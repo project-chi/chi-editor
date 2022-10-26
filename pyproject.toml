@@ -1,14 +1,25 @@
 [tool.poetry]
 name = "chi-editor"
 version = "0.1.0"
-description = ""
-authors = ["kapkekes <86285206+kapkekes@users.noreply.github.com>"]
+description = "The molecule editor in the Project Chi software package."
+authors = [
+    "Alexey Mazyar <mnl000mnl@mail.ru>",
+    "Andrey Melnikov <andrey_dru_mel@mail.ru>",
+    "Dmitriy Vashurin <kapkekes@yandex.ru>",
+    "Maxim Chernyshov <mizinchik@yahoo.com>"
+]
 readme = "README.md"
 packages = [{include = "chi_editor"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pyqt6 = "^6.4.0"
+sqlalchemy = "^1.4.42"
+requests = "^2.28.1"
 
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.0"
+pytest-mock = "*"
 
 [build-system]
 requires = ["poetry-core"]
