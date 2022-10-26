@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "chi-editor"
+version = "0.1.0"
+description = ""
+authors = ["kapkekes <86285206+kapkekes@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "chi_editor"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
