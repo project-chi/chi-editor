@@ -18,7 +18,7 @@ class Editor(QMainWindow):
         self.resize(400, 200)
         self.setWindowIcon(QIcon("..\\resources\\ProjectChi.png"))
         self.setMenuBar(menu_bar)
-        # self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, tool_bar)
+        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, tool_bar)
 
 
 if __name__ == "__main__":
