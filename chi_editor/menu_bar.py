@@ -13,11 +13,10 @@ class MenuBar(QMenuBar):
         self.setStyleSheet("""QMenuBar { background-color: rgb(212, 204, 234); }""")
 
     def _create_menus(self):
-        self.file_menu = FileMenu()
         self.edit_menu = EditMenu()
         self.view_menu = ViewMenu()
         self.help_menu = HelpMenu()
-        self.addMenu(self.file_menu)
+        self.addMenu(FileMenu())
         self.addMenu(self.edit_menu)
         self.addMenu(self.view_menu)
         self.addMenu(self.help_menu)

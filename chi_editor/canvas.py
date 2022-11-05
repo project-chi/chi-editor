@@ -1,4 +1,4 @@
-from PyQt6.QtGui import QPixmap, QColor
+from PyQt6.QtGui import QColor, QPixmap
 from PyQt6.QtWidgets import QLabel
 
 
