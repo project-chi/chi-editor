@@ -12,7 +12,7 @@ readme = "README.md"
 packages = [{include = "chi_editor"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "3.10.*"
 pyqt6 = "^6.4.0"
 sqlalchemy = "^1.4.42"
 requests = "^2.28.1"
