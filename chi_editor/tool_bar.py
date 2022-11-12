@@ -1,4 +1,4 @@
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QActionGroup
 from PyQt6.QtWidgets import QToolBar
 from tool_bar_buttons.arrow_button import ArrowButton
 from tool_bar_buttons.bond_button import BondButton
@@ -24,6 +24,18 @@ class ToolBar(QToolBar):
         self.reaction_button = ReactionButton()
         self.text_button = TextButton()
         self.eraser_button = EraserButton()
+
+        group_buttons = QActionGroup(self)
+        group_buttons.setExclusive(True)
+        group_buttons.addAction(self.arrow_button)
+        group_buttons.addAction(self.hand_button)
+        group_buttons.addAction(self.bond_button)
+        group_buttons.addAction(self.structure_button)
+        group_buttons.addAction(self.atom_button)
+        group_buttons.addAction(self.block_button)
+        group_buttons.addAction(self.reaction_button)
+        group_buttons.addAction(self.text_button)
+        group_buttons.addAction(self.eraser_button)
 
         self._set_actions()
         self._set_icons()
