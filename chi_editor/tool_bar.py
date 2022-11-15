@@ -10,6 +10,10 @@ from tool_bar_buttons.reaction_button import ReactionButton
 from tool_bar_buttons.text_button import TextButton
 from tool_bar_buttons.eraser_button import EraserButton
 
+TOOLS =[
+    'arrow', 'hand', 'bond', 'structure',
+    'atom', 'block', 'reaction', 'text', 'eraser'
+]
 
 class ToolBar(QToolBar):
     def __init__(self, parent=None):
@@ -27,39 +31,11 @@ class ToolBar(QToolBar):
 
         group_buttons = QActionGroup(self)
         group_buttons.setExclusive(True)
-        group_buttons.addAction(self.arrow_button)
-        group_buttons.addAction(self.hand_button)
-        group_buttons.addAction(self.bond_button)
-        group_buttons.addAction(self.structure_button)
-        group_buttons.addAction(self.atom_button)
-        group_buttons.addAction(self.block_button)
-        group_buttons.addAction(self.reaction_button)
-        group_buttons.addAction(self.text_button)
-        group_buttons.addAction(self.eraser_button)
+        for tool in TOOLS:
+            btn = getattr(self, '%s_button' % tool)
+            group_buttons.addAction(btn)
+            self.addAction(btn)
+            btn.setIcon(QIcon('../resources/%s.png' % tool))
 
-        self._set_actions()
-        self._set_icons()
         self.setMovable(False)
         self.setStyleSheet("""QToolBar { background-color: rgb(212, 204, 234); }""")
-
-    def _set_actions(self):
-        self.addAction(self.arrow_button)
-        self.addAction(self.hand_button)
-        self.addAction(self.bond_button)
-        self.addAction(self.structure_button)
-        self.addAction(self.atom_button)
-        self.addAction(self.block_button)
-        self.addAction(self.reaction_button)
-        self.addAction(self.text_button)
-        self.addAction(self.eraser_button)
-
-    def _set_icons(self):
-        self.arrow_button.setIcon(QIcon("../resources/arrow.png"))
-        self.hand_button.setIcon(QIcon("../resources/hand.png"))
-        self.bond_button.setIcon(QIcon("../resources/bond.png"))
-        self.structure_button.setIcon(QIcon("../resources/structure.png"))
-        self.atom_button.setIcon(QIcon("../resources/atom.png"))
-        self.block_button.setIcon(QIcon("../resources/block.png"))
-        self.reaction_button.setIcon(QIcon("../resources/reaction.png"))
-        self.text_button.setIcon(QIcon("../resources/text.png"))
-        self.eraser_button.setIcon(QIcon("../resources/eraser.png"))
