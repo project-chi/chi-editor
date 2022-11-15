@@ -10,10 +10,11 @@ from tool_bar_buttons.reaction_button import ReactionButton
 from tool_bar_buttons.text_button import TextButton
 from tool_bar_buttons.eraser_button import EraserButton
 
-TOOLS =[
+TOOLS = [
     'arrow', 'hand', 'bond', 'structure',
     'atom', 'block', 'reaction', 'text', 'eraser'
 ]
+
 
 class ToolBar(QToolBar):
     def __init__(self, parent=None):
