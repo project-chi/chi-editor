@@ -1,12 +1,21 @@
+from enum import Enum
+
 from PyQt6.QtGui import QIcon, QActionGroup
 from PyQt6.QtWidgets import QToolBar
 
 from .toolbar_buttons import *
 
-TOOLS = [
-    'arrow', 'hand', 'bond', 'structure',
-    'atom', 'block', 'reaction', 'text', 'eraser'
-]
+
+class Tools(str, Enum):
+    Arrow = 'arrow'
+    Hand = 'hand'
+    Bond = 'bond'
+    Structure = 'structure'
+    Atom = 'atom'
+    Block = 'block'
+    Reaction = 'reaction'
+    Text = 'text'
+    Eraser = 'eraser'
 
 
 class ToolBar(QToolBar):
@@ -25,7 +34,7 @@ class ToolBar(QToolBar):
 
         group_buttons = QActionGroup(self)
         group_buttons.setExclusive(True)
-        for tool in TOOLS:
+        for tool in Tools:
             btn = getattr(self, '%s_button' % tool)
             group_buttons.addAction(btn)
             self.addAction(btn)
