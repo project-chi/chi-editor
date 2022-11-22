@@ -1,9 +1,6 @@
 from PyQt6.QtWidgets import QMenuBar
 
-from menu_buttons.file_menu import FileMenu
-from menu_buttons.edit_menu import EditMenu
-from menu_buttons.view_menu import ViewMenu
-from menu_buttons.help_menu import HelpMenu
+from .menu_buttons import *
 
 
 class MenuBar(QMenuBar):
@@ -20,4 +17,3 @@ class MenuBar(QMenuBar):
         self.addMenu(self.edit_menu)
         self.addMenu(self.view_menu)
         self.addMenu(self.help_menu)
-
