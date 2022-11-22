@@ -6,14 +6,14 @@ from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from .canvas import Canvas
 from .menu_bar import MenuBar
-from .toolbar import ToolBar
+from .toolbar import create_toolbar
 
 
 class Editor(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.menu_bar = MenuBar()
-        self.tool_bar = ToolBar()
+        self.tool_bar = create_toolbar()
         self.canvas = Canvas()
         self.setWindowTitle("Project Chi")
         # to be changed to relative dimensions or whatever
