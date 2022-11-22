@@ -1,4 +1,4 @@
-from tool_bar_buttons.toolbar_button import ToolBarButton
+from .toolbar_button import ToolBarButton
 
 
 class TextButton(ToolBarButton):

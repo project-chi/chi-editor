@@ -1,14 +1,7 @@
 from PyQt6.QtGui import QIcon, QActionGroup
 from PyQt6.QtWidgets import QToolBar
-from tool_bar_buttons.arrow_button import ArrowButton
-from tool_bar_buttons.bond_button import BondButton
-from tool_bar_buttons.structure_button import StructureButton
-from tool_bar_buttons.hand_button import HandButton
-from tool_bar_buttons.atom_button import AtomButton
-from tool_bar_buttons.block_button import BlockButton
-from tool_bar_buttons.reaction_button import ReactionButton
-from tool_bar_buttons.text_button import TextButton
-from tool_bar_buttons.eraser_button import EraserButton
+
+from .toolbar_buttons import *
 
 TOOLS = [
     'arrow', 'hand', 'bond', 'structure',

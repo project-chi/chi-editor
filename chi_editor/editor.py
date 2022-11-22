@@ -4,9 +4,9 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
-from canvas import Canvas
-from menu_bar import MenuBar
-from tool_bar import ToolBar
+from .canvas import Canvas
+from .menu_bar import MenuBar
+from .toolbar import ToolBar
 
 
 class Editor(QMainWindow):
