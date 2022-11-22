@@ -35,10 +35,10 @@ class ToolBar(QToolBar):
         group_buttons = QActionGroup(self)
         group_buttons.setExclusive(True)
         for tool in Tools:
-            btn = getattr(self, '%s_button' % tool)
+            btn = getattr(self, f'{tool}_button')
             group_buttons.addAction(btn)
             self.addAction(btn)
-            btn.setIcon(QIcon('../resources/%s.png' % tool))
+            btn.setIcon(QIcon(f'../resources/{tool}.png'))
 
         self.setMovable(False)
         self.setStyleSheet("""QToolBar { background-color: rgb(212, 204, 234); }""")
