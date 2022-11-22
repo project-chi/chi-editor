@@ -1,8 +1,12 @@
 from PyQt6.QtWidgets import QWidget
-from entity import Entity
+
+from .entity import Entity
 
 
 class Adapter:
+    base: QWidget
+    entities: dict[QWidget, dict]
+
     def __init__(self, base: QWidget) -> None:
         self.base = base
         self.entities = {}
