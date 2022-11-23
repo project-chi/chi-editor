@@ -1,5 +1,5 @@
-from atom import Atom
-from bond import Bond
+from .atom import Atom
+from .bond import Bond
 
 
 class Molecule:
