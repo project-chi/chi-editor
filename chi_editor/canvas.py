@@ -1,5 +1,6 @@
-from PyQt6 import QtGui
+from PyQt6 import QtGui, QtCore
 from PyQt6.QtCore import QPoint
+from PyQt6.QtGui import QFocusEvent
 from PyQt6.QtWidgets import QLabel, QLineEdit
 
 
@@ -24,6 +25,11 @@ class DragLabel(QLabel):
         self.is_moving = False
 
 
+class MyLineEdit(QLineEdit):
+    def focusOutEvent(self, a0: QtGui.QFocusEvent) -> None:
+        self.close()
+
+
 class Canvas(QLabel):
 
     def __init__(self, *args, **kwargs):
@@ -33,18 +39,18 @@ class Canvas(QLabel):
         self.setPixmap(self.canvas)
 
     def mousePressEvent(self, ev: QtGui.QMouseEvent) -> None:
-        text_widget = DragLabel(self, text="Default text")
-        text_widget.move(ev.pos())
-        text_widget.show()
-
-        text_line = QLineEdit(self)
+        text_line = MyLineEdit(self)
         text_line.show()
         text_line.setFocus()
         text_line.move(ev.pos())
-        text_line.returnPressed.connect(lambda: self.read_line(text_line, text_widget))
+        text_line.returnPressed.connect(lambda: self.read_line(text_line))
 
-    def read_line(self, text_line: QLineEdit, text_widget: DragLabel) -> None:
-        text_widget.setText(text_line.text())
-        text_widget.adjustSize()
+    def sth(self, event):
+        print("lol")
+
+    def read_line(self, text_line: QLineEdit) -> None:
+        text_widget = DragLabel(self, text=text_line.text())
+        text_widget.move(text_line.pos())
+        text_widget.show()
 
         text_line.close()
