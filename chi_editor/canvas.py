@@ -1,6 +1,5 @@
-from PyQt6 import QtGui, QtCore
+from PyQt6 import QtGui
 from PyQt6.QtCore import QPoint
-from PyQt6.QtGui import QFocusEvent
 from PyQt6.QtWidgets import QLabel, QLineEdit
 
 
