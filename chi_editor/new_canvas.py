@@ -25,8 +25,8 @@ class Canvas(QGraphicsScene):
         elif not self._photo.pixmap().isNull():
             self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
 
-    def generateMode(self):
-        if self.
+    # def generateMode(self):
+    #     if self.
 
     def mousePressEvent(self, event):
         if self.opt == "Generate":
