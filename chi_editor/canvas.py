@@ -1,55 +1,28 @@
-from PyQt6 import QtGui
-from PyQt6.QtCore import QPoint
-from PyQt6.QtWidgets import QLabel, QLineEdit
+from PyQt6.QtWidgets import QGraphicsScene, QGraphicsItem, QGraphicsTextItem
+from PyQt6.QtGui import QFont
 
 
-class DragLabel(QLabel):
-    is_moving: bool
-    delta: QPoint
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.is_moving = False
-        self.delta = QPoint()
-
-    def mousePressEvent(self, ev: QtGui.QMouseEvent) -> None:
-        self.is_moving = True
-        self.delta = self.pos() - ev.scenePosition().toPoint()
-
-    def mouseMoveEvent(self, ev: QtGui.QMouseEvent) -> None:
-        if self.is_moving:
-            self.move(ev.scenePosition().toPoint() + self.delta)
-
-    def mouseReleaseEvent(self, ev: QtGui.QMouseEvent) -> None:
-        self.is_moving = False
-
-
-class MyLineEdit(QLineEdit):
-    def focusOutEvent(self, a0: QtGui.QFocusEvent) -> None:
-        self.close()
-
-
-class Canvas(QLabel):
+class Canvas(QGraphicsScene):
+    shapes: list[QGraphicsItem]
+    opt: str
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.canvas = QtGui.QPixmap(400, 300)
-        self.canvas.fill(QtGui.QColor("white"))
-        self.setPixmap(self.canvas)
+        self.setSceneRect(-100, -100, 200, 200)
+        self.shapes = []
+        self.opt = ""
 
-    def mousePressEvent(self, ev: QtGui.QMouseEvent) -> None:
-        text_line = MyLineEdit(self)
-        text_line.show()
-        text_line.setFocus()
-        text_line.move(ev.pos())
-        text_line.returnPressed.connect(lambda: self.read_line(text_line))
+    def setOption(self, opt):
+        self.opt = opt
 
-    def sth(self, event):
-        print("lol")
-
-    def read_line(self, text_line: QLineEdit) -> None:
-        text_widget = DragLabel(self, text=text_line.text())
-        text_widget.move(text_line.pos())
-        text_widget.show()
-
-        text_line.close()
+    def mousePressEvent(self, event):
+        if self.opt == "Generate":
+            text = QGraphicsTextItem()
+            text.setPos(event.scenePos())
+            text.setPlainText("sadasdasd")
+            text.setFont(QFont("Impact"))
+            text.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+            self.shapes.append(text)
+            self.addItem(text)
+        else:
+            super(Canvas, self).mousePressEvent(event)

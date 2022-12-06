@@ -1,5 +1,5 @@
 from PyQt6.QtCore import QRect, QCoreApplication, QMetaObject
-from PyQt6.QtWidgets import QGraphicsView, QRadioButton
+from PyQt6.QtWidgets import QGraphicsView, QRadioButton, QButtonGroup
 
 
 class Ui_Dialog(object):
@@ -9,6 +9,7 @@ class Ui_Dialog(object):
         self.graphicsView = QGraphicsView(Dialog)
         self.graphicsView.setGeometry(QRect(130, 10, 371, 221))
         self.graphicsView.setObjectName("graphicsView")
+        self.buttonGroup = QButtonGroup
         self.radioButton = QRadioButton(Dialog)
         self.radioButton.setGeometry(QRect(20, 30, 82, 31))
         self.radioButton.setObjectName("radioButton")

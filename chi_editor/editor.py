@@ -4,7 +4,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow, QGraphicsScene, QGraphicsView, QGraphicsItem, QButtonGroup
 
-from .new_canvas import Canvas
+from .canvas import Canvas
 from .menu_bar import MenuBar
 from .toolbar import create_toolbar
 from .experiment_ui import Ui_Dialog
