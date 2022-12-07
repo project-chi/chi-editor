@@ -22,16 +22,6 @@ class Canvas(QGraphicsScene):
 
     def mousePressEvent(self, event):
         self.mouse_press_event(event)
-        # if self.opt == "Text":
-        #     text = QGraphicsTextItem()
-        #     text.setPos(event.scenePos())
-        #     text.setPlainText("sadasdasd")
-        #     text.setFont(QFont("Impact"))
-        #     text.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
-        #     self.shapes.append(text)
-        #     self.addItem(text)
-        # else:
-        #     super(Canvas, self).mousePressEvent(event)
 
     def arrowEvent(self, event):
         super(Canvas, self).mousePressEvent(event)
