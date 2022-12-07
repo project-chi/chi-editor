@@ -15,6 +15,5 @@ def create_toolbar() -> QToolBar:
     for tool_button in create_buttons(Tools):
         toolbar.addAction(tool_button)
         action_group.addAction(tool_button)
-        action_group.setExclusive(True)
 
     return toolbar
