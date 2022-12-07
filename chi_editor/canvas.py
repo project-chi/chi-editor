@@ -9,7 +9,7 @@ class Canvas(QGraphicsScene):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.setSceneRect(-100, -100, 200, 200)
+        # self.setSceneRect(-100, -100, 200, 200)
         self.shapes = []
         self.opt = ""
         self.mouse_press_event = self.textEvent

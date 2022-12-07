@@ -1,8 +1,8 @@
 import sys
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QApplication, QMainWindow, QGraphicsScene, QGraphicsView, QGraphicsItem, QButtonGroup
+from PyQt6.QtCore import Qt, QRectF
+from PyQt6.QtGui import QIcon, QPainter
+from PyQt6.QtWidgets import QApplication, QMainWindow, QGraphicsScene, QGraphicsView, QGraphicsItem, QButtonGroup, QSizePolicy
 
 from .canvas import Canvas
 from .menu_bar import MenuBar
@@ -16,18 +16,20 @@ class Editor(QMainWindow, Ui_Dialog):
         self.menu_bar = MenuBar()
         self.tool_bar = create_toolbar()
 
-        self.setupUi(self)
         self.scene = Canvas(self)
+        self.scene.setSceneRect(QRectF(self.geometry()))
+
+        self.graphicsView = QGraphicsView(self)
         self.graphicsView.setScene(self.scene)
         self.graphicsView.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        self.graphicsView.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
-        # group = QButtonGroup(self)
-        # group.addButton(self.radioButton)
-        # group.addButton(self.radioButton_2)
-        #
-        # group.buttonClicked.connect(lambda btn: self.scene.setOption(btn.text()))
-        # self.radioButton.setChecked(True)
-        # self.scene.setOption(self.radioButton.text())
+        for action in self.tool_bar.actions():
+            if action.text() == "Text":
+                action.triggered.connect(self.scene.setText)
+            else:
+                action.triggered.connect(self.scene.setArrow)
+
 
         self.setWindowTitle("Project Chi")
         # to be changed to relative dimensions or whatever
@@ -35,11 +37,7 @@ class Editor(QMainWindow, Ui_Dialog):
         self.setWindowIcon(QIcon("..\\resources\\ProjectChi.png"))
         self.setMenuBar(self.menu_bar)
         self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.tool_bar)
-        for action in self.tool_bar.actions():
-            if action.text() == "Text":
-                action.triggered.connect(self.scene.setText)
-            else:
-                action.triggered.connect(self.scene.setArrow)
+        self.setCentralWidget(self.graphicsView)
 
 
 if __name__ == "__main__":
