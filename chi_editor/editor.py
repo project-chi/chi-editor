@@ -21,14 +21,6 @@ class Editor(QMainWindow, Ui_Dialog):
         self.graphicsView.setScene(self.scene)
         self.graphicsView.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
 
-        # group = QButtonGroup(self)
-        # group.addButton(self.radioButton)
-        # group.addButton(self.radioButton_2)
-        #
-        # group.buttonClicked.connect(lambda btn: self.scene.setOption(btn.text()))
-        # self.radioButton.setChecked(True)
-        # self.scene.setOption(self.radioButton.text())
-
         self.setWindowTitle("Project Chi")
         # to be changed to relative dimensions or whatever
         self.resize(400, 200)
