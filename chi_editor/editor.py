@@ -34,7 +34,7 @@ class Editor(QMainWindow, Ui_Dialog):
         self.setWindowTitle("Project Chi")
         # to be changed to relative dimensions or whatever
         self.resize(400, 200)
-        self.setWindowIcon(QIcon("..\\resources\\ProjectChi.png"))
+        self.setWindowIcon(QIcon("../resources/project-chi.png"))
         self.setMenuBar(self.menu_bar)
         self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.tool_bar)
         self.setCentralWidget(self.graphicsView)
