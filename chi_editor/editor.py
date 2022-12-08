@@ -1,31 +1,26 @@
-import sys
-
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QSizePolicy, QVBoxLayout
 
 from .canvas import Canvas
-from .menu_bar import MenuBar
-from .toolbar import create_toolbar
+from .toolbar import CanvasToolBar
 
 
 class Editor(QMainWindow):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.menu_bar = MenuBar()
-        self.tool_bar = create_toolbar()
-        self.canvas = Canvas()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        canvas = Canvas(self)
+        canvas.setSceneRect(QRectF(self.geometry()))
+
+        graphics_view = QGraphicsView(self)
+        graphics_view.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        graphics_view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        graphics_view.setScene(canvas)
+
         self.setWindowTitle("Project Chi")
-        # to be changed to relative dimensions or whatever
+        self.setWindowIcon(QIcon("../resources/assets/project-chi.png"))
         self.resize(400, 200)
-        self.setWindowIcon(QIcon("..\\resources\\ProjectChi.png"))
-        self.setMenuBar(self.menu_bar)
-        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.tool_bar)
-        self.setCentralWidget(self.canvas)
 
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    win = Editor()
-    win.show()
-    sys.exit(app.exec())
+        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, CanvasToolBar(canvas=canvas))
+        self.setCentralWidget(graphics_view)

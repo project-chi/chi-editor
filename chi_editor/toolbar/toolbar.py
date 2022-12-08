@@ -1,19 +1,27 @@
-from PyQt6.QtGui import QActionGroup
+from PyQt6.QtGui import QAction, QActionGroup
 from PyQt6.QtWidgets import QToolBar
 
-from .button_factory import Tools, create_buttons
+from .tools import tools
+from ..canvas import Canvas
 
 
-def create_toolbar() -> QToolBar:
-    toolbar = QToolBar()
-    toolbar.setStyleSheet("""QToolBar { background-color: rgb(212, 204, 234); }""")
-    toolbar.setMovable(False)
+class CanvasToolBar(QToolBar):
+    _canvas: Canvas
 
-    action_group = QActionGroup(toolbar)
-    action_group.setExclusive(True)
+    def __init__(self, *args, canvas: Canvas, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self._canvas = canvas
+        self.setStyleSheet("""QToolBar { background-color: rgb(212, 204, 234); }""")
+        self.setMovable(False)
 
-    for tool_button in create_buttons(Tools):
-        toolbar.addAction(tool_button)
-        action_group.addAction(tool_button)
+        action_group = QActionGroup(self)
+        action_group.setExclusive(True)
 
-    return toolbar
+        for Tool in tools:
+            tool = Tool(canvas=canvas)
+            self.addAction(tool)
+            action_group.addAction(tool)
+
+    def actionTriggered(self, action: QAction) -> None:
+        print('click')
+        self._canvas.current_action = action

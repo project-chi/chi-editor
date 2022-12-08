@@ -1,10 +1,16 @@
-from PyQt6.QtGui import QColor, QPixmap
-from PyQt6.QtWidgets import QLabel
+from typing import TypeVar
+
+from PyQt6.QtWidgets import QGraphicsScene, QGraphicsSceneMouseEvent
 
 
-class Canvas(QLabel):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.canvas = QPixmap(400, 300)
-        self.canvas.fill(QColor("white"))
-        self.setPixmap(self.canvas)
+Tool = TypeVar('Tool')
+
+
+class Canvas(QGraphicsScene):
+    current_action: Tool
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+    def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        self.current_action.mouse_press_event(event)
