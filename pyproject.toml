@@ -9,7 +9,7 @@ authors = [
     "Maxim Chernyshov <mizinchik@yahoo.com>"
 ]
 readme = "README.md"
-packages = [{include = "chi_editor"}]
+packages = [{include = "chi_editor", from = "source"}]
 
 [tool.poetry.dependencies]
 python = "3.10.*"

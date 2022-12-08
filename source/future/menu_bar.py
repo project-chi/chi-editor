@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QMenuBar
 
-from .menu_buttons import *
+from future.menu_buttons import *
 
 
 class MenuBar(QMenuBar):
