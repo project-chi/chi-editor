@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
 
-from ...abc.tool import Tool
+from ...bases.tool import Tool
 from ...canvas import Canvas
 
 

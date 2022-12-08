@@ -1,7 +1,7 @@
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsTextItem, QGraphicsItem
 
-from ...abc.tool import Tool
+from ...bases.tool import Tool
 
 
 class Text(Tool):

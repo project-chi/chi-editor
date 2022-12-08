@@ -1,6 +1,6 @@
 from .arrow import Arrow
 from .text import Text
-from ...abc.tool import Tool
+from ...bases.tool import Tool
 
 
 tools: tuple[type[Tool], ...] = (
