@@ -23,12 +23,13 @@ class Tool(QAction):
         self.setCheckable(True)
         self.triggered.connect(self.choose)
 
-    @property
-    def asset(self) -> str:
-        raise NotImplemented
-
     def choose(self) -> None:
         self.canvas.current_action = self
 
-    def action(self, event: QGraphicsSceneMouseEvent) -> None:
+    def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
+        pass
+
+    @property
+    def asset(self) -> str:
+        """Returns the name of the icon for this tool without extension."""
         raise NotImplemented

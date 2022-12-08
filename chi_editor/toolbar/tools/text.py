@@ -5,7 +5,7 @@ from ...bases.tool import Tool
 
 
 class Text(Tool):
-    def action(self, event: QGraphicsSceneMouseEvent) -> None:
+    def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         new_text = QGraphicsTextItem()
         new_text.setPos(event.scenePos())
         new_text.setPlainText('H')

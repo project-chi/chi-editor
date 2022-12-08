@@ -13,4 +13,4 @@ class Canvas(QGraphicsScene):
         super().__init__(*args, **kwargs)
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        self.current_action.action(event)
+        self.current_action.mouse_press_event(event)

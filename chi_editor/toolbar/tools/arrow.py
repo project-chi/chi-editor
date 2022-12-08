@@ -5,7 +5,7 @@ from ...canvas import Canvas
 
 
 class Arrow(Tool):
-    def action(self, event: QGraphicsSceneMouseEvent) -> None:
+    def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         super(Canvas, self.canvas).mousePressEvent(event)
 
     @property
