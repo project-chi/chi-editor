@@ -1,18 +1,17 @@
 import sys
 
 from PyQt6.QtCore import Qt, QRectF
-from PyQt6.QtGui import QIcon, QPainter
-from PyQt6.QtWidgets import QApplication, QMainWindow, QGraphicsScene, QGraphicsView, QGraphicsItem, QButtonGroup, QSizePolicy
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QApplication, QMainWindow, QGraphicsView, QSizePolicy
 
 from .canvas import Canvas
 from .menu_bar import MenuBar
 from .toolbar import create_toolbar
-from .experiment_ui import Ui_Dialog
 
 
-class Editor(QMainWindow, Ui_Dialog):
-    def __init__(self, parent=None):
-        super(Editor, self).__init__(parent)
+class Editor(QMainWindow):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.menu_bar = MenuBar()
         self.tool_bar = create_toolbar()
 
