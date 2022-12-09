@@ -3,6 +3,7 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QSizePolicy
 
 from .canvas import Canvas
+from .constants import ASSETS
 from .toolbar import CanvasToolBar
 
 
@@ -19,7 +20,7 @@ class Editor(QMainWindow):
         graphics_view.setScene(canvas)
 
         self.setWindowTitle("Project Chi")
-        self.setWindowIcon(QIcon("../resources/assets/project-chi.png"))
+        self.setWindowIcon(QIcon(str(ASSETS / 'project-chi.png')))
         self.resize(400, 200)
 
         self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, CanvasToolBar(canvas=canvas))
