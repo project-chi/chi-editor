@@ -1,7 +1,7 @@
 from math import fabs, atan2, sin
 from pathlib import Path
 
-from PyQt6.QtWidgets import QGraphicsItem, QGraphicsPixmapItem
+from PyQt6.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QWidget, QStyleOptionGraphicsItem
 from PyQt6.QtGui import QPixmap, QPainter
 from PyQt6.QtCore import QPointF
 
@@ -9,8 +9,6 @@ from PyQt6.QtCore import QPointF
 class Line(QGraphicsPixmapItem):
     vertex1: QGraphicsItem
     vertex2: QGraphicsItem
-    end1: QPointF
-    end2: QPointF
     width: float
     height: float
     MAX_WIDTH = 30
@@ -20,29 +18,40 @@ class Line(QGraphicsPixmapItem):
         self.vertex1 = vertex1
         self.vertex2 = vertex2
 
-        # centers of vertices
-        self.end1 = QPointF(vertex1.x() + vertex1.boundingRect().width() / 2,
-                            vertex1.y() + vertex1.boundingRect().height() / 2)
-        self.end1 = QPointF(vertex2.x() + vertex2.boundingRect().width() / 2,
-                            vertex2.y() + vertex2.boundingRect().height() / 2)
-
-        # line will be rotated around its vertices
-        self.setTransformOriginPoint(self.end1)
-
-        self.setRotation(atan2(self.end1.y() - self.end2.y(), self.end1.x() - self.end2.x()))
-
         # min of MAX_WIDTH and boarders of vertex items
         self.width = min([self.MAX_WIDTH, vertex1.boundingRect().width(), vertex1.boundingRect().height(),
-                            vertex2.boundingRect().width(), vertex2.boundingRect().height()])
+                          vertex2.boundingRect().width(), vertex2.boundingRect().height()])
+
+        self.__update_pixmap(self.vertex2)
+
+    # recalculate height and rotation of pixmap
+    def __update_pixmap(self, moved_vertex: QGraphicsItem) -> None:
+        if (moved_vertex is not self.vertex1) or (moved_vertex is not self.vertex2):
+            raise ValueError(f'Can\'t call __update_pixmap with {moved_vertex} argument')
+
+        # simple deduction of static vertex
+        moved_point = moved_vertex.boundingRect().center()
+        if moved_vertex is self.vertex1:
+            static_point = self.vertex2.boundingRect().center()
+        else:
+            static_point = self.vertex1.boundingRect().center()
+
+        # line will be rotated around its vertices
+        self.setTransformOriginPoint(static_point)
+
+        self.setRotation(atan2(static_point.y() - moved_point.y(), static_point.x() - moved_point.x()))
 
         # hypotenuse of right triangle of vertices, rotation is an angle between them
-        self.height = fabs(self.end1.y() - self.end1.y()) / sin(self.rotation())
+        self.height = fabs(static_point.y() - moved_point.y()) / sin(self.rotation())
 
         # height is just distance between y's
         self.setPixmap(QPixmap(self.width, self.height))
 
-    def paint(self):
-        painter = QPainter(self.pixmap())
-        rect = self.texture.rect()
+        self.update()
+
+    def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem = None, widget: QWidget = None) -> None:
+        rect = self.pixmap().rect()
+
+        # draw straight line in the parallel to y-axis
         painter.drawLine(rect.x() + rect.width() / 2, rect.y(),
                          rect.x() + rect.width() / 2, rect.y() + rect.height())
