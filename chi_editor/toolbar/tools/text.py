@@ -1,40 +1,35 @@
-from PyQt6.QtGui import QFont, QFocusEvent
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsTextItem, QGraphicsItem, QLineEdit
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QKeyEvent, QInputEvent, QFocusEvent
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsTextItem, QGraphicsItem
 
 from ...bases.tool import Tool
 
+class MyText(QGraphicsTextItem):
 
-class MyLineEdit(QLineEdit):
-    def focusOutEvent(self, a0: QFocusEvent) -> None:
-        self.close()
+    def mouseDoubleClickEvent(self, event: 'QGraphicsSceneMouseEvent') -> None:
+        self.setTextInteractionFlags(Qt.TextInteractionFlag.TextEditable)
+        self.setFocus(Qt.FocusReason.MouseFocusReason)
 
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() != Qt.Key.Key_Return:
+            QGraphicsTextItem.keyPressEvent(self, event)
+        else:
+            self.clearFocus()
+            self.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
+
+    def focusOutEvent(self, event: QFocusEvent) -> None:
+        self.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
 
 class Text(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
-        text_line = MyLineEdit()
-        text_line.show()
-        text_line.setFocus()
-        text_line.move(event.pos().toPoint())
-        text_line.returnPressed.connect(lambda: self.read_line(text_line))
-        # new_text = QGraphicsTextItem()
-        # new_text.setPos(event.scenePos())
-        # new_text.setPlainText('H')
-        # new_text.setFont(QFont('Impact'))
-        # new_text.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
-        #
-        # self.canvas.addItem(new_text)
-
-    def read_line(self, text_line: QLineEdit) -> None:
-        new_text = QGraphicsTextItem()
-        new_text.setPos(text_line.pos().toPointF())
-        new_text.setPlainText(text_line.text())
+        new_text = MyText()
+        new_text.setPos(event.scenePos())
+        new_text.setPlainText("H")
         new_text.setFont(QFont('Impact'))
         new_text.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
 
         self.canvas.addItem(new_text)
-        text_line.close()
 
     @property
     def asset(self) -> str:
         return 'text'
-
