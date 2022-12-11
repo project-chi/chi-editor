@@ -46,10 +46,9 @@ class Line(QGraphicsPixmapItem):
         # moved_vertex is second vertex or ellipse (which means it follows mouse)
         if moved_vertex is self.vertex2 or isinstance(moved_vertex, QGraphicsEllipseItem):
             static_point = self.vertex1.sceneBoundingRect().center()
-            if isinstance(moved_vertex, QGraphicsEllipseItem):
-               self.vertex2 = moved_vertex
         else:
             static_point = self.vertex2.sceneBoundingRect().center()
+        self.setPos(static_point - QPointF(self.width / 2, 0))
 
         # line will be rotated around its vertices
         self.setTransformOriginPoint(self.mapFromScene(static_point))
@@ -69,20 +68,12 @@ class Line(QGraphicsPixmapItem):
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem = None, widget: QWidget = None) -> None:
         painter.save()
-        pen = QPen(QColor("blue"), 3)
+        pen = QPen(QColor("black"), 3)
         painter.setPen(pen)
 
         # draw straight line in the parallel to y-axis
         painter.drawLine(QPointF(self.width / 2, 0),
                          QPointF(self.width / 2, self.height))
-
-        trcolor = QColor("blue")
-        trcolor.setAlphaF(0.5)
-        trbrush = QBrush(trcolor)
-        pen.setWidth(0)
-        painter.setPen(pen)
-        painter.setBrush(trbrush)
-        painter.drawRect(self.pixmap().rect())
 
         painter.restore()
 
