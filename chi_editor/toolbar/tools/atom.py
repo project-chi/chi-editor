@@ -7,7 +7,7 @@ from ...bases.alpha_atom import AlphaAtom
 class Atom(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         new_atom = AlphaAtom('H')
-        new_atom.setPos(event.scenePos())
+        new_atom.setPos(event.scenePos() - new_atom.sceneBoundingRect().center())
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
 
