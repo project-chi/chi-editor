@@ -21,7 +21,7 @@ class Editor(QMainWindow):
 
         self.setWindowTitle("Project Chi")
         self.setWindowIcon(QIcon(str(ASSETS / 'project-chi.png')))
-        self.resize(400, 200)
+        self.resize(1000, 800)
 
         self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, CanvasToolBar(canvas=canvas))
         self.setCentralWidget(graphics_view)
