@@ -17,11 +17,23 @@ class AlphaAtom(QGraphicsItem):
         super().__init__(*args, **kwargs)
         self.setFlags(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
-    def addLine(self, lineItem):
-        pass
+    def addLine(self, newLine: Line):
+        for existing in self.lines:
+            if (existing.vertex1, existing.vertex2) == (newLine.vertex1, newLine.vertex2):
+                # another line with the same control points already exists
+                return False
+        self.lines.append(newLine)
+        return True
 
-    def removeLine(self, lineItem):
-        pass
+    def removeLine(self, line: Line):
+        for existing in self.lines:
+            if (existing.vertex1, existing.vertex2) == (line.vertex1, line.vertex2):
+                self.scene().removeItem(existing)
+                self.lines.remove(existing)
+                return True
+        return False
 
     def itemChange(self, change, value):
-        pass
+        for line in self.lines:
+            line.update_pixmap(self)
+        return super().itemChange(change, value)
