@@ -1,19 +1,53 @@
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsTextItem, QGraphicsItem
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
+from PyQt6.QtCore import Qt, QPointF
 
 from ...bases.tool import Tool
 from ...bases.line import Line
+from ...bases.alpha_atom import AlphaAtom
 
 
 class Bond(Tool):
+    startItem: AlphaAtom = None
+    bond: Line = None
+
+    def atomAt(self, pos: QPointF) -> AlphaAtom | None:
+        for item in self.canvas.items(pos, Qt.ItemSelectionMode.IntersectsItemShape):
+            if isinstance(item, AlphaAtom):
+                return item
+        return None
+
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
-        selected = self.canvas.selectedItems()
-        if len(selected) != 2:
+        if event.button() == Qt.MouseButton.LeftButton:
+            atom = self.atomAt(event.scenePos())
+            if atom is not None:
+                self.startItem = atom
+
+                self.bond = Line(atom, event.scenePos())
+                self.canvas.addItem(self.bond)
+                return
+
+    def mouse_move_event(self, event: QGraphicsSceneMouseEvent) -> None:
+        if self.bond is not None:
+            atom = self.atomAt(event.scenePos())
+            if atom is not None and atom != self.startItem:
+                new_end = atom.scenePos()  # lock on atom
+            else:
+                new_end = event.scenePos()
+            self.bond.update_pixmap(new_end)
             return
 
-        line = Line(selected[0], selected[1])
-        self.canvas.addItem(line)
+    def mouse_release_event(self, event) -> None:
+        if self.bond is not None:
+            end_atom = self.atomAt(event.scenePos())
+            if end_atom is not None and end_atom != self.startItem:
+                if self.startItem.addLine(self.bond):  # if line didn't exist before, we add it
+                    end_atom.addLine(self.bond)
+            else:
+                self.canvas.removeItem(self.bond)  # remove line from canvas
+
+        self.startItem = None   # type: ignore
+        self.bond = None    # type: ignore
 
     @property
     def asset(self) -> str:
         return 'bond'
-
