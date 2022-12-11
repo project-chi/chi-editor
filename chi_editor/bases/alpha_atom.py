@@ -1,6 +1,6 @@
-from PyQt6.QtGui import QPen, QBrush, QColor
+from PyQt6.QtGui import QPen, QBrush, QColor, QFont
 from PyQt6.QtWidgets import QGraphicsItem
-from PyQt6.QtCore import QRectF
+from PyQt6.QtCore import QRectF, Qt
 
 from .line import Line
 
@@ -49,5 +49,8 @@ class AlphaAtom(QGraphicsItem):
         painter.setPen(self.pen)
         painter.setBrush(self.brush)
         painter.drawEllipse(self.rect)
-        painter.drawText(self.rect, self.text)
+        text_pen = QPen(QColor("white"), 10)
+        painter.setPen(text_pen)
+        painter.setFont(QFont("Impact", 30))
+        painter.drawText(self.rect, Qt.AlignmentFlag.AlignCenter, self.text)
         painter.restore()
