@@ -6,13 +6,15 @@ from .line import Line
 
 
 class AlphaAtom(QGraphicsItem):
+    text: str
     pen: QPen = QPen(QColor("black"), 0)
     brush: QBrush = QBrush(QColor("black"))
     rect: QRectF = QRectF(0, 0, 100, 100)
     lines: list[Line] = []
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, element: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.text = element
         self.setFlags(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
     def addLine(self, newLine: Line):
@@ -47,4 +49,5 @@ class AlphaAtom(QGraphicsItem):
         painter.setPen(self.pen)
         painter.setBrush(self.brush)
         painter.drawEllipse(self.rect)
+        painter.drawText(self.rect, self.text)
         painter.restore()
