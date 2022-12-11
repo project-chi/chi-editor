@@ -1,7 +1,7 @@
 from math import fabs, atan2, cos, degrees, radians
 
 from PyQt6.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QWidget, QStyleOptionGraphicsItem
-from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor
+from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QBrush
 from PyQt6.QtCore import QPointF, QRectF
 
 
@@ -27,7 +27,7 @@ class Line(QGraphicsPixmapItem):
 
         self.setShapeMode(QGraphicsPixmapItem.ShapeMode.BoundingRectShape)
 
-        self.setPos(self.vertex1 - QPointF(start.sceneBoundingRect().width() / 2, 0))
+        self.setPos(self.vertex1 - QPointF(self.width / 2, 0))
 
         self.update_pixmap(self.vertex2)
 
@@ -58,12 +58,20 @@ class Line(QGraphicsPixmapItem):
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem = None, widget: QWidget = None) -> None:
         painter.save()
-        pen = QPen(QColor("black"), 3)
+        pen = QPen(QColor("blue"), 3)
         painter.setPen(pen)
 
         # draw straight line in the parallel to y-axis
         painter.drawLine(QPointF(self.width / 2, 0),
                          QPointF(self.width / 2, self.height))
+
+        trcolor = QColor("blue")
+        trcolor.setAlphaF(0.5)
+        trbrush = QBrush(trcolor)
+        pen.setWidth(0)
+        painter.setPen(pen)
+        painter.setBrush(trbrush)
+        painter.drawRect(self.pixmap().rect())
 
         painter.restore()
 

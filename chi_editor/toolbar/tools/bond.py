@@ -30,7 +30,7 @@ class Bond(Tool):
         if self.bond is not None:
             atom = self.atomAt(event.scenePos())
             if atom is not None and atom != self.startItem:
-                new_end = atom.scenePos()  # lock on atom
+                new_end = atom.sceneBoundingRect().center()  # lock on atom
             else:
                 new_end = event.scenePos()
             self.bond.update_pixmap(new_end)
