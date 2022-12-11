@@ -6,36 +6,35 @@ from PyQt6.QtCore import QPointF, QRectF
 
 
 class Line(QGraphicsPixmapItem):
-    vertex1: QGraphicsItem
-    vertex2: QGraphicsItem
+    vertex1: QPointF
+    vertex2: QPointF
     width: float
     height: float
     MAX_WIDTH = 30
 
-    def __init__(self, vertex1: QGraphicsItem, vertex2: QGraphicsItem, *args, **kwargs) -> None:
+    def __init__(self, item1: QGraphicsItem, item2: QGraphicsItem, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.vertex1 = vertex1
-        self.vertex2 = vertex2
+        self.vertex1 = item1.sceneBoundingRect().center()
+        self.vertex2 = item2.sceneBoundingRect().center()
 
         self.setShapeMode(QGraphicsPixmapItem.ShapeMode.BoundingRectShape)
 
-        self.setPos(vertex1.sceneBoundingRect().center() - QPointF(vertex1.sceneBoundingRect().width() / 2, 0))
+        self.setPos(self.vertex1 - QPointF(item1.sceneBoundingRect().width() / 2, 0))
 
         # min of MAX_WIDTH and boarders of vertex items
-        self.width = min([self.MAX_WIDTH, vertex1.boundingRect().width(), vertex1.boundingRect().height(),
-                          vertex2.boundingRect().width(), vertex2.boundingRect().height()])
+        self.width = min([self.MAX_WIDTH, item1.boundingRect().width(), item1.boundingRect().height(),
+                          item2.boundingRect().width(), item2.boundingRect().height()])
 
         self.update_pixmap(self.vertex2)
 
     # recalculate height and rotation of pixmap
-    def update_pixmap(self, moved_vertex: QGraphicsItem) -> None:
+    def update_pixmap(self, moved_point: QPointF) -> None:
         # simple deduction of static vertex
-        moved_point = moved_vertex.sceneBoundingRect().center()
 
-        if moved_vertex is self.vertex1:
-            static_point = self.vertex2.sceneBoundingRect().center()
+        if moved_point is self.vertex1:
+            static_point = self.vertex2
         else:
-            static_point = self.vertex1.sceneBoundingRect().center()
+            static_point = self.vertex1
 
         # line will be rotated around its vertices
         self.setTransformOriginPoint(self.mapFromScene(static_point))
