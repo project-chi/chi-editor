@@ -12,18 +12,22 @@ class Line(QGraphicsPixmapItem):
     height: float
     MAX_WIDTH = 30
 
-    def __init__(self, item1: QGraphicsItem, item2: QGraphicsItem, *args, **kwargs) -> None:
+    def __init__(self, start: QGraphicsItem, *args, end: QGraphicsItem | QPointF, **kwargs) \
+            -> None:
         super().__init__(*args, **kwargs)
-        self.vertex1 = item1.sceneBoundingRect().center()
-        self.vertex2 = item2.sceneBoundingRect().center()
+        self.vertex1 = start.sceneBoundingRect().center()
+
+        if isinstance(end, QGraphicsItem):
+            self.vertex2 = end.sceneBoundingRect().center()
+            self.width = min([self.MAX_WIDTH, start.boundingRect().width(), start.boundingRect().height(),
+                              end.boundingRect().width(), end.boundingRect().height()])
+        else:
+            self.vertex2 = end
+            self.width = min([self.MAX_WIDTH, start.boundingRect().width(), start.boundingRect().height()])
 
         self.setShapeMode(QGraphicsPixmapItem.ShapeMode.BoundingRectShape)
 
-        self.setPos(self.vertex1 - QPointF(item1.sceneBoundingRect().width() / 2, 0))
-
-        # min of MAX_WIDTH and boarders of vertex items
-        self.width = min([self.MAX_WIDTH, item1.boundingRect().width(), item1.boundingRect().height(),
-                          item2.boundingRect().width(), item2.boundingRect().height()])
+        self.setPos(self.vertex1 - QPointF(start.sceneBoundingRect().width() / 2, 0))
 
         self.update_pixmap(self.vertex2)
 
