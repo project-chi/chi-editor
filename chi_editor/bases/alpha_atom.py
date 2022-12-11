@@ -37,3 +37,16 @@ class AlphaAtom(QGraphicsItem):
         for line in self.lines:
             line.update_pixmap(self)
         return super().itemChange(change, value)
+
+    def boundingRect(self) -> QRectF:
+        # adjust for boarder width
+        adjust = self.pen.width() / 2
+        return self.rect.adjusted(-adjust, -adjust, adjust, adjust)
+
+    def paint(self, painter, option, widget=None) -> None:
+        # save + restore to reset pen and brush
+        painter.save()
+        painter.setPen(self.pen)
+        painter.setBrush(self.brush)
+        painter.drawEllipse(self.rect)
+        painter.restore()
