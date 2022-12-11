@@ -1,6 +1,6 @@
 from PyQt6.QtGui import QPen, QBrush, QColor, QFont
 from PyQt6.QtWidgets import QGraphicsItem
-from PyQt6.QtCore import QRectF, Qt
+from PyQt6.QtCore import QRectF, Qt, QVariant
 
 from .line import Line
 
@@ -17,7 +17,7 @@ class AlphaAtom(QGraphicsItem):
         self.text = element
         self.setFlags(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
-    def addLine(self, newLine: Line):
+    def addLine(self, newLine: Line) -> bool:
         for existing in self.lines:
             if (existing.vertex1, existing.vertex2) == (newLine.vertex1, newLine.vertex2):
                 # another line with the same control points already exists
@@ -25,7 +25,7 @@ class AlphaAtom(QGraphicsItem):
         self.lines.append(newLine)
         return True
 
-    def removeLine(self, line: Line):
+    def removeLine(self, line: Line) -> bool:
         for existing in self.lines:
             if (existing.vertex1, existing.vertex2) == (line.vertex1, line.vertex2):
                 self.scene().removeItem(existing)
@@ -33,7 +33,7 @@ class AlphaAtom(QGraphicsItem):
                 return True
         return False
 
-    def itemChange(self, change, value):
+    def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: QVariant) -> QVariant:
         for line in self.lines:
             line.update_pixmap(self.sceneBoundingRect().center())
         return super().itemChange(change, value)
