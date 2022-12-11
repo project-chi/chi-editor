@@ -33,7 +33,7 @@ class AlphaAtom(QGraphicsItem):
 
     def itemChange(self, change, value):
         for line in self.lines:
-            line.update_pixmap(self)
+            line.update_pixmap(self.sceneBoundingRect().center())
         return super().itemChange(change, value)
 
     def boundingRect(self) -> QRectF:
