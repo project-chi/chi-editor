@@ -1,9 +1,7 @@
 from PyQt6.QtGui import QPen, QBrush, QColor
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem
+from PyQt6.QtWidgets import QGraphicsItem
 from PyQt6.QtCore import QRectF
 
-from ..canvas import Canvas
-from ..constants import RESOURCES
 from .line import Line
 
 
