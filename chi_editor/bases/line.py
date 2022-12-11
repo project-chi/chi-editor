@@ -25,10 +25,10 @@ class Line(QGraphicsPixmapItem):
         self.width = min([self.MAX_WIDTH, vertex1.boundingRect().width(), vertex1.boundingRect().height(),
                           vertex2.boundingRect().width(), vertex2.boundingRect().height()])
 
-        self.__update_pixmap(self.vertex2)
+        self.update_pixmap(self.vertex2)
 
     # recalculate height and rotation of pixmap
-    def __update_pixmap(self, moved_vertex: QGraphicsItem) -> None:
+    def update_pixmap(self, moved_vertex: QGraphicsItem) -> None:
         # simple deduction of static vertex
         moved_point = moved_vertex.sceneBoundingRect().center()
 
