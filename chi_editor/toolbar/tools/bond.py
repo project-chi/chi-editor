@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsEllipseItem
 from PyQt6.QtCore import Qt, QPointF
 
 from ...bases.tool import Tool
@@ -33,7 +33,10 @@ class Bond(Tool):
                 new_end = atom.sceneBoundingRect().center()  # lock on atom
             else:
                 new_end = event.scenePos()
-            self.bond.update_pixmap(new_end)
+
+            mouse_item = QGraphicsEllipseItem(0, 0, 0, 0)
+            mouse_item.setPos(new_end)
+            self.bond.update_pixmap(mouse_item)
             return
 
     def mouse_release_event(self, event) -> None:
@@ -42,6 +45,7 @@ class Bond(Tool):
             if end_atom is not None and end_atom != self.startItem:
                 if self.startItem.addLine(self.bond):  # if line didn't exist before, we add it
                     end_atom.addLine(self.bond)
+                    self.bond.setV2(end_atom)
             else:
                 self.canvas.removeItem(self.bond)  # remove line from canvas
 

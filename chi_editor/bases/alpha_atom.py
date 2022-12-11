@@ -35,7 +35,7 @@ class AlphaAtom(QGraphicsItem):
 
     def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: QVariant) -> QVariant:
         for line in self.lines:
-            line.update_pixmap(self.sceneBoundingRect().center())
+            line.update_pixmap(self)
         return super().itemChange(change, value)
 
     def boundingRect(self) -> QRectF:
