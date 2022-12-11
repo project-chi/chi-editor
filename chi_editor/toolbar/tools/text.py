@@ -11,6 +11,7 @@ class Text(Tool):
         new_text.setPlainText('H')
         new_text.setFont(QFont('Impact'))
         new_text.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+        new_text.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
 
         self.canvas.addItem(new_text)
 
