@@ -18,8 +18,6 @@ class Text(Tool):
 
 
 class TextItem(QGraphicsTextItem):
-    _canvas: Canvas
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setPlainText('H')
@@ -27,11 +25,11 @@ class TextItem(QGraphicsTextItem):
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         self.setAcceptHoverEvents(True)
 
-    def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
+    def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
         HoverText(is_right=True, parent=self)
         HoverText(is_right=False, parent=self)
 
-    def hoverLeaveEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
+    def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
         for i in self.childItems():
             self.scene().removeItem(i)
 
