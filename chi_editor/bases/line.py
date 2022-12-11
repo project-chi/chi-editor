@@ -12,7 +12,7 @@ class Line(QGraphicsPixmapItem):
     height: float
     MAX_WIDTH = 30
 
-    def __init__(self, start: QGraphicsItem, *args, end: QGraphicsItem | QPointF, **kwargs) \
+    def __init__(self, start: QGraphicsItem, end: QGraphicsItem | QPointF, *args, **kwargs) \
             -> None:
         super().__init__(*args, **kwargs)
         self.vertex1 = start.sceneBoundingRect().center()
