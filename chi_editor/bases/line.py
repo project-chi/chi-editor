@@ -6,6 +6,12 @@ from PyQt6.QtCore import QPointF, QRectF
 
 
 class Line(QGraphicsPixmapItem):
+    """
+    Class that connects two graphics items with a pixmap (presumably line).
+    Parent class for all chemical bonds.
+
+    Pixmap item is chosen instead of line item because chemical bond can be different (double, dotted, bold-wedged)
+    """
     vertex1: QGraphicsItem
     vertex2: QGraphicsItem
     width: float
@@ -36,13 +42,13 @@ class Line(QGraphicsPixmapItem):
         self.vertex2 = end
 
     # recalculate height and rotation of pixmap
-    def update_pixmap(self, moved_vertex: QGraphicsItem) -> None:
+    def update_pixmap(self, moved_vertex: QGraphicsItem, following_mouse: bool = False) -> None:
         # simple deduction of static vertex
         moved_point = moved_vertex.sceneBoundingRect().center()
         self.setRotation(0)
         self.setScale(1)
 
-        # moved_vertex is second vertex or ellipse (which means it follows mouse)
+        # moved_vertex is second vertex or bond follows the mouse
         if moved_vertex is self.vertex2 or isinstance(moved_vertex, QGraphicsEllipseItem):
             static_point = self.vertex1.sceneBoundingRect().center()
         else:
