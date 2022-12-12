@@ -1,9 +1,8 @@
 from math import fabs, atan2, cos, degrees, radians
-from typing import cast
 
-from PyQt6.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QWidget, QStyleOptionGraphicsItem, QGraphicsEllipseItem, QGraphicsScene
-from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QBrush, QTransform
-from PyQt6.QtCore import QPointF, QRectF, QPoint
+from PyQt6.QtWidgets import QGraphicsItem, QGraphicsPixmapItem, QWidget, QStyleOptionGraphicsItem, QGraphicsEllipseItem
+from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor
+from PyQt6.QtCore import QPointF, QRectF
 
 
 class Line(QGraphicsPixmapItem):
