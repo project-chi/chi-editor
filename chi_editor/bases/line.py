@@ -49,7 +49,7 @@ class Line(QGraphicsPixmapItem):
         self.setScale(1)
 
         # moved_vertex is second vertex or bond follows the mouse
-        if moved_vertex is self.vertex2 or isinstance(moved_vertex, QGraphicsEllipseItem):
+        if moved_vertex is self.vertex2 or following_mouse:
             static_point = self.vertex1.sceneBoundingRect().center()
         else:
             static_point = self.vertex2.sceneBoundingRect().center()

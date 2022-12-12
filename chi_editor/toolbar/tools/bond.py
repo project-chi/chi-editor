@@ -36,7 +36,7 @@ class Bond(Tool):
 
             mouse_item = QGraphicsEllipseItem(0, 0, 0, 0)
             mouse_item.setPos(new_end)
-            self.bond.update_pixmap(mouse_item)
+            self.bond.update_pixmap(mouse_item, following_mouse=True)
             return
 
     def mouse_release_event(self, event) -> None:
