@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QSizePolicy, QVBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QSizePolicy
 
 from .canvas import Canvas
 from .constants import ASSETS
