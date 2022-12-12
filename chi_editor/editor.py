@@ -18,6 +18,7 @@ class Editor(QMainWindow):
         graphics_view.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         graphics_view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         graphics_view.setScene(canvas)
+        graphics_view.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
 
         self.setWindowTitle("Project Chi")
         self.setWindowIcon(QIcon(str(ASSETS / 'project-chi.png')))
