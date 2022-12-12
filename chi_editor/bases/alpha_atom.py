@@ -21,7 +21,8 @@ class AlphaAtom(QGraphicsItem):
 
     def addLine(self, newLine: Line) -> bool:
         for existing in self.lines:
-            if (existing.vertex1, existing.vertex2) == (newLine.vertex1, newLine.vertex2):
+            if (existing.vertex1, existing.vertex2) == (newLine.vertex1, newLine.vertex2) \
+                    or (existing.vertex2, existing.vertex1) == (newLine.vertex1, newLine.vertex2):
                 # another line with the same control points already exists
                 return False
         self.lines.append(newLine)

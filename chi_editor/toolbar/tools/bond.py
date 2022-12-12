@@ -21,7 +21,6 @@ class Bond(Tool):
             atom = self.atomAt(event.scenePos())
             if atom is not None:
                 self.startItem = atom
-
                 self.bond = Line(atom, event.scenePos())
                 self.canvas.addItem(self.bond)
                 return
@@ -43,9 +42,9 @@ class Bond(Tool):
         if self.bond is not None:
             end_atom = self.atomAt(event.scenePos())
             if end_atom is not None and end_atom != self.startItem:
+                self.bond.setV2(end_atom)
                 if self.startItem.addLine(self.bond):  # if line didn't exist before, we add it
                     end_atom.addLine(self.bond)
-                    self.bond.setV2(end_atom)
             else:
                 self.canvas.removeItem(self.bond)  # remove line from canvas
 
