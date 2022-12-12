@@ -67,14 +67,20 @@ class Line(QGraphicsPixmapItem):
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem = None, widget: QWidget = None) -> None:
         painter.save()
+        self.paintLine(painter)
+        painter.restore()
+
+    def paintLine(self, painter: QPainter) -> None:
+        """
+        This method determines how line is drawn.
+        It should be overrided by children classes
+        """
         pen = QPen(QColor("black"), 3)
         painter.setPen(pen)
 
-        # draw straight line in the parallel to y-axis
+        # draw straight line
         painter.drawLine(QPointF(self.width / 2, 0),
                          QPointF(self.width / 2, self.height))
-
-        painter.restore()
 
     def boundingRect(self) -> QRectF:
         return super(Line, self).boundingRect()
