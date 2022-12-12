@@ -10,11 +10,12 @@ class AlphaAtom(QGraphicsItem):
     pen: QPen = QPen(QColor("black"), 0)
     brush: QBrush = QBrush(QColor("black"))
     rect: QRectF = QRectF(0, 0, 100, 100)
-    lines: list[Line] = []
+    lines: list[Line]
 
     def __init__(self, element: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.text = element
+        self.lines = []
         self.setFlags(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
     def addLine(self, newLine: Line) -> bool:
