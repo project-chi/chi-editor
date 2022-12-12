@@ -7,8 +7,8 @@ from .line import Line
 
 class AlphaAtom(QGraphicsItem):
     text: str
-    pen: QPen = QPen(QColor("black"), 0)
-    brush: QBrush = QBrush(QColor("black"))
+    pen: QPen = QPen(QColor("white"), 1)
+    brush: QBrush = QBrush(QColor("white"))
     rect: QRectF = QRectF(0, 0, 100, 100)
     lines: list[Line]
 
@@ -16,6 +16,7 @@ class AlphaAtom(QGraphicsItem):
         super().__init__(*args, **kwargs)
         self.text = element
         self.lines = []
+        self.setZValue(1)
         self.setFlags(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
     def addLine(self, newLine: Line) -> bool:
@@ -50,8 +51,8 @@ class AlphaAtom(QGraphicsItem):
         painter.setPen(self.pen)
         painter.setBrush(self.brush)
         painter.drawEllipse(self.rect)
-        text_pen = QPen(QColor("white"), 10)
+        text_pen = QPen(QColor("black"), 10)
         painter.setPen(text_pen)
-        painter.setFont(QFont("Impact", 30))
+        painter.setFont(QFont("Helvetica", 40))
         painter.drawText(self.rect, Qt.AlignmentFlag.AlignCenter, self.text)
         painter.restore()

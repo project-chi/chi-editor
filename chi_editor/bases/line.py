@@ -27,7 +27,7 @@ class Line(QGraphicsPixmapItem):
             self.vertex2 = end
             self.width = min([self.MAX_WIDTH, start.boundingRect().width(), start.boundingRect().height(),
                               end.boundingRect().width(), end.boundingRect().height()])
-        else:
+        else:   # provide empty (0 radius ellipse) item for mouse movement and calculate width accordingly
             self.vertex2 = QGraphicsEllipseItem(0, 0, 0, 0)
             self.vertex2.setPos(end)
             self.width = min([self.MAX_WIDTH, start.boundingRect().width(), start.boundingRect().height()])
