@@ -55,4 +55,4 @@ class HoverText(QGraphicsTextItem):
         self.setFont(QFont('Impact'))
         self.setAcceptHoverEvents(True)
         self.setParentItem(parent)
-        self.setPos(10 if is_right else -10, 0)
+        self.setPos(parent.boundingRect().width() - 7 if is_right else -10, 0)
