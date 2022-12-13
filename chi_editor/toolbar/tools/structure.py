@@ -1,6 +1,7 @@
 import datamol.viz
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem, QGraphicsTextItem
+from PyQt6.QtCore import Qt
 from rdkit import Chem
 from datamol import viz, to_mol
 
@@ -12,8 +13,11 @@ from ...playground import mol_from_graphs, matrix_from_item
 
 class Structure(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
-        selected = self.canvas.selectedItems()
-        molecule_matrix = matrix_from_item(selected[0])
+        items = self.canvas.items(event.scenePos(), Qt.ItemSelectionMode.IntersectsItemShape)
+        if items == [] or not isinstance(items[0], AlphaAtom):
+            return super(Structure, self).mouse_press_event(event)
+
+        molecule_matrix = matrix_from_item(items[0])
         nodes = molecule_matrix[0]
         adjacent = molecule_matrix[1]
         molecule_smiles = Chem.MolToSmiles(mol_from_graphs(nodes, adjacent))
