@@ -18,4 +18,4 @@ class Oxygen(Tool):
 
     @property
     def asset(self) -> str:
-        return 'atom'
+        return 'oxygen'
