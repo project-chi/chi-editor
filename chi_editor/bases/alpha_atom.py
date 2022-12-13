@@ -9,7 +9,7 @@ class AlphaAtom(QGraphicsItem):
     text: str
     pen: QPen = QPen(QColor("white"), 1)
     brush: QBrush = QBrush(QColor("white"))
-    rect: QRectF = QRectF(0, 0, 100, 100)
+    rect: QRectF = QRectF(0, 0, 50, 50)
     lines: list[Line]
 
     def __init__(self, element: str, *args, **kwargs) -> None:
