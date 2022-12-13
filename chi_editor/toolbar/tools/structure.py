@@ -4,23 +4,19 @@ from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem, QGraphicsTe
 from rdkit import Chem
 from datamol import viz, to_mol
 
+from ...bases.alpha_atom import AlphaAtom
 from ...bases.tool import Tool
 from ...constants import RESOURCES
-from ...playground import MolFromGraphs
+from ...playground import mol_from_graphs, matrix_from_item
 
 
 class Structure(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
-        nodes = ["C", "C", "N", "C", "C", "C", "C", "O"]
-        adjacent = [[0., 1., 0., 0., 0., 0., 0., 0.],
-                            [1., 0., 2., 0., 0., 0., 0., 1.],
-                            [0., 2., 0., 1., 0., 0., 0., 0.],
-                            [0., 0., 1., 0., 1., 0., 0., 0.],
-                            [0., 0., 0., 1., 0., 1., 0., 0.],
-                            [0., 0., 0., 0., 1., 0., 1., 1.],
-                            [0., 0., 0., 0., 0., 1., 0., 0.],
-                            [0., 1., 0., 0., 0., 1., 0., 0.]]
-        molecule_smiles = Chem.MolToSmiles(MolFromGraphs(nodes, adjacent))
+        selected = self.canvas.selectedItems()
+        molecule_matrix = matrix_from_item(selected[0])
+        nodes = molecule_matrix[0]
+        adjacent = molecule_matrix[1]
+        molecule_smiles = Chem.MolToSmiles(mol_from_graphs(nodes, adjacent))
         molecule_dm = to_mol(mol=molecule_smiles)
         viz.to_image(mols=molecule_dm, use_svg=True, outfile=RESOURCES / 'molecule.svg')
         molecule = QGraphicsSvgItem('resources//molecule.svg')

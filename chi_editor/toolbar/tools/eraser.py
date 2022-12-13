@@ -6,7 +6,7 @@ from datamol import viz, to_mol
 
 from ...bases.tool import Tool
 from ...constants import RESOURCES
-from ...playground import MolFromGraphs
+from ...playground import mol_from_graphs
 
 
 class Eraser(Tool):
