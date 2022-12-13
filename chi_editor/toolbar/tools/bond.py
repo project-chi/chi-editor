@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsEllipseItem
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsEllipseItem, QGraphicsItem
 from PyQt6.QtCore import Qt, QPointF
 
 from ...bases.tool import Tool
@@ -21,7 +21,7 @@ class Bond(Tool):
             atom = self.atomAt(event.scenePos())
             if atom is not None:
                 self.startItem = atom
-                self.bond = Line(atom, event.scenePos())
+                self.bond = self.get_line(atom, event.scenePos())
                 self.canvas.addItem(self.bond)
                 return
 
@@ -50,6 +50,10 @@ class Bond(Tool):
 
         self.startItem = None   # type: ignore
         self.bond = None    # type: ignore
+
+    # should be @property
+    def get_line(self, start_atom: QGraphicsItem, mouse_pos: QPointF) -> Line:
+        pass
 
     @property
     def asset(self) -> str:
