@@ -9,6 +9,7 @@ from ...bases.alpha_atom import AlphaAtom
 class Bond(Tool):
     startItem: AlphaAtom = None
     bond: Line = None
+    type: int
 
     def atomAt(self, pos: QPointF) -> AlphaAtom | None:
         for item in self.canvas.items(pos, Qt.ItemSelectionMode.IntersectsItemShape):

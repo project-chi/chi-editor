@@ -41,8 +41,8 @@ def mol_from_graphs(node_list, adjacency_matrix):
 def is_line_between(atom1: AlphaAtom, atom2: AlphaAtom):
     for i in atom1.lines:
         if i.vertex1 == atom2 or i.vertex2 == atom2:
-            return True
-    return False
+            return i.multiplicity
+    return 0
 
 
 def matrix_from_item(atom: AlphaAtom):
@@ -60,7 +60,6 @@ def matrix_from_item(atom: AlphaAtom):
     adjacency = list(list(0 for i in range(len(alpha_atoms))) for i in range(len(alpha_atoms)))
     for i in range(len(alpha_atoms)):
         for j in range(len(alpha_atoms)):
-            if is_line_between(alpha_atoms[i], alpha_atoms[j]):
-                adjacency[i][j] = 1
+            adjacency[i][j] = is_line_between(alpha_atoms[i], alpha_atoms[j])
 
     return (list(map(lambda x: x.text, alpha_atoms)), adjacency, alpha_atoms)

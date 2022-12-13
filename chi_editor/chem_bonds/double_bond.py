@@ -5,7 +5,7 @@ from ..bases.line import Line
 
 
 class DoubleBond(Line):
-    multiplicity: int = 2
+    multiplicity = 2
 
     def paintLine(self, painter: QPainter) -> None:
         pen = QPen(QColor("black"), 3)

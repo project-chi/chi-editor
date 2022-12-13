@@ -5,7 +5,7 @@ from ..bases.line import Line
 
 
 class TripleBond(Line):
-    multiplicity: int = 3
+    multiplicity = 3
 
     def paintLine(self, painter: QPainter) -> None:
         pen = QPen(QColor("black"), 3)

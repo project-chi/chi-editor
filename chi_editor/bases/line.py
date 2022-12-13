@@ -17,6 +17,7 @@ class Line(QGraphicsPixmapItem):
     width: float
     height: float
     MAX_WIDTH = 30
+    multiplicity: int
 
     def __init__(self, start: QGraphicsItem, end: QGraphicsItem | QPointF, *args, **kwargs) \
             -> None:
