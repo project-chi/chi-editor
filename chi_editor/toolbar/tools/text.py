@@ -1,4 +1,5 @@
-from PyQt6.QtGui import QFont
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QKeyEvent, QFocusEvent
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsTextItem, QGraphicsItem, QGraphicsSceneHoverEvent
 
 from ...bases.tool import Tool
@@ -32,6 +33,20 @@ class TextItem(QGraphicsTextItem):
         for i in self.childItems():
             self.scene().removeItem(i)
 
+    def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        self.setTextInteractionFlags(Qt.TextInteractionFlag.TextEditable)
+        self.setFocus(Qt.FocusReason.MouseFocusReason)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() != Qt.Key.Key_Return:
+            QGraphicsTextItem.keyPressEvent(self, event)
+        else:
+            self.clearFocus()
+            self.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
+
+    def focusOutEvent(self, event: QFocusEvent) -> None:
+        self.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
+
 
 class HoverText(QGraphicsTextItem):
     def __init__(self, *args, is_right: bool, parent: TextItem, **kwargs):
@@ -40,4 +55,4 @@ class HoverText(QGraphicsTextItem):
         self.setFont(QFont('Impact'))
         self.setAcceptHoverEvents(True)
         self.setParentItem(parent)
-        self.setPos(10 if is_right else -10, 0)
+        self.setPos(parent.boundingRect().width() - 7 if is_right else -10, 0)
