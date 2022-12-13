@@ -1,17 +1,15 @@
-import datamol.viz
-from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem, QGraphicsTextItem
-from rdkit import Chem
-from datamol import viz, to_mol
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
 
 from ...bases.tool import Tool
-from ...constants import RESOURCES
-from ...playground import mol_from_graphs
 
 
 class Eraser(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
-        self.canvas.clear()
+        items = self.canvas.items(event.scenePos(), Qt.ItemSelectionMode.IntersectsItemShape)
+        if items == []:
+            return super(Eraser, self).mouse_press_event(event)
+        self.canvas.removeItem(items[0])
 
 
     @property
