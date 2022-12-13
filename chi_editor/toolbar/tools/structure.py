@@ -23,7 +23,10 @@ class Structure(Tool):
         molecule.setPos(event.scenePos())
         molecule.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
 
-
+        for i in molecule_matrix[2]:
+            for j in i.lines:
+                self.canvas.removeItem(j)
+            self.canvas.removeItem(i)
         self.canvas.addItem(molecule)
         self.canvas.selectedItems()
 
