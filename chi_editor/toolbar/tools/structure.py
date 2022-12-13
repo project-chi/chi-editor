@@ -1,9 +1,10 @@
 import datamol.viz
+from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtSvgWidgets import QGraphicsSvgItem
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem, QGraphicsTextItem
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem, QGraphicsTextItem, QGraphicsPixmapItem
 from PyQt6.QtCore import Qt
 from rdkit import Chem
-from datamol import viz, to_mol
+from datamol import viz, to_mol, incorrect_valence
 
 from ...bases.alpha_atom import AlphaAtom
 from ...bases.tool import Tool
@@ -22,6 +23,15 @@ class Structure(Tool):
         adjacent = molecule_matrix[1]
         molecule_smiles = Chem.MolToSmiles(mol_from_graphs(nodes, adjacent))
         molecule_dm = to_mol(mol=molecule_smiles)
+        if molecule_dm is None or incorrect_valence(molecule_dm):
+            image = QImage('resources//stathem.jpg')
+            molecule = QGraphicsPixmapItem(QPixmap.fromImage(image))
+            for i in molecule_matrix[2]:
+                for j in i.lines:
+                    self.canvas.removeItem(j)
+                self.canvas.removeItem(i)
+            self.canvas.addItem(molecule)
+            return
         viz.to_image(mols=molecule_dm, use_svg=True, outfile=RESOURCES / 'molecule.svg')
         molecule = QGraphicsSvgItem('resources//molecule.svg')
         molecule.setPos(event.scenePos())
