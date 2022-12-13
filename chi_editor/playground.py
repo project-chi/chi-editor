@@ -32,6 +32,9 @@ def mol_from_graphs(node_list, adjacency_matrix):
             elif bond == 2:
                 bond_type = Chem.rdchem.BondType.DOUBLE
                 mol.AddBond(node_to_idx[ix], node_to_idx[iy], bond_type)
+            elif bond == 3:
+                bond_type = Chem.rdchem.BondType.TRIPLE
+                mol.AddBond(node_to_idx[ix], node_to_idx[iy], bond_type)
 
     # Convert RWMol to Mol object
     mol = mol.GetMol()
