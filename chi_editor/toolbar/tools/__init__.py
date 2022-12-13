@@ -1,6 +1,7 @@
 from .arrow import Arrow
 from .eraser import Eraser
 from .nitrogen import Nitrogen
+from .oxygen import Oxygen
 from .structure import Structure
 from .text import Text
 from .bond import Bond
@@ -14,6 +15,7 @@ tools: tuple[type[Tool], ...] = (
     Bond,
     Atom,
     Nitrogen,
+    Oxygen,
     Structure,
     Eraser,
 )
