@@ -62,8 +62,8 @@ class Line(QGraphicsPixmapItem):
         self.setRotation(-1 * degrees(atan2(moved_point.x() - static_point.x(), moved_point.y() - static_point.y())))
 
         # hypotenuse of right triangle of vertices, rotation is an angle between them
-        if self.rotation() == 0:
-            self.height = fabs(static_point.y() - moved_point.y())
+        if self.rotation() % 360 == 90 or self.rotation() % 360 == 270:
+            self.height = fabs(static_point.x() - moved_point.x())
         else:
             self.height = fabs((static_point.y() - moved_point.y()) / cos(radians(self.rotation())))
 
