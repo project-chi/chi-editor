@@ -6,10 +6,11 @@ from .line import Line
 
 
 class AlphaAtom(QGraphicsItem):
-    text: str
     pen: QPen = QPen(QColor("white"), 1)
     brush: QBrush = QBrush(QColor("white"))
     rect: QRectF = QRectF(0, 0, 50, 50)
+
+    text: str
     lines: list[Line]
 
     def __init__(self, element: str, *args, **kwargs) -> None:
@@ -19,7 +20,7 @@ class AlphaAtom(QGraphicsItem):
         self.setZValue(1)
         self.setFlags(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
-    def addLine(self, newLine: Line) -> bool:
+    def add_line(self, newLine: Line) -> bool:
         for existing in self.lines:
             if (existing.vertex1, existing.vertex2) == (newLine.vertex1, newLine.vertex2) \
                     or (existing.vertex2, existing.vertex1) == (newLine.vertex1, newLine.vertex2):
@@ -28,7 +29,7 @@ class AlphaAtom(QGraphicsItem):
         self.lines.append(newLine)
         return True
 
-    def removeLine(self, line: Line) -> bool:
+    def remove_line(self, line: Line) -> bool:
         for existing in self.lines:
             if (existing.vertex1, existing.vertex2) == (line.vertex1, line.vertex2):
                 self.scene().removeItem(existing)
