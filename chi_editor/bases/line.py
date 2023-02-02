@@ -39,7 +39,7 @@ class Line(QGraphicsPixmapItem):
 
         self.update_pixmap(self.vertex2)
 
-    def setV2(self, end: QGraphicsItem) -> None:
+    def set_v2(self, end: QGraphicsItem) -> None:
         self.vertex2 = end
 
     # recalculate height and rotation of pixmap
@@ -74,10 +74,10 @@ class Line(QGraphicsPixmapItem):
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem = None, widget: QWidget = None) -> None:
         painter.save()
-        self.paintLine(painter)
+        self.paint_line(painter)
         painter.restore()
 
-    def paintLine(self, painter: QPainter) -> None:
+    def paint_line(self, painter: QPainter) -> None:
         """
         This method determines how line is drawn.
         It should be overrided by children classes
