@@ -49,7 +49,6 @@ class AlphaAtom(QGraphicsItem):
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget=None) -> None:
         # save + restore to reset pen and brush
-        super(AlphaAtom, self).paint(painter, option, widget)
         painter.save()
         painter.setPen(self.pen)
         painter.setBrush(self.brush)
