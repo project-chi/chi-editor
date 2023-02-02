@@ -9,7 +9,6 @@ from ...bases.alpha_atom import AlphaAtom
 class Bond(Tool):
     startItem: AlphaAtom = None
     bond: Line = None
-    type: int
 
     def atom_at(self, pos: QPointF) -> AlphaAtom | None:
         for item in self.canvas.items(pos, Qt.ItemSelectionMode.IntersectsItemShape):
@@ -46,8 +45,8 @@ class Bond(Tool):
                 self.bond.set_v2(end_atom)
                 if self.startItem.add_line(self.bond):  # if line didn't exist before, we add it
                     end_atom.add_line(self.bond)
-            else:
-                self.canvas.removeItem(self.bond)  # remove line from canvas
+                else:
+                    self.canvas.removeItem(self.bond)  # remove line from canvas
 
         self.startItem = None   # type: ignore
         self.bond = None    # type: ignore
