@@ -10,8 +10,8 @@ class AlphaAtom(QGraphicsItem):
     brush: QBrush = QBrush(QColor("white"))
     rect: QRectF = QRectF(0, 0, 50, 50)
 
-    text: str
-    lines: list[Line]
+    _text: str
+    _lines: list[Line]
 
     def __init__(self, element: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
