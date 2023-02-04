@@ -85,4 +85,4 @@ class Line(QGraphicsPixmapItem):
                          QPointF(self.width / 2, self.height))
 
     def boundingRect(self) -> QRectF:
-        return super(Line, self).boundingRect()
+        return super().boundingRect()
