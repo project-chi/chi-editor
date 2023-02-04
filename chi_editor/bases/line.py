@@ -10,24 +10,23 @@ class Line(QGraphicsPixmapItem):
 
     vertex1: QGraphicsItem
     vertex2: QGraphicsItem
-    width: float
+    width: float = 30
     height: float
-    MAX_WIDTH = 30
     multiplicity: int
 
-    def __init__(self, start: QGraphicsItem, end: QGraphicsItem | QPointF, *args, **kwargs) \
-            -> None:
+    def __init__(self,
+                 start: QGraphicsItem,
+                 end: QGraphicsItem | QPointF,
+                 *args,
+                 **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.vertex1 = start
 
         if isinstance(end, QGraphicsItem):
             self.vertex2 = end
-            self.width = min([self.MAX_WIDTH, start.boundingRect().width(), start.boundingRect().height(),
-                              end.boundingRect().width(), end.boundingRect().height()])
-        else:   # provide empty (0 radius ellipse) item for mouse movement and calculate width accordingly
+        else:
             self.vertex2 = QGraphicsEllipseItem(0, 0, 0, 0)
             self.vertex2.setPos(end)
-            self.width = min([self.MAX_WIDTH, start.boundingRect().width(), start.boundingRect().height()])
 
         self.setShapeMode(QGraphicsPixmapItem.ShapeMode.BoundingRectShape)
 
