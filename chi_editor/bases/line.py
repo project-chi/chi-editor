@@ -6,12 +6,8 @@ from PyQt6.QtCore import QPointF, QRectF
 
 
 class Line(QGraphicsPixmapItem):
-    """
-    Class that connects two graphics items with a pixmap (presumably line).
-    Parent class for all chemical bonds.
+    """Connects two graphics items with a line."""
 
-    Pixmap item is chosen instead of line item because chemical bond can be different (double, dotted, bold-wedged)
-    """
     vertex1: QGraphicsItem
     vertex2: QGraphicsItem
     width: float
