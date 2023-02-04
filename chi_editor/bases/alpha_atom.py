@@ -6,7 +6,9 @@ from .line import Line
 
 
 class AlphaAtom(QGraphicsItem):
-    pen: QPen = QPen(QColor("white"), 1)
+    background_pen: QPen = QPen(QColor("white"), 1)
+    text_pen: QPen = QPen(QColor("black"), 10)
+    text_font: QFont = QFont("Helvetica", 40)
     brush: QBrush = QBrush(QColor("white"))
     rect: QRectF = QRectF(0, 0, 50, 50)
 
@@ -44,17 +46,16 @@ class AlphaAtom(QGraphicsItem):
 
     def boundingRect(self) -> QRectF:
         # adjust for boarder width
-        adjust = self.pen.width() / 2
+        adjust = self.background_pen.width() / 2
         return self.rect.adjusted(-adjust, -adjust, adjust, adjust)
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget=None) -> None:
         # save + restore to reset pen and brush
         painter.save()
-        painter.setPen(self.pen)
+        painter.setPen(self.background_pen)
         painter.setBrush(self.brush)
         painter.drawEllipse(self.rect)
-        text_pen = QPen(QColor("black"), 10)
-        painter.setPen(text_pen)
-        painter.setFont(QFont("Helvetica", 40))
+        painter.setPen(self.text_pen)
+        painter.setFont(self.text_font)
         painter.drawText(self.rect, Qt.AlignmentFlag.AlignCenter, self.text)
         painter.restore()
