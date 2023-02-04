@@ -23,7 +23,6 @@ class Bond(Tool):
                 self.startItem = atom
                 self.bond = self.get_line(atom, event.scenePos())
                 self.canvas.addItem(self.bond)
-                return
 
     def mouse_move_event(self, event: QGraphicsSceneMouseEvent) -> None:
         if self.bond is not None:
@@ -36,7 +35,6 @@ class Bond(Tool):
             mouse_item = QGraphicsEllipseItem(0, 0, 0, 0)
             mouse_item.setPos(new_end)
             self.bond.update_pixmap(mouse_item, following_mouse=True)
-            return
 
     def mouse_release_event(self, event) -> None:
         if self.bond is None:
