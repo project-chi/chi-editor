@@ -4,12 +4,12 @@ from .bonds.create_single_bond import CreateSingleBond
 from .bonds.create_triple_bond import CreateTripleBond
 from .bonds.create_wedge_bond import CreateWedgeBond
 from .eraser import Eraser
-from .nitrogen import Nitrogen
-from .oxygen import Oxygen
+from .atoms.carbon import Carbon
+from .atoms.nitrogen import Nitrogen
+from .atoms.oxygen import Oxygen
 from .structure import Structure
 from .text import Text
 from .bond import Bond
-from .atom import Atom
 from ...bases.tool import Tool
 
 
@@ -20,7 +20,7 @@ tools: tuple[type[Tool], ...] = (
     CreateDoubleBond,
     CreateTripleBond,
     CreateWedgeBond,
-    Atom,
+    Carbon,
     Nitrogen,
     Oxygen,
     Structure,
