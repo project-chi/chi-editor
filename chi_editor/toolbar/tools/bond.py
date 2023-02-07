@@ -9,7 +9,6 @@ from ...bases.alpha_atom import AlphaAtom
 class Bond(Tool):
     startItem: AlphaAtom = None
     bond: Line = None
-    type: int
 
     def atom_at(self, pos: QPointF) -> AlphaAtom | None:
         for item in self.canvas.items(pos, Qt.ItemSelectionMode.IntersectsItemShape):
@@ -24,7 +23,6 @@ class Bond(Tool):
                 self.startItem = atom
                 self.bond = self.get_line(atom, event.scenePos())
                 self.canvas.addItem(self.bond)
-                return
 
     def mouse_move_event(self, event: QGraphicsSceneMouseEvent) -> None:
         if self.bond is not None:
@@ -37,20 +35,22 @@ class Bond(Tool):
             mouse_item = QGraphicsEllipseItem(0, 0, 0, 0)
             mouse_item.setPos(new_end)
             self.bond.update_pixmap(mouse_item, following_mouse=True)
-            return
 
     def mouse_release_event(self, event) -> None:
-        if self.bond is not None:
-            end_atom = self.atom_at(event.scenePos())
-            if end_atom is not None and end_atom != self.startItem:
-                self.bond.set_v2(end_atom)
-                if self.startItem.add_line(self.bond):  # if line didn't exist before, we add it
-                    end_atom.add_line(self.bond)
-            else:
-                self.canvas.removeItem(self.bond)  # remove line from canvas
+        if self.bond is None:
+            return
 
-        self.startItem = None   # type: ignore
-        self.bond = None    # type: ignore
+        end_atom = self.atom_at(event.scenePos())
+        if end_atom is None or end_atom == self.startItem:
+            self.canvas.removeItem(self.bond)
+            return
+
+        self.bond.set_v2(end_atom)
+        only_one_line_between = self.startItem.add_line(self.bond)
+        if not only_one_line_between:
+            self.canvas.removeItem(self.bond)
+        else:   # if line didn't exist before, we add it
+            end_atom.add_line(self.bond)
 
     # should be @property
     def get_line(self, start_atom: QGraphicsItem, mouse_pos: QPointF) -> Line:

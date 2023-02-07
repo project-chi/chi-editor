@@ -6,32 +6,27 @@ from PyQt6.QtCore import QPointF, QRectF
 
 
 class Line(QGraphicsPixmapItem):
-    """
-    Class that connects two graphics items with a pixmap (presumably line).
-    Parent class for all chemical bonds.
+    """Connects two graphics items with a line."""
 
-    Pixmap item is chosen instead of line item because chemical bond can be different (double, dotted, bold-wedged)
-    """
     vertex1: QGraphicsItem
     vertex2: QGraphicsItem
-    width: float
+    width: float = 30
     height: float
-    MAX_WIDTH = 30
     multiplicity: int
 
-    def __init__(self, start: QGraphicsItem, end: QGraphicsItem | QPointF, *args, **kwargs) \
-            -> None:
+    def __init__(self,
+                 start: QGraphicsItem,
+                 end: QGraphicsItem | QPointF,
+                 *args,
+                 **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.vertex1 = start
 
         if isinstance(end, QGraphicsItem):
             self.vertex2 = end
-            self.width = min([self.MAX_WIDTH, start.boundingRect().width(), start.boundingRect().height(),
-                              end.boundingRect().width(), end.boundingRect().height()])
-        else:   # provide empty (0 radius ellipse) item for mouse movement and calculate width accordingly
+        else:
             self.vertex2 = QGraphicsEllipseItem(0, 0, 0, 0)
             self.vertex2.setPos(end)
-            self.width = min([self.MAX_WIDTH, start.boundingRect().width(), start.boundingRect().height()])
 
         self.setShapeMode(QGraphicsPixmapItem.ShapeMode.BoundingRectShape)
 
@@ -62,8 +57,8 @@ class Line(QGraphicsPixmapItem):
         self.setRotation(-1 * degrees(atan2(moved_point.x() - static_point.x(), moved_point.y() - static_point.y())))
 
         # hypotenuse of right triangle of vertices, rotation is an angle between them
-        if self.rotation() == 0:
-            self.height = fabs(static_point.y() - moved_point.y())
+        if self.rotation() % 360 == 90 or self.rotation() % 360 == 270:
+            self.height = fabs(static_point.x() - moved_point.x())
         else:
             self.height = fabs((static_point.y() - moved_point.y()) / cos(radians(self.rotation())))
 
@@ -90,4 +85,4 @@ class Line(QGraphicsPixmapItem):
                          QPointF(self.width / 2, self.height))
 
     def boundingRect(self) -> QRectF:
-        return super(Line, self).boundingRect()
+        return super().boundingRect()
