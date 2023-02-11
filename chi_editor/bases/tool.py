@@ -29,6 +29,12 @@ class Tool(QAction):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         pass
 
+    def mouse_move_event(self, event: QGraphicsSceneMouseEvent) -> None:
+        pass
+
+    def mouse_release_event(self, event: QGraphicsSceneMouseEvent) -> None:
+        pass
+
     @property
     def asset(self) -> str:
         """Returns the name of the icon for this tool without extension."""
