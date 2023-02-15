@@ -22,6 +22,12 @@ class AlphaAtom(QGraphicsItem):
         self.setZValue(1)
         self.setFlags(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
+    def remove(self):
+        list_of_lines = list(self.lines)
+        for line in list_of_lines:
+            line.remove()
+        self.scene().removeItem(self)
+
     def add_line(self, new_line: Line) -> bool:
         for existing in self.lines:
             if (existing.vertex1, existing.vertex2) == (new_line.vertex1, new_line.vertex2) \
@@ -30,15 +36,6 @@ class AlphaAtom(QGraphicsItem):
                 return False
         self.lines.append(new_line)
         return True
-
-    def remove_line(self, line: Line) -> bool:
-        for existing in self.lines:
-            if (existing.vertex1, existing.vertex2) == (line.vertex1, line.vertex2) or\
-                    (existing.vertex1, existing.vertex2) == (line.vertex2, line.vertex1):
-                self.scene().removeItem(existing)
-                self.lines.remove(existing)
-                return True
-        return False
 
     def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: QVariant) -> QVariant:
         for line in self.lines:
