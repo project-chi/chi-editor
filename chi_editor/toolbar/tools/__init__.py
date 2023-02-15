@@ -10,6 +10,7 @@ from .atoms.oxygen import Oxygen
 from .structure import Structure
 from .text import Text
 from .bond import Bond
+from .drag import Drag
 from ...bases.tool import Tool
 
 
@@ -25,4 +26,5 @@ tools: tuple[type[Tool], ...] = (
     Oxygen,
     Structure,
     Eraser,
+    Drag
 )
