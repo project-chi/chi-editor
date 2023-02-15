@@ -1,6 +1,7 @@
 from PyQt6.QtGui import QAction, QActionGroup
-from PyQt6.QtWidgets import QToolBar
+from PyQt6.QtWidgets import QToolBar, QGraphicsView
 
+from ..toolbar.tools.drag import Drag
 from .tools import tools
 from ..canvas import Canvas
 
@@ -22,6 +23,14 @@ class CanvasToolBar(QToolBar):
             self.addAction(tool)
             action_group.addAction(tool)
 
-    def actionTriggered(self, action: QAction) -> None:
-        print('click')
+        self.actionTriggered.connect(self.changeAction)
+
+    def changeAction(self, action: QAction) -> None:
         self._canvas.current_action = action
+
+        if isinstance(action, Drag):
+            for view in self._canvas.views():
+                view.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)
+        else:
+            for view in self._canvas.views():
+                view.setDragMode(QGraphicsView.DragMode.NoDrag)
