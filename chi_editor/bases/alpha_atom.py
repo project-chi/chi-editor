@@ -33,7 +33,8 @@ class AlphaAtom(QGraphicsItem):
 
     def remove_line(self, line: Line) -> bool:
         for existing in self.lines:
-            if (existing.vertex1, existing.vertex2) == (line.vertex1, line.vertex2):
+            if (existing.vertex1, existing.vertex2) == (line.vertex1, line.vertex2) or\
+                    (existing.vertex1, existing.vertex2) == (line.vertex2, line.vertex1):
                 self.scene().removeItem(existing)
                 self.lines.remove(existing)
                 return True
