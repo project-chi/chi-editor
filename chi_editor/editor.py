@@ -12,13 +12,7 @@ class Editor(QMainWindow):
         super().__init__(*args, **kwargs)
 
         canvas = Canvas(self)
-        canvas.setSceneRect(QRectF(self.geometry()))
-
         graphics_view = QGraphicsView(self)
-        graphics_view.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-        graphics_view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        graphics_view.setScene(canvas)
-        graphics_view.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
 
         self.setWindowTitle("Project Chi")
         self.setWindowIcon(QIcon(str(ASSETS / 'project-chi.png')))
@@ -26,3 +20,10 @@ class Editor(QMainWindow):
 
         self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, CanvasToolBar(canvas=canvas))
         self.setCentralWidget(graphics_view)
+
+        graphics_view.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        graphics_view.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        graphics_view.setScene(canvas)
+        graphics_view.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
+
+        canvas.setSceneRect(QRectF(self.rect()))
