@@ -16,7 +16,8 @@ class Eraser(Tool):
 
             if isinstance(items[0], AlphaAtom):
                 atom = items[0]
-                for line in atom.lines:
+                list_of_lines = list(atom.lines)
+                for line in list_of_lines:
                     line.vertex1.remove_line(line)
                     line.vertex2.remove_line(line)
                     self.canvas.removeItem(line)
