@@ -17,13 +17,14 @@ class Eraser(Tool):
             if isinstance(items[0], AlphaAtom):
                 atom = items[0]
                 for line in atom.lines:
-                    atom.remove_line(line)
+                    line.vertex1.remove_line(line)
+                    line.vertex2.remove_line(line)
                     self.canvas.removeItem(line)
 
             elif isinstance(items[0], Line):
                 line = items[0]
-                line.vertex1.removeLine(line)
-                line.vertex2.removeLine(line)
+                line.vertex1.remove_line(line)
+                line.vertex2.remove_line(line)
 
             self.canvas.removeItem(items[0])
         else:
