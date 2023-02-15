@@ -27,10 +27,3 @@ class CanvasToolBar(QToolBar):
 
     def changeAction(self, action: QAction) -> None:
         self._canvas.current_action = action
-
-        if isinstance(action, Drag):
-            for view in self._canvas.views():
-                view.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)
-        else:
-            for view in self._canvas.views():
-                view.setDragMode(QGraphicsView.DragMode.NoDrag)
