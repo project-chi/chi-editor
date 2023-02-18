@@ -49,18 +49,15 @@ class Editor(QMainWindow):
         hbox.addStretch()
         hbox.addLayout(vbox)
 
-        # Create a widget to hold the horizontal layout
-        widget = QWidget()
-        widget.setLayout(hbox)
+        layout = QVBoxLayout()
+        layout.addWidget(self.graphics_view)
+        layout.addLayout(hbox)
 
-        # Create a stacked layout to hold the view and the widget with buttons
-        stack = QStackedLayout()
-        stack.addWidget(self.graphics_view)
-        stack.addWidget(widget)
-
-        # Set the stacked layout as the central widget of the main window
+        # Create a central widget and set its layout
         central_widget = QWidget()
-        central_widget.setLayout(stack)
+        central_widget.setLayout(layout)
+
+        # Set the central widget of the QMainWindow
         self.setCentralWidget(central_widget)
 
         # Set the view to be interactable
