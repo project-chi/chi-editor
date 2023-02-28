@@ -1,4 +1,4 @@
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QSizePolicy
 
@@ -26,3 +26,7 @@ class Editor(QMainWindow):
         graphics_view.setScene(canvas)
         graphics_view.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
         self.show()
+
+        graphics_view_height = graphics_view.geometry().height()
+        graphics_view_width = graphics_view.geometry().width()
+        canvas.setSceneRect(0, 0, graphics_view_width, graphics_view_height)
