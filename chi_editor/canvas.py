@@ -10,6 +10,7 @@ Tool = TypeVar('Tool')
 class Canvas(QGraphicsScene):
     current_action: Tool
     min_bounding_rect: QRectF
+    """Area bounding all the items on scene"""
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
