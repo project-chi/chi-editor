@@ -1,10 +1,11 @@
-from PyQt6.QtCore import Qt, QRectF
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QSizePolicy
 
 from .canvas import Canvas
 from .constants import ASSETS
 from .toolbar import CanvasToolBar
+from .canvas_view import CanvasView
 
 
 class Editor(QMainWindow):
@@ -12,7 +13,7 @@ class Editor(QMainWindow):
         super().__init__(*args, **kwargs)
 
         canvas = Canvas(self)
-        graphics_view = QGraphicsView(self)
+        graphics_view = CanvasView(self)
 
         self.setWindowTitle("Project Chi")
         self.setWindowIcon(QIcon(str(ASSETS / 'project-chi.png')))
@@ -30,3 +31,4 @@ class Editor(QMainWindow):
         graphics_view_height = graphics_view.geometry().height()
         graphics_view_width = graphics_view.geometry().width()
         canvas.setSceneRect(0, 0, graphics_view_width, graphics_view_height)
+
