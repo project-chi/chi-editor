@@ -13,7 +13,7 @@ class Canvas(QGraphicsScene):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.min_bounding_rect = self.sceneRect()
+        self.min_bounding_rect = super().sceneRect()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self.current_action.mouse_press_event(event)
@@ -23,3 +23,9 @@ class Canvas(QGraphicsScene):
 
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self.current_action.mouse_release_event(event)
+
+    def sceneRect(self) -> QRectF:
+        return self.min_bounding_rect
+
+    def setSceneRect(self, x: float, y: float, w: float, h: float) -> None:
+        self.min_bounding_rect = self.min_bounding_rect.united(QRectF(x, y, w, h))
