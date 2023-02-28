@@ -11,6 +11,9 @@ from ... import bases
 from ...bases.alpha_atom import AlphaAtom
 from ...bases.line import Line
 from ...bases.tool import Tool
+from ...chem_bonds.double_bond import DoubleBond
+from ...chem_bonds.single_bond import SingleBond
+from ...chem_bonds.triple_bond import TripleBond
 from ...constants import RESOURCES
 from ...playground import mol_from_graphs, matrix_from_item
 
@@ -59,10 +62,15 @@ class Structure(Tool):
         for bond in molecule_dm.GetBonds():
             start_position = bond.GetBeginAtomIdx()
             end_position = bond.GetEndAtomIdx()
-            bond_type = bond.GetBondType()
-            new_bond = Line(atoms[start_position], atoms[end_position])
-            atoms[start_position].add_line(new_bond)
-            atoms[end_position].add_line(new_bond)
+            bond_type = bond.GetBondTypeAsDouble()
+            if bond_type == 1 :
+                new_bond = SingleBond(atoms[start_position], atoms[end_position])
+            elif bond_type == 2:
+                new_bond = DoubleBond(atoms[start_position], atoms[end_position])
+            elif bond_type == 3:
+                new_bond = TripleBond(atoms[start_position], atoms[end_position])
+            # atoms[start_position].add_line(new_bond)
+            # atoms[end_position].add_line(new_bond)
             self.canvas.addItem(new_bond)
 
         # viz.to_image(mols=molecule_dm, use_svg=True, outfile=RESOURCES / 'molecule.svg')
