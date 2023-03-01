@@ -1,12 +1,10 @@
 from PyQt6.QtCore import Qt, QRectF
-from PyQt6.QtGui import QIcon, QColor, QTransform, QBrush
-from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QSizePolicy, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, \
-    QStackedLayout, QBoxLayout
+from PyQt6.QtGui import QIcon, QTransform
+from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QHBoxLayout, QWidget
 
 from .canvas import Canvas
 from .constants import ASSETS
 from .toolbar import CanvasToolBar
-from .canvas_view import CanvasView
 
 
 class Editor(QMainWindow):
