@@ -1,7 +1,6 @@
 from PyQt6.QtGui import QAction, QActionGroup
-from PyQt6.QtWidgets import QToolBar, QGraphicsView
+from PyQt6.QtWidgets import QToolBar
 
-from ..toolbar.tools.drag import Drag
 from .tools import tools
 from ..canvas import Canvas
 
