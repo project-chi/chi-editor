@@ -41,6 +41,7 @@ def mol_from_graphs(node_list, adjacency_matrix):
 
     return mol
 
+
 def is_line_between(atom1: AlphaAtom, atom2: AlphaAtom):
     for i in atom1.lines:
         if i.vertex1 == atom2 or i.vertex2 == atom2:
