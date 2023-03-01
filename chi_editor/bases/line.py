@@ -37,6 +37,12 @@ class Line(QGraphicsPixmapItem):
     def set_v2(self, end: QGraphicsItem) -> None:
         self.vertex2 = end
 
+    def remove(self):
+        self.vertex1.lines.remove(self)
+        self.vertex2.lines.remove(self)
+        if self.scene():
+            self.scene().removeItem(self)
+
     def update_pixmap(self, moved_vertex: QGraphicsItem, following_mouse: bool = False) -> None:
         moved_point = moved_vertex.sceneBoundingRect().center()
         self.setRotation(0)
