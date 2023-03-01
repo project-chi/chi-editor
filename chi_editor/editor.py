@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QSizePolicy, QPushButton
 from .canvas import Canvas
 from .constants import ASSETS
 from .toolbar import CanvasToolBar
+from .canvas_view import CanvasView
 
 
 class Editor(QMainWindow):
@@ -33,7 +34,7 @@ class Editor(QMainWindow):
         # Window settings
         self.setWindowTitle("Project Chi")
         self.setWindowIcon(QIcon(str(ASSETS / 'project-chi.png')))
-        self.resize(1000, 800)
+        self.resize(1000, 600)
 
         # The biggest part of interface
         self.workspace = QWidget()  # create workspace
