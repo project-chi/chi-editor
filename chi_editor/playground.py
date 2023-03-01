@@ -66,4 +66,4 @@ def matrix_from_item(atom: AlphaAtom):
         for j in range(len(alpha_atoms)):
             adjacency[i][j] = is_line_between(alpha_atoms[i], alpha_atoms[j])
 
-    return (list(map(lambda x: x.text, alpha_atoms)), adjacency, alpha_atoms)
+    return list(map(lambda x: x.text, alpha_atoms)), adjacency, alpha_atoms
