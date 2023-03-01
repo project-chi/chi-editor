@@ -23,7 +23,7 @@ def create_molecule(atom: AlphaAtom) -> (Chem.Mol, list):
     return molecule_dm, molecule_matrix
 
 
-def create_atoms(molecule: Chem.Mol, event: QGraphicsSceneMouseEvent) -> list:
+def create_atoms(molecule: Chem.Mol, position) -> list:
     Chem.rdDepictor.Compute2DCoords(molecule)
     zeros = [0, 0]
     atoms = [None for _ in range(molecule.GetNumAtoms())]
@@ -32,12 +32,12 @@ def create_atoms(molecule: Chem.Mol, event: QGraphicsSceneMouseEvent) -> list:
         print(atom.GetSymbol(), positions.x, positions.y)
         new_atom = AlphaAtom(atom.GetSymbol())
         if i == 0:
-            new_atom.setPos(event.scenePos())
+            new_atom.setPos(position)
             zeros[0] = positions.x
             zeros[1] = positions.y
         else:
-            new_atom.setPos((positions.x - zeros[0]) * 100 + event.scenePos().x(),
-                            (positions.y - zeros[1]) * 100 + event.scenePos().y())
+            new_atom.setPos((positions.x - zeros[0]) * 100 + position.x(),
+                            (positions.y - zeros[1]) * 100 + position.y())
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
         atoms[i] = new_atom
@@ -71,7 +71,7 @@ class Structure(Tool):
             molecule, molecule_matrix = create_molecule(items[0])
             if not self.check_correctness(molecule, molecule_matrix):
                 return
-            atoms = create_atoms(molecule, event)
+            atoms = create_atoms(molecule, event.scenePos())
             for atom in atoms:
                 self.canvas.addItem(atom)
             self.put_bonds(molecule, atoms)
@@ -86,7 +86,7 @@ class Structure(Tool):
                         return
                     cur_atoms = molecule_matrix[2]
                     old_atoms.extend(cur_atoms)
-                    new_atoms = create_atoms(molecule, event)
+                    new_atoms = create_atoms(molecule, item.scenePos())
                     atoms.extend(new_atoms)
                     self.put_bonds(molecule, new_atoms)
                     self.remove_obsolete(molecule_matrix)
