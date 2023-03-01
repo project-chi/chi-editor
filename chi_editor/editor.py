@@ -43,6 +43,7 @@ class Editor(QMainWindow):
         self.graphics_view = CanvasView(self)    # create QGraphicsView
         self.graphics_view\
             .setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)     # Set QGraphicsView position
+        self.graphics_view.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
 
         # Initialize GGraphicsScene called canvas
         self.canvas = Canvas(self)
