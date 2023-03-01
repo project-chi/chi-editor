@@ -44,8 +44,7 @@ class Editor(QMainWindow):
         self.graphics_view.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
 
         # Initialize GGraphicsScene called canvas
-        self.canvas = Canvas(self)
-        self.canvas.setSceneRect(QRectF(self.geometry()))
+        self.canvas = Canvas(QRectF(self.graphics_view.geometry()))
 
         # Bind GraphicsScene to GraphicsView
         self.graphics_view.setScene(self.canvas)
