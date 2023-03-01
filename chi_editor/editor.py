@@ -40,7 +40,7 @@ class Editor(QMainWindow):
         self.workspace = QWidget()  # create workspace
 
         # Initialize QGraphicsView
-        self.graphics_view = CanvasView(self)    # create QGraphicsView
+        self.graphics_view = QGraphicsView(self)    # create QGraphicsView
         self.graphics_view\
             .setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)     # Set QGraphicsView position
         self.graphics_view.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
