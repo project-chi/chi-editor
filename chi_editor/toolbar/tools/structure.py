@@ -1,6 +1,3 @@
-from collections import namedtuple
-from typing import List
-
 import rdkit.Chem.rdDepictor
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem, QGraphicsPixmapItem
@@ -14,7 +11,6 @@ from ...chem_bonds.double_bond import DoubleBond
 from ...chem_bonds.single_bond import SingleBond
 from ...chem_bonds.triple_bond import TripleBond
 from ...playground import mol_from_graphs, matrix_from_item
-from ...bases.line import Line
 
 
 def create_molecule(atom: AlphaAtom) -> (Chem.Mol, list):
@@ -31,7 +27,7 @@ def create_atoms(molecule: Chem.Mol, position) -> list:
     Chem.rdDepictor.Compute2DCoords(molecule)
     atoms = [None for _ in range(molecule.GetNumAtoms())]
 
-    molecule_shift: QPointF = get_geometrical_center(
+    molecule_center: QPointF = get_geometrical_center(
         [
             QPointF(
                 molecule.GetConformer().GetAtomPosition(i).x,
@@ -45,8 +41,8 @@ def create_atoms(molecule: Chem.Mol, position) -> list:
         positions = molecule.GetConformer().GetAtomPosition(i)
         new_atom = AlphaAtom(atom.GetSymbol())
 
-        new_atom.setPos((positions.x - molecule_shift.x()) * 100 + position.x(),
-                        (positions.y - molecule_shift.y()) * 100 + position.y())
+        new_atom.setPos((positions.x - molecule_center.x()) * 100 + position.x(),
+                        (positions.y - molecule_center.y()) * 100 + position.y())
 
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
@@ -80,8 +76,8 @@ def get_geometrical_center(points: list[QPointF]) -> QPointF:
         geometrical_center.setX(geometrical_center.x() + point.x())
         geometrical_center.setY(geometrical_center.y() + point.y())
         atoms_count += 1
-    geometrical_center.setX(geometrical_center.x()/atoms_count)
-    geometrical_center.setY(geometrical_center.y()/atoms_count)
+    geometrical_center.setX(geometrical_center.x() / atoms_count)
+    geometrical_center.setY(geometrical_center.y() / atoms_count)
     return geometrical_center
 
 
