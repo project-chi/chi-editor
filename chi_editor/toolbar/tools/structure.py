@@ -71,7 +71,7 @@ class Structure(Tool):
             molecule, molecule_matrix = create_molecule(items[0])
             if not self.check_correctness(molecule, molecule_matrix):
                 return
-            atoms = create_atoms(molecule, event.scenePos())
+            atoms = create_atoms(molecule, items[0].pos())
             for atom in atoms:
                 self.canvas.addItem(atom)
             self.put_bonds(molecule, atoms)
