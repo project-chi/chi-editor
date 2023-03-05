@@ -1,7 +1,10 @@
+from collections import namedtuple
+from typing import List
+
 import rdkit.Chem.rdDepictor
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem, QGraphicsPixmapItem
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QPointF
 from rdkit import Chem
 from datamol import incorrect_valence
 
@@ -11,6 +14,7 @@ from ...chem_bonds.double_bond import DoubleBond
 from ...chem_bonds.single_bond import SingleBond
 from ...chem_bonds.triple_bond import TripleBond
 from ...playground import mol_from_graphs, matrix_from_item
+from ...bases.line import Line
 
 
 def create_molecule(atom: AlphaAtom) -> (Chem.Mol, list):
@@ -25,19 +29,25 @@ def create_molecule(atom: AlphaAtom) -> (Chem.Mol, list):
 
 def create_atoms(molecule: Chem.Mol, position) -> list:
     Chem.rdDepictor.Compute2DCoords(molecule)
-    zeros = [0, 0]
     atoms = [None for _ in range(molecule.GetNumAtoms())]
+
+    molecule_shift: QPointF = get_geometrical_center(
+        [
+            QPointF(
+                molecule.GetConformer().GetAtomPosition(i).x,
+                molecule.GetConformer().GetAtomPosition(i).y
+            )
+            for i in range(molecule.GetNumAtoms())
+        ]
+    )
+
     for i, atom in enumerate(molecule.GetAtoms()):
         positions = molecule.GetConformer().GetAtomPosition(i)
-        print(atom.GetSymbol(), positions.x, positions.y)
         new_atom = AlphaAtom(atom.GetSymbol())
-        if i == 0:
-            new_atom.setPos(position)
-            zeros[0] = positions.x
-            zeros[1] = positions.y
-        else:
-            new_atom.setPos((positions.x - zeros[0]) * 100 + position.x(),
-                            (positions.y - zeros[1]) * 100 + position.y())
+
+        new_atom.setPos((positions.x - molecule_shift.x()) * 100 + position.x(),
+                        (positions.y - molecule_shift.y()) * 100 + position.y())
+
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
         atoms[i] = new_atom
@@ -62,6 +72,19 @@ def create_bonds(molecule: Chem.Mol, atoms: list) -> list:
     return bonds
 
 
+def get_geometrical_center(points: list[QPointF]) -> QPointF:
+    geometrical_center: QPointF = QPointF(0, 0)
+    atoms_count: int = 0
+
+    for point in points:
+        geometrical_center.setX(geometrical_center.x() + point.x())
+        geometrical_center.setY(geometrical_center.y() + point.y())
+        atoms_count += 1
+    geometrical_center.setX(geometrical_center.x()/atoms_count)
+    geometrical_center.setY(geometrical_center.y()/atoms_count)
+    return geometrical_center
+
+
 class Structure(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
@@ -69,9 +92,19 @@ class Structure(Tool):
             if items == [] or not isinstance(items[0], AlphaAtom):
                 return super(Structure, self).mouse_press_event(event)
             molecule, molecule_matrix = create_molecule(items[0])
+
             if not self.check_correctness(molecule, molecule_matrix):
                 return
-            atoms = create_atoms(molecule, items[0].pos())
+
+            atoms = create_atoms(
+                molecule,
+                QPointF(
+                    get_geometrical_center(
+                        [atom.pos() for atom in items[0].get_molecule_atoms()]
+                    )
+                )
+            )
+
             for atom in atoms:
                 self.canvas.addItem(atom)
             self.put_bonds(molecule, atoms)

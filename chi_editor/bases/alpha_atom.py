@@ -1,3 +1,5 @@
+from typing import List
+
 from PyQt6.QtGui import QPen, QBrush, QColor, QFont, QPainter
 from PyQt6.QtWidgets import QGraphicsItem, QStyleOptionGraphicsItem
 from PyQt6.QtCore import QRectF, Qt, QVariant
@@ -21,6 +23,21 @@ class AlphaAtom(QGraphicsItem):
         self.lines = []
         self.setZValue(1)
         self.setFlags(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
+
+    def get_adjacent_atoms(self) -> list:
+        adjacent_atoms = []
+        for line in self.lines:
+            adjacent_atoms.append(line.vertex2 if line.vertex1 == self else line.vertex1)
+        return adjacent_atoms
+
+    def get_molecule_atoms(self) -> list:
+        marked: list[AlphaAtom] = []
+        queue: list[AlphaAtom] = [self]
+        while queue:
+            current_atom: AlphaAtom = queue.pop()
+            marked.append(current_atom)
+            queue.extend([x for x in current_atom.get_adjacent_atoms() if x not in marked])
+        return marked
 
     def remove(self):
         list_of_lines = list(self.lines)

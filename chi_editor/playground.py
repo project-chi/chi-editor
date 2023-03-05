@@ -61,7 +61,7 @@ def matrix_from_item(atom: AlphaAtom):
         if current_atom not in alpha_atoms:
             alpha_atoms.append(current_atom)
             queue += (list(map(lambda x: x.vertex2 if x.vertex1 == current_atom else x.vertex1, current_atom.lines)))
-    adjacency = list(list(0 for i in range(len(alpha_atoms))) for i in range(len(alpha_atoms)))
+    adjacency = list(list(0 for _ in range(len(alpha_atoms))) for _ in range(len(alpha_atoms)))
     for i in range(len(alpha_atoms)):
         for j in range(len(alpha_atoms)):
             adjacency[i][j] = is_line_between(alpha_atoms[i], alpha_atoms[j])
