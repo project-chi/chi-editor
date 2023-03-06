@@ -41,8 +41,8 @@ def create_atoms(molecule: Chem.Mol, position) -> list:
         positions = molecule.GetConformer().GetAtomPosition(i)
         new_atom = AlphaAtom(atom.GetSymbol())
 
-        new_atom.setPos((positions.x - molecule_center.x()) * 100 + position.x(),
-                        (positions.y - molecule_center.y()) * 100 + position.y())
+        new_atom.setPos(position.x() + (positions.x - molecule_center.x()) * 100,
+                        position.y() + (positions.y - molecule_center.y()) * 100)
 
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
@@ -94,10 +94,8 @@ class Structure(Tool):
 
             atoms = create_atoms(
                 molecule,
-                QPointF(
-                    get_geometrical_center(
-                        [atom.pos() for atom in items[0].get_molecule_atoms()]
-                    )
+                get_geometrical_center(
+                    [atom.scenePos() for atom in items[0].get_molecule_atoms()]
                 )
             )
 
