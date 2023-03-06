@@ -31,7 +31,7 @@ def create_atoms(molecule: Chem.Mol, position) -> list:
         [
             QPointF(
                 molecule.GetConformer().GetAtomPosition(i).x,
-                molecule.GetConformer().GetAtomPosition(i).y
+                molecule.GetConformer().GetAtomPosition(i).y,
             )
             for i in range(molecule.GetNumAtoms())
         ]
@@ -41,8 +41,10 @@ def create_atoms(molecule: Chem.Mol, position) -> list:
         positions = molecule.GetConformer().GetAtomPosition(i)
         new_atom = AlphaAtom(atom.GetSymbol())
 
-        new_atom.setPos(position.x() + (positions.x - molecule_center.x()) * 100,
-                        position.y() + (positions.y - molecule_center.y()) * 100)
+        new_atom.setPos(
+            position.x() + (positions.x - molecule_center.x()) * 100,
+            position.y() + (positions.y - molecule_center.y()) * 100,
+        )
 
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
@@ -72,13 +74,15 @@ def get_geometrical_center(points: list[QPointF]) -> QPointF:
     x: float = sum(point.x() for point in points)
     y: float = sum(point.y() for point in points)
     atoms_count: int = len(points)
-    return QPointF(x/atoms_count, y/atoms_count)
+    return QPointF(x / atoms_count, y / atoms_count)
 
 
 class Structure(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
-            items: list[AlphaAtom] = self.canvas.items(event.scenePos(), Qt.ItemSelectionMode.IntersectsItemShape)
+            items: list[AlphaAtom] = self.canvas.items(
+                event.scenePos(), Qt.ItemSelectionMode.IntersectsItemShape
+            )
             if items == [] or not isinstance(items[0], AlphaAtom):
                 return super(Structure, self).mouse_press_event(event)
             molecule, molecule_matrix = create_molecule(items[0])
@@ -86,13 +90,11 @@ class Structure(Tool):
             if not self.check_correctness(molecule, molecule_matrix):
                 return
 
-            print(items[0].get_molecule_atoms())
-
             atoms = create_atoms(
                 molecule,
                 get_geometrical_center(
                     [atom.pos() for atom in items[0].get_molecule_atoms()]
-                )
+                ),
             )
 
             for atom in atoms:
@@ -113,7 +115,7 @@ class Structure(Tool):
                         molecule,
                         get_geometrical_center(
                             [atom.pos() for atom in item.get_molecule_atoms()]
-                        )
+                        ),
                     )
                     atoms.extend(new_atoms)
                     self.put_bonds(molecule, new_atoms)
@@ -123,7 +125,7 @@ class Structure(Tool):
 
     def check_correctness(self, molecule: Chem.Mol, molecule_matrix: list) -> bool:
         if molecule is None or incorrect_valence(molecule):
-            image = QImage('resources//stathem.jpg')
+            image = QImage("resources//stathem.jpg")
             molecule = QGraphicsPixmapItem(QPixmap.fromImage(image))
             for i in molecule_matrix[2]:
                 for j in i.lines:
@@ -158,4 +160,4 @@ class Structure(Tool):
 
     @property
     def asset(self) -> str:
-        return 'structure'
+        return "structure"
