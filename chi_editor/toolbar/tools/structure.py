@@ -69,16 +69,10 @@ def create_bonds(molecule: Chem.Mol, atoms: list) -> list:
 
 
 def get_geometrical_center(points: list[QPointF]) -> QPointF:
-    geometrical_center: QPointF = QPointF(0, 0)
-    atoms_count: int = 0
-
-    for point in points:
-        geometrical_center.setX(geometrical_center.x() + point.x())
-        geometrical_center.setY(geometrical_center.y() + point.y())
-        atoms_count += 1
-    geometrical_center.setX(geometrical_center.x() / atoms_count)
-    geometrical_center.setY(geometrical_center.y() / atoms_count)
-    return geometrical_center
+    x: float = sum(point.x() for point in points)
+    y: float = sum(point.y() for point in points)
+    atoms_count: int = len(points)
+    return QPointF(x/atoms_count, y/atoms_count)
 
 
 class Structure(Tool):
@@ -95,7 +89,7 @@ class Structure(Tool):
             atoms = create_atoms(
                 molecule,
                 get_geometrical_center(
-                    [atom.scenePos() for atom in items[0].get_molecule_atoms()]
+                    [atom.pos() for atom in items[0].get_molecule_atoms()]
                 )
             )
 
