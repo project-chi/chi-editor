@@ -109,7 +109,12 @@ class Structure(Tool):
                         return
                     cur_atoms = molecule_matrix[2]
                     old_atoms.extend(cur_atoms)
-                    new_atoms = create_atoms(molecule, item.scenePos())
+                    new_atoms = atoms = create_atoms(
+                        molecule,
+                        get_geometrical_center(
+                            [atom.pos() for atom in item.get_molecule_atoms()]
+                        )
+                    )
                     atoms.extend(new_atoms)
                     self.put_bonds(molecule, new_atoms)
                     self.remove_obsolete(molecule_matrix)
