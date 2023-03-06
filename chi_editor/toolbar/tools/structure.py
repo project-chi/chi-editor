@@ -78,13 +78,15 @@ def get_geometrical_center(points: list[QPointF]) -> QPointF:
 class Structure(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
-            items = self.canvas.items(event.scenePos(), Qt.ItemSelectionMode.IntersectsItemShape)
+            items: list[AlphaAtom] = self.canvas.items(event.scenePos(), Qt.ItemSelectionMode.IntersectsItemShape)
             if items == [] or not isinstance(items[0], AlphaAtom):
                 return super(Structure, self).mouse_press_event(event)
             molecule, molecule_matrix = create_molecule(items[0])
 
             if not self.check_correctness(molecule, molecule_matrix):
                 return
+
+            print(items[0].get_molecule_atoms())
 
             atoms = create_atoms(
                 molecule,

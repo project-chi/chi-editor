@@ -30,13 +30,13 @@ class AlphaAtom(QGraphicsItem):
             adjacent_atoms.append(line.vertex2 if line.vertex1 == self else line.vertex1)
         return adjacent_atoms
 
-    def get_molecule_atoms(self) -> list:
+    def get_molecule_atoms(self) -> list[QGraphicsItem]:
         marked: list[AlphaAtom] = []
         queue: list[AlphaAtom] = [self]
         while queue:
             current_atom: AlphaAtom = queue.pop()
             marked.append(current_atom)
-            queue.extend([x for x in current_atom.get_adjacent_atoms() if x not in marked])
+            queue.extend([x for x in current_atom.get_adjacent_atoms() if x not in marked and x not in queue])
         return marked
 
     def remove(self):
