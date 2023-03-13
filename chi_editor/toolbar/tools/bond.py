@@ -57,7 +57,6 @@ class Bond(Tool):
             self.canvas.removeItem(self.bond)
         else:  # if line didn't exist before, we add it
             end_atom.add_line(self.bond)
-            print("add line")
         self.startItem.molecule.update_atoms()
 
     # should be @property
