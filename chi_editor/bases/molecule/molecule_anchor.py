@@ -1,7 +1,7 @@
 import weakref
 
 from PyQt6.QtCore import QRectF, QPointF
-from PyQt6.QtGui import QPen, QColor, QBrush, QPainter
+from PyQt6.QtGui import QPen, QColor, QBrush, QPainter, QImage
 from PyQt6.QtWidgets import (
     QGraphicsItem,
     QStyleOptionGraphicsItem,
@@ -21,12 +21,11 @@ def get_geometrical_center(atoms: list[AlphaAtom]) -> QPointF:
 
 
 class MoleculeAnchor(QGraphicsItem):
-    background_pen: QPen = QPen(QColor("red"), 1)
-    brush: QBrush = QBrush(QColor("red"))
+    background_pen: QPen = QPen(QColor("lightgray"), 1)
+    brush: QBrush = QBrush(QColor("lightgray"))
     rect: QRectF = QRectF(-10, -10, 20, 20)
 
     atoms: weakref.WeakSet[AlphaAtom]
-    atom_delta_positions: dict
 
     def __init__(self, atoms: weakref.WeakSet[AlphaAtom], *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -58,7 +57,8 @@ class MoleculeAnchor(QGraphicsItem):
         painter.save()
         painter.setPen(self.background_pen)
         painter.setBrush(self.brush)
-        painter.drawRect(self.rect)
+        painter.drawEllipse(self.rect)
+        painter.drawImage(self.rect, QImage("resources//assets/anchor.png"))
         painter.restore()
 
     def mouseMoveEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
