@@ -19,11 +19,16 @@ class Molecule:
     def remove_atom(self, atom: AlphaAtom) -> None:
         self.atoms.remove(atom)
         if len(self.atoms) == 0:
-            self.remove()
+            self.remove_anchor()
 
-    def remove(self):
+    def remove_anchor(self):
         if self.molecule_drawer.scene() is not None:
             self.molecule_drawer.scene().removeItem(self.molecule_drawer)
+
+    def destroy(self):
+        atoms_to_remove: weakref.WeakSet[AlphaAtom] = self.atoms.copy()
+        for atom in atoms_to_remove:
+            atom.remove()
 
     def update_atoms(self) -> None:
         queue: list[AlphaAtom] = [atom for atom in self.atoms]

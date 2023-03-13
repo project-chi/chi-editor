@@ -73,7 +73,7 @@ class Structure(Tool):
             for atom in atoms:
                 atom.add_to_canvas(self.canvas)
             self.put_bonds(molecule, atoms)
-            self.remove_obsolete(molecule_matrix)
+            items[0].molecule.destroy()
         else:
             atoms = []
             old_atoms = []
@@ -88,7 +88,7 @@ class Structure(Tool):
                     )
                     atoms.extend(new_atoms)
                     self.put_bonds(molecule, new_atoms)
-                    self.remove_obsolete(molecule_matrix)
+                    item.molecule.destroy()
             for atom in atoms:
                 atom.add_to_canvas(self.canvas)
 
@@ -119,13 +119,6 @@ class Structure(Tool):
             atoms[end_position].add_line(new_bond)
 
             self.canvas.addItem(new_bond)
-
-    def remove_obsolete(self, molecule_matrix):
-        for i in molecule_matrix[2]:
-            for j in i.lines:
-                self.canvas.removeItem(j)
-            self.canvas.removeItem(i)
-        self.canvas.selectedItems()
 
     @property
     def asset(self) -> str:
