@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
 
@@ -21,10 +19,6 @@ class Tool(QAction):
 
         self.setIcon(QIcon(str(icon_path)))
         self.setCheckable(True)
-        self.triggered.connect(self.choose)
-
-    def choose(self) -> None:
-        self.canvas.current_action = self
 
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         pass

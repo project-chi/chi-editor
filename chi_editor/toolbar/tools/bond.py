@@ -1,4 +1,10 @@
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsEllipseItem, QGraphicsItem
+from __future__ import annotations
+
+from PyQt6.QtWidgets import (
+    QGraphicsSceneMouseEvent,
+    QGraphicsEllipseItem,
+    QGraphicsItem,
+)
 from PyQt6.QtCore import Qt, QPointF
 
 from ...bases.tool import Tool
@@ -49,8 +55,9 @@ class Bond(Tool):
         only_one_line_between = self.startItem.add_line(self.bond)
         if not only_one_line_between:
             self.canvas.removeItem(self.bond)
-        else:   # if line didn't exist before, we add it
+        else:  # if line didn't exist before, we add it
             end_atom.add_line(self.bond)
+        self.startItem.molecule.update_atoms()
 
     # should be @property
     def get_line(self, start_atom: QGraphicsItem, mouse_pos: QPointF) -> Line:
@@ -58,4 +65,4 @@ class Bond(Tool):
 
     @property
     def asset(self) -> str:
-        return 'bond'
+        return "bond"
