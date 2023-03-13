@@ -23,7 +23,9 @@ def get_geometrical_center(atoms: list[AlphaAtom]) -> QPointF:
 class MoleculeAnchor(QGraphicsItem):
     background_pen: QPen = QPen(QColor("lightgray"), 1)
     brush: QBrush = QBrush(QColor("lightgray"))
-    rect: QRectF = QRectF(-10, -10, 20, 20)
+    rect: QRectF = QRectF(
+        AlphaAtom.rect.center().x() - 10, AlphaAtom.rect.center().y() - 10, 20, 20
+    )
 
     atoms: weakref.WeakSet[AlphaAtom]
 
@@ -36,7 +38,7 @@ class MoleculeAnchor(QGraphicsItem):
         self.setFlag(self.GraphicsItemFlag.ItemIsMovable)
 
     def update_position(self, atoms: list[AlphaAtom]) -> None:
-        self.setPos(get_geometrical_center(atoms) + AlphaAtom.rect.center())
+        self.setPos(get_geometrical_center(atoms))
 
     def boundingRect(self) -> QRectF:
         # adjust for boarder width
