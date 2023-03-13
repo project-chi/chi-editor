@@ -30,6 +30,7 @@ class Line(QGraphicsPixmapItem):
 
         if isinstance(end, QGraphicsItem):
             self.vertex2 = end
+            self.vertex1.molecule.update_atoms()
         else:
             self.vertex2 = QGraphicsEllipseItem(0, 0, 0, 0)
             self.vertex2.setPos(end)
@@ -44,7 +45,7 @@ class Line(QGraphicsPixmapItem):
 
     def set_v2(self, end: QGraphicsItem) -> None:
         self.vertex2 = end
-
+        self.vertex1.molecule.update_atoms()
         # if self.vertex1.molecule != self.vertex2.molecule:
         #     self.vertex2.molecule.remove()
         # self.vertex1.molecule.update_atoms()

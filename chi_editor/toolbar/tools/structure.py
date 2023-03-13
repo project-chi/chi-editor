@@ -82,19 +82,15 @@ class Structure(Tool):
                     molecule, molecule_matrix = create_molecule(item)
                     if not self.check_correctness(molecule, molecule_matrix):
                         return
-                    cur_atoms = molecule_matrix[1]
-                    old_atoms.extend(cur_atoms)
+                    old_atoms.extend(item.molecule.atoms)
                     new_atoms = create_atoms(
-                        molecule,
-                        get_geometrical_center(
-                            [atom.pos() for atom in item.get_molecule_atoms()]
-                        ),
+                        molecule, item.molecule.molecule_drawer.pos()
                     )
                     atoms.extend(new_atoms)
                     self.put_bonds(molecule, new_atoms)
                     self.remove_obsolete(molecule_matrix)
             for atom in atoms:
-                self.canvas.addItem(atom)
+                atom.add_to_canvas(self.canvas)
 
     def check_correctness(self, molecule: Chem.Mol, molecule_matrix: list) -> bool:
         if molecule is None or incorrect_valence(molecule):
@@ -113,15 +109,15 @@ class Structure(Tool):
             start_position = bond.GetBeginAtomIdx()
             end_position = bond.GetEndAtomIdx()
             bond_type = bond.GetBondTypeAsDouble()
-            if bond_type == 1:
-                new_bond = SingleBond(atoms[start_position], atoms[end_position])
-            elif bond_type == 2:
-                new_bond = DoubleBond(atoms[start_position], atoms[end_position])
-            elif bond_type == 3:
-                new_bond = TripleBond(atoms[start_position], atoms[end_position])
+            new_bond = {
+                bond_type == 1: SingleBond(atoms[start_position], atoms[end_position]),
+                bond_type == 2: DoubleBond(atoms[start_position], atoms[end_position]),
+                bond_type == 3: TripleBond(atoms[start_position], atoms[end_position]),
+            }[True]
 
             atoms[start_position].add_line(new_bond)
             atoms[end_position].add_line(new_bond)
+
             self.canvas.addItem(new_bond)
 
     def remove_obsolete(self, molecule_matrix):

@@ -22,12 +22,15 @@ class Molecule:
             self.remove()
 
     def remove(self):
-        self.molecule_drawer.scene().removeItem(self.molecule_drawer)
+        if self.molecule_drawer.scene() is not None:
+            self.molecule_drawer.scene().removeItem(self.molecule_drawer)
 
     def update_atoms(self) -> None:
         queue: list[AlphaAtom] = [atom for atom in self.atoms]
         while queue:
             current_atom: AlphaAtom = queue.pop()
+            if current_atom.molecule != self:
+                current_atom.molecule.remove_atom(current_atom)
             current_atom.molecule = self
             self.atoms.add(current_atom)
             queue.extend(
