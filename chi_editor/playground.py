@@ -1,40 +1,33 @@
 import weakref
+from typing import Dict
 
 from rdkit import Chem
 
 from chi_editor.bases.alpha_atom import AlphaAtom
+from chi_editor.bases.molecule.molecule import Molecule
 
 
-def mol_from_graphs(node_list, adjacency_matrix):
+def mol_from_graphs(molecule: Molecule):
     # create empty editable mol object
     mol = Chem.RWMol()
 
+    atom_to_index: Dict[AlphaAtom, int] = {}
     # add atoms to mol and keep track of index
-    node_to_idx = {}
-    for i in range(len(node_list)):
-        a = Chem.Atom(node_list[i])
-        molIdx = mol.AddAtom(a)
-        node_to_idx[i] = molIdx
+    for atom in molecule.atoms:
+        atom_to_index[atom] = mol.AddAtom(Chem.Atom(atom.text))
 
     # add bonds between adjacent atoms
-    for ix, row in enumerate(adjacency_matrix):
-        for iy, bond in enumerate(row):
-            # only traverse half the matrix
-            if iy <= ix:
-                continue
-
-            # add relevant bond type (there are many more of these)
-            if bond == 0:
-                continue
-            elif bond == 1:
-                bond_type = Chem.rdchem.BondType.SINGLE
-                mol.AddBond(node_to_idx[ix], node_to_idx[iy], bond_type)
-            elif bond == 2:
-                bond_type = Chem.rdchem.BondType.DOUBLE
-                mol.AddBond(node_to_idx[ix], node_to_idx[iy], bond_type)
-            elif bond == 3:
-                bond_type = Chem.rdchem.BondType.TRIPLE
-                mol.AddBond(node_to_idx[ix], node_to_idx[iy], bond_type)
+    for atom in atom_to_index:
+        for line in atom.lines:
+            atom1: int = atom_to_index[line.vertex1]
+            atom2: int = atom_to_index[line.vertex2]
+            if mol.GetBondBetweenAtoms(atom1, atom2) is None:
+                bond_type: Chem.rdchem.BondType = {
+                    line.multiplicity == 1: Chem.BondType.SINGLE,
+                    line.multiplicity == 2: Chem.BondType.DOUBLE,
+                    line.multiplicity == 3: Chem.BondType.TRIPLE,
+                }[True]
+                mol.AddBond(atom1, atom2, bond_type)
 
     # Convert RWMol to Mol object
     mol = mol.GetMol()
@@ -51,7 +44,6 @@ def is_line_between(atom1: AlphaAtom, atom2: AlphaAtom):
 
 def matrix_from_item(atom: AlphaAtom):
     alpha_atoms: list[AlphaAtom] = [atom for atom in atom.molecule.atoms]
-    atoms: list[str]
     adjacency: list[list[int]]
 
     adjacency = list(

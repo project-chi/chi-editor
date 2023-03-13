@@ -17,7 +17,7 @@ def create_molecule(atom: AlphaAtom) -> (Chem.Mol, list):
     molecule_matrix = matrix_from_item(atom)
     nodes = molecule_matrix[0]
     adjacent = molecule_matrix[1]
-    molecule_smiles = Chem.MolToSmiles(mol_from_graphs(nodes, adjacent))
+    molecule_smiles = Chem.MolToSmiles(mol_from_graphs(atom.molecule))
     molecule_dm = Chem.MolFromSmiles(molecule_smiles)
     Chem.Kekulize(molecule_dm)
     return molecule_dm, molecule_matrix
