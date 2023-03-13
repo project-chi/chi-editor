@@ -11,12 +11,7 @@ class Atom(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         new_atom = AlphaAtom(self._element)
         new_atom.setPos(event.scenePos() - new_atom.sceneBoundingRect().center())
-
-        new_molecule = new_atom.molecule.molecule_drawer
-        new_molecule.setPos(new_atom.pos())
-
-        self.canvas.addItem(new_atom)
-        self.canvas.addItem(new_molecule)
+        new_atom.add_to_canvas(self.canvas)
 
     @property
     def asset(self) -> str:

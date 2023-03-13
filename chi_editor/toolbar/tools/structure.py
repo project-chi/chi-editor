@@ -6,7 +6,6 @@ from datamol import incorrect_valence
 from rdkit import Chem
 
 from ...bases.alpha_atom import AlphaAtom
-from ...bases.line import Line
 from ...bases.tool import Tool
 from ...chem_bonds.double_bond import DoubleBond
 from ...chem_bonds.single_bond import SingleBond
@@ -41,8 +40,7 @@ def create_atoms(molecule: Chem.Mol, position) -> list[AlphaAtom]:
         new_atom = AlphaAtom(atom.GetSymbol())
 
         new_atom.setPos(
-            position.x() + (positions.x - molecule_center.x()) * 100,
-            position.y() + (positions.y - molecule_center.y()) * 100,
+            position + (QPointF(positions.x, positions.y) - molecule_center) * 100,
         )
 
         atoms.append(new_atom)
@@ -73,7 +71,7 @@ class Structure(Tool):
             atoms = create_atoms(molecule, items[0].molecule.molecule_drawer.pos())
 
             for atom in atoms:
-                self.canvas.addItem(atom)
+                atom.add_to_canvas(self.canvas)
             self.put_bonds(molecule, atoms)
             self.remove_obsolete(molecule_matrix)
         else:

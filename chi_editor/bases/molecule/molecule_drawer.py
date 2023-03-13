@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import (
     QGraphicsItem,
     QStyleOptionGraphicsItem,
     QGraphicsSceneMouseEvent,
+    QGraphicsScene,
 )
 
 from chi_editor.bases.alpha_atom import AlphaAtom
@@ -42,6 +43,9 @@ class MoleculeDrawer(QGraphicsItem):
         # adjust for boarder width
         adjust = self.background_pen.width() / 2
         return self.rect.adjusted(-adjust, -adjust, adjust, adjust)
+
+    def add_to_canvas(self, canvas: QGraphicsScene):
+        canvas.addItem(self)
 
     def paint(
         self, painter: QPainter, option: QStyleOptionGraphicsItem, widget=None

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from PyQt6 import QtCore
+
 if TYPE_CHECKING:
     from chi_editor.bases.molecule.molecule import Molecule
 
@@ -10,6 +12,7 @@ from PyQt6.QtWidgets import (
     QGraphicsItem,
     QStyleOptionGraphicsItem,
     QGraphicsSceneMouseEvent,
+    QGraphicsScene,
 )
 from PyQt6.QtCore import QRectF, Qt, QVariant
 
@@ -50,6 +53,10 @@ class AlphaAtom(QGraphicsItem):
             )
         return adjacent_atoms
 
+    def setPos(self, pos: QtCore.QPointF) -> None:
+        super().setPos(pos)
+        self.molecule.molecule_drawer.setPos(pos)
+
     def remove(self):
         list_of_lines = list(self.lines)
         for line in list_of_lines:
@@ -72,6 +79,10 @@ class AlphaAtom(QGraphicsItem):
                 return False
         self.lines.append(new_line)
         return True
+
+    def add_to_canvas(self, canvas: QGraphicsScene):
+        canvas.addItem(self)
+        self.molecule.molecule_drawer.add_to_canvas(canvas)
 
     def itemChange(
         self, change: QGraphicsItem.GraphicsItemChange, value: QVariant
