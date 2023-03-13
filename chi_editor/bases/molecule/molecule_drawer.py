@@ -1,3 +1,5 @@
+import weakref
+
 from PyQt6.QtCore import QRectF, QPointF
 from PyQt6.QtGui import QPen, QColor, QBrush, QPainter
 from PyQt6.QtWidgets import (
@@ -22,10 +24,11 @@ class MoleculeDrawer(QGraphicsItem):
     brush: QBrush = QBrush(QColor("red"))
     rect: QRectF = QRectF(0, 0, 20, 20)
 
-    atoms: list[AlphaAtom]
+    atoms: weakref.WeakSet[AlphaAtom]
+    atom_delta_positions: dict
 
-    def __init__(self, atoms, *args, **kwargs):
-        super().__init__()
+    def __init__(self, atoms: weakref.WeakSet[AlphaAtom], *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.atoms = atoms
         self.setZValue(2)
         self.setFlag(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
@@ -52,11 +55,15 @@ class MoleculeDrawer(QGraphicsItem):
 
     def mousePressEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
         super().mousePressEvent(event)
-        self.dpos: dict = {}
+        self.atom_delta_positions = {}
         for atom in self.atoms:
-            self.dpos[atom] = atom.pos() - self.pos()
+            self.atom_delta_positions[atom] = atom.pos() - self.pos()
 
     def mouseMoveEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
         super().mouseMoveEvent(event)
         for atom in self.atoms:
-            atom.setPos(self.pos() + self.dpos[atom])
+            atom.setPos(self.pos() + self.atom_delta_positions[atom])
+
+    def mouseReleaseEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
+        super().mouseMoveEvent(event)
+        self.atom_delta_positions = {}

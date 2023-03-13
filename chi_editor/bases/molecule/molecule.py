@@ -8,7 +8,7 @@ class Molecule:
     atoms: weakref.WeakSet[AlphaAtom]
     molecule_drawer: MoleculeDrawer
 
-    def __init__(self, atom: AlphaAtom, *args, **kwargs) -> None:
+    def __init__(self, atom: AlphaAtom) -> None:
         self.atoms = weakref.WeakSet()
         self.atoms.add(atom)
         self.molecule_drawer = MoleculeDrawer(self.atoms)
