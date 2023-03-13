@@ -1,3 +1,5 @@
+import weakref
+
 from rdkit import Chem
 
 from chi_editor.bases.alpha_atom import AlphaAtom
@@ -48,22 +50,10 @@ def is_line_between(atom1: AlphaAtom, atom2: AlphaAtom):
 
 
 def matrix_from_item(atom: AlphaAtom):
-    alpha_atoms: list[AlphaAtom]
+    alpha_atoms: list[AlphaAtom] = [atom for atom in atom.molecule.atoms]
     atoms: list[str]
     adjacency: list[list[int]]
 
-    alpha_atoms = []
-    queue = [atom]
-    while queue:
-        current_atom = queue.pop(0)
-        if current_atom not in alpha_atoms:
-            alpha_atoms.append(current_atom)
-            queue += list(
-                map(
-                    lambda x: x.vertex2 if x.vertex1 == current_atom else x.vertex1,
-                    current_atom.lines,
-                )
-            )
     adjacency = list(
         list(0 for _ in range(len(alpha_atoms))) for _ in range(len(alpha_atoms))
     )
@@ -71,4 +61,4 @@ def matrix_from_item(atom: AlphaAtom):
         for j in range(len(alpha_atoms)):
             adjacency[i][j] = is_line_between(alpha_atoms[i], alpha_atoms[j])
 
-    return list(map(lambda x: x.text, alpha_atoms)), adjacency, alpha_atoms
+    return [atom.text for atom in alpha_atoms], adjacency, alpha_atoms

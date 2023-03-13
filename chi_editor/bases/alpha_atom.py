@@ -24,7 +24,7 @@ class AlphaAtom(QGraphicsItem):
     rect: QRectF = QRectF(0, 0, 50, 50)
 
     molecule: Molecule
-    _text: str
+    text: str
     lines: list[Line]
 
     def __init__(self, element: str, *args, **kwargs) -> None:
