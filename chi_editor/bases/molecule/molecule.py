@@ -18,6 +18,8 @@ class Molecule:
 
     def remove_atom(self, atom: AlphaAtom) -> None:
         self.atoms.remove(atom)
+        if len(self.atoms) == 0:
+            self.remove()
 
     def remove(self):
         self.molecule_drawer.scene().removeItem(self.molecule_drawer)
