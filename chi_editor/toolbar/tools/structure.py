@@ -82,9 +82,9 @@ class Structure(Tool):
                     molecule, molecule_matrix = create_molecule(item)
                     if not self.check_correctness(molecule, molecule_matrix):
                         return
-                    cur_atoms = molecule_matrix[2]
+                    cur_atoms = molecule_matrix[1]
                     old_atoms.extend(cur_atoms)
-                    new_atoms = atoms = create_atoms(
+                    new_atoms = create_atoms(
                         molecule,
                         get_geometrical_center(
                             [atom.pos() for atom in item.get_molecule_atoms()]
