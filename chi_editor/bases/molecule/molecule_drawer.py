@@ -1,4 +1,3 @@
-from PyQt6 import QtGui
 from PyQt6.QtCore import QRectF, QPointF
 from PyQt6.QtGui import QPen, QColor, QBrush, QPainter
 from PyQt6.QtWidgets import (

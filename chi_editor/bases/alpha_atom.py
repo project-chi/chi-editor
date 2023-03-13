@@ -6,7 +6,11 @@ if TYPE_CHECKING:
     from chi_editor.bases.molecule.molecule import Molecule
 
 from PyQt6.QtGui import QPen, QBrush, QColor, QFont, QPainter
-from PyQt6.QtWidgets import QGraphicsItem, QStyleOptionGraphicsItem
+from PyQt6.QtWidgets import (
+    QGraphicsItem,
+    QStyleOptionGraphicsItem,
+    QGraphicsSceneMouseEvent,
+)
 from PyQt6.QtCore import QRectF, Qt, QVariant
 
 from .line import Line
@@ -90,3 +94,7 @@ class AlphaAtom(QGraphicsItem):
         painter.setFont(self.text_font)
         painter.drawText(self.rect, Qt.AlignmentFlag.AlignCenter, self.text)
         painter.restore()
+
+    def mouseMoveEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
+        super().mouseMoveEvent(event)
+        self.molecule.update_atoms()
