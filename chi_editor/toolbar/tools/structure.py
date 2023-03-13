@@ -1,11 +1,12 @@
 import rdkit.Chem.rdDepictor
 from PyQt6.QtCore import Qt, QPointF
 from PyQt6.QtGui import QImage, QPixmap
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem, QGraphicsPixmapItem
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsPixmapItem
 from datamol import incorrect_valence
 from rdkit import Chem
 
 from ...bases.alpha_atom import AlphaAtom
+from ...bases.line import Line
 from ...bases.tool import Tool
 from ...chem_bonds.double_bond import DoubleBond
 from ...chem_bonds.single_bond import SingleBond
@@ -15,17 +16,15 @@ from ...playground import mol_from_graphs, matrix_from_item
 
 def create_molecule(atom: AlphaAtom) -> (Chem.Mol, list):
     molecule_matrix = matrix_from_item(atom)
-    nodes = molecule_matrix[0]
-    adjacent = molecule_matrix[1]
     molecule_smiles = Chem.MolToSmiles(mol_from_graphs(atom.molecule))
     molecule_dm = Chem.MolFromSmiles(molecule_smiles)
     Chem.Kekulize(molecule_dm)
     return molecule_dm, molecule_matrix
 
 
-def create_atoms(molecule: Chem.Mol, position) -> list:
+def create_atoms(molecule: Chem.Mol, position) -> list[AlphaAtom]:
     Chem.rdDepictor.Compute2DCoords(molecule)
-    atoms = [None for _ in range(molecule.GetNumAtoms())]
+    atoms: list[AlphaAtom] = []
 
     molecule_center: QPointF = get_geometrical_center(
         [
@@ -37,8 +36,8 @@ def create_atoms(molecule: Chem.Mol, position) -> list:
         ]
     )
 
-    for i, atom in enumerate(molecule.GetAtoms()):
-        positions = molecule.GetConformer().GetAtomPosition(i)
+    for atom in molecule.GetAtoms():
+        positions = molecule.GetConformer().GetAtomPosition(atom.GetIdx())
         new_atom = AlphaAtom(atom.GetSymbol())
 
         new_atom.setPos(
@@ -46,28 +45,9 @@ def create_atoms(molecule: Chem.Mol, position) -> list:
             position.y() + (positions.y - molecule_center.y()) * 100,
         )
 
-        new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
-        new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
-        atoms[i] = new_atom
+        atoms.append(new_atom)
+
     return atoms
-
-
-def create_bonds(molecule: Chem.Mol, atoms: list) -> list:
-    bonds = []
-    for bond in molecule.GetBonds():
-        start_position = bond.GetBeginAtomIdx()
-        end_position = bond.GetEndAtomIdx()
-        bond_type = bond.GetBondTypeAsDouble()
-        if bond_type == 1:
-            new_bond = SingleBond(atoms[start_position], atoms[end_position])
-        elif bond_type == 2:
-            new_bond = DoubleBond(atoms[start_position], atoms[end_position])
-        elif bond_type == 3:
-            new_bond = TripleBond(atoms[start_position], atoms[end_position])
-        atoms[start_position].add_line(new_bond)
-        atoms[end_position].add_line(new_bond)
-        bonds.append(bond)
-    return bonds
 
 
 def get_geometrical_center(points: list[QPointF]) -> QPointF:

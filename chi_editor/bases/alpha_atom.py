@@ -33,6 +33,9 @@ class AlphaAtom(QGraphicsItem):
         self.text = element
         self.lines = []
         self.setZValue(1)
+
+        self.setFlag(self.GraphicsItemFlag.ItemIsMovable)
+        self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
         self.setFlag(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
         from chi_editor.bases.molecule.molecule import Molecule
