@@ -1,4 +1,9 @@
-from typing import List
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from chi_editor.bases.molecule.molecule import Molecule
 
 from PyQt6.QtGui import QPen, QBrush, QColor, QFont, QPainter
 from PyQt6.QtWidgets import QGraphicsItem, QStyleOptionGraphicsItem
@@ -14,48 +19,57 @@ class AlphaAtom(QGraphicsItem):
     brush: QBrush = QBrush(QColor("white"))
     rect: QRectF = QRectF(0, 0, 50, 50)
 
+    molecule: Molecule
     _text: str
     _lines: list[Line]
 
     def __init__(self, element: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+
         self.text = element
-        self.lines = []
+        self._lines = []
         self.setZValue(1)
-        self.setFlags(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
+        self.setFlag(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
+
+        from chi_editor.bases.molecule.molecule import Molecule
+
+        self.molecule = Molecule(self)
 
     def get_adjacent_atoms(self) -> list:
         adjacent_atoms = []
-        for line in self.lines:
-            adjacent_atoms.append(line.vertex2 if line.vertex1 == self else line.vertex1)
+        for line in self._lines:
+            adjacent_atoms.append(
+                line.vertex2 if line.vertex1 == self else line.vertex1
+            )
         return adjacent_atoms
 
-    def get_molecule_atoms(self) -> list[QGraphicsItem]:
-        marked: list[AlphaAtom] = []
-        queue: list[AlphaAtom] = [self]
-        while queue:
-            current_atom: AlphaAtom = queue.pop()
-            marked.append(current_atom)
-            queue.extend([x for x in current_atom.get_adjacent_atoms() if x not in marked and x not in queue])
-        return marked
-
     def remove(self):
-        list_of_lines = list(self.lines)
+        list_of_lines = list(self._lines)
         for line in list_of_lines:
             line.remove()
+
+        self.molecule.remove_atom(self)
+
         self.scene().removeItem(self)
 
     def add_line(self, new_line: Line) -> bool:
-        for existing in self.lines:
-            if (existing.vertex1, existing.vertex2) == (new_line.vertex1, new_line.vertex2) \
-                    or (existing.vertex2, existing.vertex1) == (new_line.vertex1, new_line.vertex2):
+        for existing in self._lines:
+            if (existing.vertex1, existing.vertex2) == (
+                new_line.vertex1,
+                new_line.vertex2,
+            ) or (existing.vertex2, existing.vertex1) == (
+                new_line.vertex1,
+                new_line.vertex2,
+            ):
                 # another line with the same control points already exists
                 return False
-        self.lines.append(new_line)
+        self._lines.append(new_line)
         return True
 
-    def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: QVariant) -> QVariant:
-        for line in self.lines:
+    def itemChange(
+        self, change: QGraphicsItem.GraphicsItemChange, value: QVariant
+    ) -> QVariant:
+        for line in self._lines:
             line.update_pixmap(self)
         return super().itemChange(change, value)
 
@@ -64,7 +78,9 @@ class AlphaAtom(QGraphicsItem):
         adjust = self.background_pen.width() / 2
         return self.rect.adjusted(-adjust, -adjust, adjust, adjust)
 
-    def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget=None) -> None:
+    def paint(
+        self, painter: QPainter, option: QStyleOptionGraphicsItem, widget=None
+    ) -> None:
         # save + restore to reset pen and brush
         painter.save()
         painter.setPen(self.background_pen)

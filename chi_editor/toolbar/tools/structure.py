@@ -1,9 +1,9 @@
 import rdkit.Chem.rdDepictor
+from PyQt6.QtCore import Qt, QPointF
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem, QGraphicsPixmapItem
-from PyQt6.QtCore import Qt, QPointF
-from rdkit import Chem
 from datamol import incorrect_valence
+from rdkit import Chem
 
 from ...bases.alpha_atom import AlphaAtom
 from ...bases.tool import Tool
@@ -90,12 +90,7 @@ class Structure(Tool):
             if not self.check_correctness(molecule, molecule_matrix):
                 return
 
-            atoms = create_atoms(
-                molecule,
-                get_geometrical_center(
-                    [atom.pos() for atom in items[0].get_molecule_atoms()]
-                ),
-            )
+            atoms = create_atoms(molecule, items[0].molecule.position)
 
             for atom in atoms:
                 self.canvas.addItem(atom)
