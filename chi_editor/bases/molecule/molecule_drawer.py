@@ -23,7 +23,7 @@ def get_geometrical_center(atoms: list[AlphaAtom]) -> QPointF:
 class MoleculeDrawer(QGraphicsItem):
     background_pen: QPen = QPen(QColor("red"), 1)
     brush: QBrush = QBrush(QColor("red"))
-    rect: QRectF = QRectF(0, 0, 20, 20)
+    rect: QRectF = QRectF(-10, -10, 20, 20)
 
     atoms: weakref.WeakSet[AlphaAtom]
     atom_delta_positions: dict
@@ -37,7 +37,7 @@ class MoleculeDrawer(QGraphicsItem):
         self.setFlag(self.GraphicsItemFlag.ItemIsMovable)
 
     def update_position(self, atoms: list[AlphaAtom]) -> None:
-        self.setPos(get_geometrical_center(atoms))
+        self.setPos(get_geometrical_center(atoms) + AlphaAtom.rect.center())
 
     def boundingRect(self) -> QRectF:
         # adjust for boarder width
@@ -46,6 +46,10 @@ class MoleculeDrawer(QGraphicsItem):
 
     def add_to_canvas(self, canvas: QGraphicsScene):
         canvas.addItem(self)
+
+    def remove(self):
+        if self.scene() is not None:
+            self.scene().removeItem(self)
 
     def paint(
         self, painter: QPainter, option: QStyleOptionGraphicsItem, widget=None

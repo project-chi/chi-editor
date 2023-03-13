@@ -55,7 +55,7 @@ class AlphaAtom(QGraphicsItem):
 
     def setPos(self, pos: QtCore.QPointF) -> None:
         super().setPos(pos)
-        self.molecule.molecule_drawer.setPos(pos)
+        self.molecule.update_atoms()
 
     def remove(self):
         list_of_lines = list(self.lines)
