@@ -19,8 +19,6 @@ class Atom(Tool):
 
         self.canvas.addItem(new_atom)
         self.canvas.addItem(new_molecule)
-        # group = self.canvas.createItemGroup([new_atom, new_molecule])
-        # group.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
 
     @property
     def asset(self) -> str:

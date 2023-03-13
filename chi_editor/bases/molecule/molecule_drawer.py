@@ -53,17 +53,10 @@ class MoleculeDrawer(QGraphicsItem):
         painter.drawRect(self.rect)
         painter.restore()
 
-    def mousePressEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
-        super().mousePressEvent(event)
-        self.atom_delta_positions = {}
-        for atom in self.atoms:
-            self.atom_delta_positions[atom] = atom.pos() - self.pos()
-
     def mouseMoveEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
         super().mouseMoveEvent(event)
         for atom in self.atoms:
-            atom.setPos(self.pos() + self.atom_delta_positions[atom])
-
-    def mouseReleaseEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
-        super().mouseMoveEvent(event)
-        self.atom_delta_positions = {}
+            atom.moveBy(
+                event.pos().x() - event.lastPos().x(),
+                event.pos().y() - event.lastPos().y(),
+            )
