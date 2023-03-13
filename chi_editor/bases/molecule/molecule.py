@@ -1,17 +1,17 @@
 import weakref
 
 from chi_editor.bases.alpha_atom import AlphaAtom
-from chi_editor.bases.molecule.molecule_drawer import MoleculeDrawer
+from chi_editor.bases.molecule.molecule_anchor import MoleculeAnchor
 
 
 class Molecule:
     atoms: weakref.WeakSet[AlphaAtom]
-    molecule_drawer: MoleculeDrawer
+    molecule_drawer: MoleculeAnchor
 
     def __init__(self, atom: AlphaAtom) -> None:
         self.atoms = weakref.WeakSet()
         self.atoms.add(atom)
-        self.molecule_drawer = MoleculeDrawer(self.atoms)
+        self.molecule_drawer = MoleculeAnchor(self.atoms)
 
     def add_atom(self, atom: AlphaAtom) -> None:
         self.atoms.add(atom)

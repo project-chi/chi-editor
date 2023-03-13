@@ -20,7 +20,7 @@ def get_geometrical_center(atoms: list[AlphaAtom]) -> QPointF:
     return position / atoms_count
 
 
-class MoleculeDrawer(QGraphicsItem):
+class MoleculeAnchor(QGraphicsItem):
     background_pen: QPen = QPen(QColor("red"), 1)
     brush: QBrush = QBrush(QColor("red"))
     rect: QRectF = QRectF(-10, -10, 20, 20)

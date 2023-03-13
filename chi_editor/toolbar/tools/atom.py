@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem
 
-from chi_editor.bases.molecule.molecule import MoleculeDrawer
+from chi_editor.bases.molecule.molecule import MoleculeAnchor
 from ...bases.tool import Tool
 from ...bases.alpha_atom import AlphaAtom
 
