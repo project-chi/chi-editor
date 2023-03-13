@@ -74,6 +74,7 @@ class Structure(Tool):
                 atom.add_to_canvas(self.canvas)
             self.put_bonds(molecule, atoms)
             items[0].molecule.destroy()
+            # atoms[0].molecule.update_atoms()
         else:
             atoms = []
             old_atoms = []
@@ -117,6 +118,7 @@ class Structure(Tool):
 
             atoms[start_position].add_line(new_bond)
             atoms[end_position].add_line(new_bond)
+            atoms[start_position].molecule.update_atoms()
 
             self.canvas.addItem(new_bond)
 
