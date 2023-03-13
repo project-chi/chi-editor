@@ -4,7 +4,6 @@ from PyQt6.QtGui import QPen, QColor, QBrush, QPainter
 from PyQt6.QtWidgets import (
     QGraphicsItem,
     QStyleOptionGraphicsItem,
-    QGraphicsItemGroup,
     QGraphicsSceneMouseEvent,
 )
 
@@ -24,9 +23,11 @@ class MoleculeDrawer(QGraphicsItem):
     brush: QBrush = QBrush(QColor("red"))
     rect: QRectF = QRectF(0, 0, 20, 20)
 
-    def __init__(self, molecule, *args, **kwargs):
+    atoms: list[AlphaAtom]
+
+    def __init__(self, atoms, *args, **kwargs):
         super().__init__()
-        self.molecule = molecule
+        self.atoms = atoms
         self.setZValue(2)
         self.setFlag(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
@@ -52,12 +53,11 @@ class MoleculeDrawer(QGraphicsItem):
 
     def mousePressEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
         super().mousePressEvent(event)
-        print(self.molecule.atoms)
         self.dpos: dict = {}
-        for atom in self.molecule.atoms:
+        for atom in self.atoms:
             self.dpos[atom] = atom.pos() - self.pos()
 
     def mouseMoveEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
         super().mouseMoveEvent(event)
-        for atom in self.molecule.atoms:
+        for atom in self.atoms:
             atom.setPos(self.pos() + self.dpos[atom])

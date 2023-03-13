@@ -11,9 +11,7 @@ class Molecule:
     def __init__(self, atom: AlphaAtom, *args, **kwargs) -> None:
         self.atoms = weakref.WeakSet()
         self.atoms.add(atom)
-        self.molecule_drawer = MoleculeDrawer(self)
-        # atom.group().addToGroup(self.molecule_drawer)
-        # self.update_atoms()
+        self.molecule_drawer = MoleculeDrawer(self.atoms)
 
     def add_atom(self, atom: AlphaAtom) -> None:
         self.atoms.add(atom)
@@ -37,6 +35,4 @@ class Molecule:
                     if x not in self.atoms and x not in queue
                 ]
             )
-        # for atom in self.atoms:
-        #     self.molecule_drawer.group().addToGroup(atom)
         self.molecule_drawer.update_position([atom for atom in self.atoms])
