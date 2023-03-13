@@ -90,7 +90,7 @@ class Structure(Tool):
             if not self.check_correctness(molecule, molecule_matrix):
                 return
 
-            atoms = create_atoms(molecule, items[0].molecule.position)
+            atoms = create_atoms(molecule, items[0].molecule.molecule_drawer.pos())
 
             for atom in atoms:
                 self.canvas.addItem(atom)

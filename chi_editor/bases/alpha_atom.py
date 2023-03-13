@@ -25,13 +25,13 @@ class AlphaAtom(QGraphicsItem):
 
     molecule: Molecule
     _text: str
-    _lines: list[Line]
+    lines: list[Line]
 
     def __init__(self, element: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
         self.text = element
-        self._lines = []
+        self.lines = []
         self.setZValue(1)
         self.setFlag(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
@@ -41,14 +41,14 @@ class AlphaAtom(QGraphicsItem):
 
     def get_adjacent_atoms(self) -> list:
         adjacent_atoms = []
-        for line in self._lines:
+        for line in self.lines:
             adjacent_atoms.append(
                 line.vertex2 if line.vertex1 == self else line.vertex1
             )
         return adjacent_atoms
 
     def remove(self):
-        list_of_lines = list(self._lines)
+        list_of_lines = list(self.lines)
         for line in list_of_lines:
             line.remove()
 
@@ -57,7 +57,7 @@ class AlphaAtom(QGraphicsItem):
         self.scene().removeItem(self)
 
     def add_line(self, new_line: Line) -> bool:
-        for existing in self._lines:
+        for existing in self.lines:
             if (existing.vertex1, existing.vertex2) == (
                 new_line.vertex1,
                 new_line.vertex2,
@@ -67,13 +67,13 @@ class AlphaAtom(QGraphicsItem):
             ):
                 # another line with the same control points already exists
                 return False
-        self._lines.append(new_line)
+        self.lines.append(new_line)
         return True
 
     def itemChange(
         self, change: QGraphicsItem.GraphicsItemChange, value: QVariant
     ) -> QVariant:
-        for line in self._lines:
+        for line in self.lines:
             line.update_pixmap(self)
         return super().itemChange(change, value)
 

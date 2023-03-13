@@ -4,7 +4,6 @@ from chi_editor.bases.alpha_atom import AlphaAtom
 
 
 def mol_from_graphs(node_list, adjacency_matrix):
-
     # create empty editable mol object
     mol = Chem.RWMol()
 
@@ -18,7 +17,6 @@ def mol_from_graphs(node_list, adjacency_matrix):
     # add bonds between adjacent atoms
     for ix, row in enumerate(adjacency_matrix):
         for iy, bond in enumerate(row):
-
             # only traverse half the matrix
             if iy <= ix:
                 continue
@@ -60,8 +58,15 @@ def matrix_from_item(atom: AlphaAtom):
         current_atom = queue.pop(0)
         if current_atom not in alpha_atoms:
             alpha_atoms.append(current_atom)
-            queue += (list(map(lambda x: x.vertex2 if x.vertex1 == current_atom else x.vertex1, current_atom.lines)))
-    adjacency = list(list(0 for _ in range(len(alpha_atoms))) for _ in range(len(alpha_atoms)))
+            queue += list(
+                map(
+                    lambda x: x.vertex2 if x.vertex1 == current_atom else x.vertex1,
+                    current_atom.lines,
+                )
+            )
+    adjacency = list(
+        list(0 for _ in range(len(alpha_atoms))) for _ in range(len(alpha_atoms))
+    )
     for i in range(len(alpha_atoms)):
         for j in range(len(alpha_atoms)):
             adjacency[i][j] = is_line_between(alpha_atoms[i], alpha_atoms[j])
