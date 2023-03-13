@@ -1,7 +1,7 @@
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsItem
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
 
-from ...bases.tool import Tool
 from ...bases.alpha_atom import AlphaAtom
+from ...bases.tool import Tool
 
 
 class Atom(Tool):
@@ -10,11 +10,8 @@ class Atom(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         new_atom = AlphaAtom(self._element)
         new_atom.setPos(event.scenePos() - new_atom.sceneBoundingRect().center())
-        new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
-        new_atom.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
-
-        self.canvas.addItem(new_atom)
+        new_atom.add_to_canvas(self.canvas)
 
     @property
     def asset(self) -> str:
-        return 'carbon'
+        return "carbon"
