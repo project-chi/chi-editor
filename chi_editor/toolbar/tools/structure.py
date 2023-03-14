@@ -9,6 +9,7 @@ from rdkit import Chem
 from rdkit.Chem import Mol
 
 from ...bases.alpha_atom import AlphaAtom
+from ...bases.line import Line
 from ...bases.molecule.molecule import Molecule
 from ...bases.tool import Tool
 from ...chem_bonds.double_bond import DoubleBond
@@ -17,7 +18,7 @@ from ...chem_bonds.triple_bond import TripleBond
 from ...playground import mol_from_graphs
 
 
-def create_atoms(molecule: Chem.Mol, position) -> list[AlphaAtom]:
+def create_atoms(molecule: Chem.Mol, position: QPointF) -> list[AlphaAtom]:
     Chem.rdDepictor.Compute2DCoords(molecule)
     atoms: list[AlphaAtom] = []
 
@@ -62,20 +63,22 @@ class Structure(Tool):
 
             current_atom: AlphaAtom = items[0]
             print(current_atom)
-            molecule = self.create_molecule(current_atom)
+            molecule: Chem.Mol = self.create_molecule(current_atom)
 
             if molecule is None:
                 return
 
-            atoms = create_atoms(molecule, current_atom.molecule.anchor.pos())
+            atoms: list[AlphaAtom] = create_atoms(
+                molecule, current_atom.molecule.anchor.pos()
+            )
 
             for atom in atoms:
                 atom.add_to_canvas(self.canvas)
             self.put_bonds(molecule, atoms)
             current_atom.molecule.destroy()
         else:
-            atoms = []
-            old_atoms = []
+            atoms: list[AlphaAtom] = []
+            old_atoms: list[AlphaAtom] = []
             for item in self.canvas.items():
                 if isinstance(item, AlphaAtom) and item not in old_atoms:
                     molecule = self.create_molecule(item)
@@ -86,8 +89,8 @@ class Structure(Tool):
                     atoms.extend(new_atoms)
                     self.put_bonds(molecule, new_atoms)
                     item.molecule.destroy()
-            for current_atom in atoms:
-                current_atom.add_to_canvas(self.canvas)
+            for atom in atoms:
+                atom.add_to_canvas(self.canvas)
 
     def create_molecule(self, atom: AlphaAtom) -> Mol | None:
         molecule_smiles: str = Chem.MolToSmiles(mol_from_graphs(atom.molecule))
@@ -108,12 +111,12 @@ class Structure(Tool):
             return False
         return True
 
-    def put_bonds(self, molecule: Chem.Mol, atoms: list):
+    def put_bonds(self, molecule: Chem.Mol, atoms: list[AlphaAtom]):
         for bond in molecule.GetBonds():
-            start_position = bond.GetBeginAtomIdx()
-            end_position = bond.GetEndAtomIdx()
-            bond_type = bond.GetBondTypeAsDouble()
-            new_bond = {
+            start_position: int = bond.GetBeginAtomIdx()
+            end_position: int = bond.GetEndAtomIdx()
+            bond_type: float = bond.GetBondTypeAsDouble()
+            new_bond: Line = {
                 bond_type == 1: SingleBond(atoms[start_position], atoms[end_position]),
                 bond_type == 2: DoubleBond(atoms[start_position], atoms[end_position]),
                 bond_type == 3: TripleBond(atoms[start_position], atoms[end_position]),
