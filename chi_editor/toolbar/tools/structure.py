@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import rdkit.Chem.rdDepictor
 from PyQt6.QtCore import Qt, QPointF
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsPixmapItem
 from datamol import incorrect_valence
 from rdkit import Chem
+from rdkit.Chem import Mol
 
 from ...bases.alpha_atom import AlphaAtom
 from ...bases.molecule.molecule import Molecule
@@ -12,13 +15,6 @@ from ...chem_bonds.double_bond import DoubleBond
 from ...chem_bonds.single_bond import SingleBond
 from ...chem_bonds.triple_bond import TripleBond
 from ...playground import mol_from_graphs
-
-
-def create_molecule(atom: AlphaAtom) -> Chem.Mol:
-    molecule_smiles: str = Chem.MolToSmiles(mol_from_graphs(atom.molecule))
-    molecule_dm: Chem.Mol = Chem.MolFromSmiles(molecule_smiles)
-    Chem.Kekulize(molecule_dm)
-    return molecule_dm
 
 
 def create_atoms(molecule: Chem.Mol, position) -> list[AlphaAtom]:
@@ -55,15 +51,6 @@ def get_geometrical_center(points: list[QPointF]) -> QPointF:
     return QPointF(x / atoms_count, y / atoms_count)
 
 
-def check_correctness(mol: Chem.Mol, molecule: Molecule) -> bool:
-    if mol is None or incorrect_valence(mol):
-        image = QImage("resources//stathem.jpg")
-        mol = QGraphicsPixmapItem(QPixmap.fromImage(image))
-        molecule.destroy()
-        return False
-    return True
-
-
 class Structure(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
@@ -72,9 +59,9 @@ class Structure(Tool):
             )
             if items == [] or not isinstance(items[0], AlphaAtom):
                 return super(Structure, self).mouse_press_event(event)
-            molecule = create_molecule(items[0])
+            molecule = self.create_molecule(items[0])
 
-            if not check_correctness(molecule, items[0].molecule):
+            if molecule is None:
                 return
 
             atoms = create_atoms(molecule, items[0].molecule.anchor.pos())
@@ -89,8 +76,8 @@ class Structure(Tool):
             old_atoms = []
             for item in filter(lambda x: isinstance(x, AlphaAtom), self.canvas.items()):
                 if item not in old_atoms:
-                    molecule = create_molecule(item)
-                    if not check_correctness(molecule, item.molecule):
+                    molecule = self.create_molecule(item)
+                    if molecule is None:
                         return
                     old_atoms.extend(item.molecule.atoms)
                     new_atoms = create_atoms(molecule, item.molecule.anchor.pos())
@@ -99,6 +86,25 @@ class Structure(Tool):
                     item.molecule.destroy()
             for atom in atoms:
                 atom.add_to_canvas(self.canvas)
+
+    def create_molecule(self, atom: AlphaAtom) -> Mol | None:
+        molecule_smiles: str = Chem.MolToSmiles(mol_from_graphs(atom.molecule))
+        molecule_dm: Chem.Mol = Chem.MolFromSmiles(molecule_smiles)
+        if not self.check_correctness(molecule_dm, atom.molecule):
+            return None
+        Chem.Kekulize(molecule_dm)
+        return molecule_dm
+
+    def check_correctness(self, mol: Chem.Mol, molecule: Molecule) -> bool:
+        if mol is None or incorrect_valence(mol):
+            image = QImage("resources//stathem.jpg")
+            mol = QGraphicsPixmapItem(QPixmap.fromImage(image))
+            for item in self.canvas.items():
+                if isinstance(item, AlphaAtom):
+                    item.molecule.destroy()
+            self.canvas.addItem(mol)
+            return False
+        return True
 
     def put_bonds(self, molecule: Chem.Mol, atoms: list):
         for bond in molecule.GetBonds():
