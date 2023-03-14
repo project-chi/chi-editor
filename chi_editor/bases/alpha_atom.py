@@ -82,7 +82,7 @@ class AlphaAtom(QGraphicsItem):
 
     def add_to_canvas(self, canvas: QGraphicsScene):
         canvas.addItem(self)
-        self.molecule.molecule_drawer.add_to_canvas(canvas)
+        self.molecule.anchor.add_to_canvas(canvas)
 
     def itemChange(
         self, change: QGraphicsItem.GraphicsItemChange, value: QVariant

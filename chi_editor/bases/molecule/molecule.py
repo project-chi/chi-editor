@@ -6,12 +6,12 @@ from chi_editor.bases.molecule.molecule_anchor import MoleculeAnchor
 
 class Molecule:
     atoms: weakref.WeakSet[AlphaAtom]
-    molecule_drawer: MoleculeAnchor
+    anchor: MoleculeAnchor
 
     def __init__(self, atom: AlphaAtom) -> None:
         self.atoms = weakref.WeakSet()
         self.atoms.add(atom)
-        self.molecule_drawer = MoleculeAnchor(self.atoms)
+        self.anchor = MoleculeAnchor(self.atoms)
 
     def add_atom(self, atom: AlphaAtom) -> None:
         self.atoms.add(atom)
@@ -19,7 +19,7 @@ class Molecule:
     def remove_atom(self, atom: AlphaAtom) -> None:
         self.atoms.remove(atom)
         if len(self.atoms) == 0:
-            self.molecule_drawer.remove()
+            self.anchor.remove()
 
     def destroy(self):
         atoms_to_remove: weakref.WeakSet[AlphaAtom] = self.atoms.copy()
@@ -41,4 +41,4 @@ class Molecule:
                     if x not in self.atoms and x not in queue
                 ]
             )
-        self.molecule_drawer.update_position([atom for atom in self.atoms])
+        self.anchor.update_position([atom for atom in self.atoms])

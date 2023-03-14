@@ -68,7 +68,7 @@ class Structure(Tool):
             if not self.check_correctness(molecule, molecule_matrix):
                 return
 
-            atoms = create_atoms(molecule, items[0].molecule.molecule_drawer.pos())
+            atoms = create_atoms(molecule, items[0].molecule.anchor.pos())
 
             for atom in atoms:
                 atom.add_to_canvas(self.canvas)
@@ -84,9 +84,7 @@ class Structure(Tool):
                     if not self.check_correctness(molecule, molecule_matrix):
                         return
                     old_atoms.extend(item.molecule.atoms)
-                    new_atoms = create_atoms(
-                        molecule, item.molecule.molecule_drawer.pos()
-                    )
+                    new_atoms = create_atoms(molecule, item.molecule.anchor.pos())
                     atoms.extend(new_atoms)
                     self.put_bonds(molecule, new_atoms)
                     item.molecule.destroy()
