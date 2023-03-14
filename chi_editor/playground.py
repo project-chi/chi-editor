@@ -33,24 +33,3 @@ def mol_from_graphs(molecule: Molecule):
     mol = mol.GetMol()
 
     return mol
-
-
-def is_line_between(atom1: AlphaAtom, atom2: AlphaAtom):
-    for i in atom1.lines:
-        if i.vertex1 == atom2 or i.vertex2 == atom2:
-            return i.multiplicity
-    return 0
-
-
-def matrix_from_item(atom: AlphaAtom):
-    alpha_atoms: list[AlphaAtom] = [atom for atom in atom.molecule.atoms]
-    adjacency: list[list[int]]
-
-    adjacency = list(
-        list(0 for _ in range(len(alpha_atoms))) for _ in range(len(alpha_atoms))
-    )
-    for i in range(len(alpha_atoms)):
-        for j in range(len(alpha_atoms)):
-            adjacency[i][j] = is_line_between(alpha_atoms[i], alpha_atoms[j])
-
-    return [atom.text for atom in alpha_atoms], adjacency, alpha_atoms

@@ -6,19 +6,19 @@ from datamol import incorrect_valence
 from rdkit import Chem
 
 from ...bases.alpha_atom import AlphaAtom
+from ...bases.molecule.molecule import Molecule
 from ...bases.tool import Tool
 from ...chem_bonds.double_bond import DoubleBond
 from ...chem_bonds.single_bond import SingleBond
 from ...chem_bonds.triple_bond import TripleBond
-from ...playground import mol_from_graphs, matrix_from_item
+from ...playground import mol_from_graphs
 
 
 def create_molecule(atom: AlphaAtom) -> (Chem.Mol, list):
-    molecule_matrix = matrix_from_item(atom)
     molecule_smiles = Chem.MolToSmiles(mol_from_graphs(atom.molecule))
     molecule_dm = Chem.MolFromSmiles(molecule_smiles)
     Chem.Kekulize(molecule_dm)
-    return molecule_dm, molecule_matrix
+    return molecule_dm
 
 
 def create_atoms(molecule: Chem.Mol, position) -> list[AlphaAtom]:
@@ -55,6 +55,15 @@ def get_geometrical_center(points: list[QPointF]) -> QPointF:
     return QPointF(x / atoms_count, y / atoms_count)
 
 
+def check_correctness(mol: Chem.Mol, molecule: Molecule) -> bool:
+    if mol is None or incorrect_valence(mol):
+        image = QImage("resources//stathem.jpg")
+        mol = QGraphicsPixmapItem(QPixmap.fromImage(image))
+        molecule.destroy()
+        return False
+    return True
+
+
 class Structure(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
@@ -63,9 +72,9 @@ class Structure(Tool):
             )
             if items == [] or not isinstance(items[0], AlphaAtom):
                 return super(Structure, self).mouse_press_event(event)
-            molecule, molecule_matrix = create_molecule(items[0])
+            molecule = create_molecule(items[0])
 
-            if not self.check_correctness(molecule, molecule_matrix):
+            if not check_correctness(molecule, items[0].molecule):
                 return
 
             atoms = create_atoms(molecule, items[0].molecule.anchor.pos())
@@ -80,8 +89,8 @@ class Structure(Tool):
             old_atoms = []
             for item in filter(lambda x: isinstance(x, AlphaAtom), self.canvas.items()):
                 if item not in old_atoms:
-                    molecule, molecule_matrix = create_molecule(item)
-                    if not self.check_correctness(molecule, molecule_matrix):
+                    molecule = create_molecule(item)
+                    if not check_correctness(molecule, item.molecule):
                         return
                     old_atoms.extend(item.molecule.atoms)
                     new_atoms = create_atoms(molecule, item.molecule.anchor.pos())
@@ -90,18 +99,6 @@ class Structure(Tool):
                     item.molecule.destroy()
             for atom in atoms:
                 atom.add_to_canvas(self.canvas)
-
-    def check_correctness(self, molecule: Chem.Mol, molecule_matrix: list) -> bool:
-        if molecule is None or incorrect_valence(molecule):
-            image = QImage("resources//stathem.jpg")
-            molecule = QGraphicsPixmapItem(QPixmap.fromImage(image))
-            for i in molecule_matrix[2]:
-                for j in i.lines:
-                    self.canvas.removeItem(j)
-                self.canvas.removeItem(i)
-            self.canvas.addItem(molecule)
-            return False
-        return True
 
     def put_bonds(self, molecule: Chem.Mol, atoms: list):
         for bond in molecule.GetBonds():
