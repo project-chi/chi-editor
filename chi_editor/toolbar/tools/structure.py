@@ -14,9 +14,9 @@ from ...chem_bonds.triple_bond import TripleBond
 from ...playground import mol_from_graphs
 
 
-def create_molecule(atom: AlphaAtom) -> (Chem.Mol, list):
-    molecule_smiles = Chem.MolToSmiles(mol_from_graphs(atom.molecule))
-    molecule_dm = Chem.MolFromSmiles(molecule_smiles)
+def create_molecule(atom: AlphaAtom) -> Chem.Mol:
+    molecule_smiles: str = Chem.MolToSmiles(mol_from_graphs(atom.molecule))
+    molecule_dm: Chem.Mol = Chem.MolFromSmiles(molecule_smiles)
     Chem.Kekulize(molecule_dm)
     return molecule_dm
 
