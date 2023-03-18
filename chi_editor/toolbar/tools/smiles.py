@@ -1,5 +1,6 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QWidget, QLineEdit, QLabel, QVBoxLayout
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QInputDialog, QWidget
+from rdkit import Chem
 
 from .structure import put_molecule
 from ...bases.tool import Tool
@@ -8,43 +9,32 @@ from ...bases.tool import Tool
 class Smiles(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
-            input_widget = SmilesInput()
-            text, label = input_widget.initUI()
-
-            put_molecule(self.canvas, mol, event.scenePos())
+            dialog = SmilesDialog()
+            self.canvas.addWidget(dialog)
+            if dialog.smiles != "":
+                molecule: Chem.Mol = Chem.MolFromSmiles(dialog.smiles)
+                Chem.Kekulize(molecule)
+                put_molecule(self.canvas, molecule, event.scenePos())
+            self.canvas.removeItem(dialog.graphicsProxyWidget())
 
     @property
     def asset(self) -> str:
         return "structure"
 
 
-class SmilesInput(QWidget):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.text_field = None
-        self.saved_label = None
+class SmilesDialog(QWidget):
+    smiles: str
+
+    def __init__(self):
+        super().__init__()
         self.initUI()
 
-    def initUI(self) -> (QLineEdit, QLabel):
-        self.setGeometry(300, 300, 250, 150)
-        self.setWindowTitle('Interactive Text Field')
+    def initUI(self):
+        self.showDialog()
 
-        # create a QLineEdit object and set it to the center of the window
-        self.text_field = QLineEdit(self)
-        self.text_field.returnPressed.connect(self.save_input)
-
-        # create a QLabel object to display the saved text
-        self.saved_label = QLabel(self)
-
-        # create a QVBoxLayout to arrange the widgets vertically
-        layout = QVBoxLayout()
-        layout.addWidget(self.text_field)
-        layout.addWidget(self.saved_label)
-        self.setLayout(layout)
-
-        self.show()
-        return self.text_field, self.saved_label
-
-    def save_input(self):
-        text = self.text_field.text()
-        self.saved_label.setText(f'Saved text: {text}')
+    def showDialog(self):
+        text, ok = QInputDialog.getText(self, 'input dialog', 'Is this ok?')
+        if ok:
+            self.smiles = str(text)
+        else:
+            self.smiles = ""
