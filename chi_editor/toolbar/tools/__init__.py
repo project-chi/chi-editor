@@ -11,6 +11,7 @@ from .structure import Structure
 from .text import Text
 from .bond import Bond
 from .drag import Drag
+from .smiles import Smiles
 from ...bases.tool import Tool
 
 
@@ -25,6 +26,7 @@ tools: tuple[type[Tool], ...] = (
     Nitrogen,
     Oxygen,
     Structure,
+    Smiles,
     Eraser,
     Drag
 )
