@@ -33,7 +33,7 @@ class SmilesDialog(QWidget):
         self.showDialog()
 
     def showDialog(self):
-        text, ok = QInputDialog.getText(self, 'input dialog', 'Is this ok?')
+        text, ok = QInputDialog.getText(self, 'input dialog', 'Put in your SMILES formula')
         if ok:
             self.smiles = str(text)
         else:
