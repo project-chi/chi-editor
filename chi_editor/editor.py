@@ -44,8 +44,6 @@ class Editor(QMainWindow):
         self.workspace = QWidget()  # create workspace
         self.setCentralWidget(self.workspace)
 
-        self.workspace.setLayout(self.getLayout(Editor.EditorMode.FREE_MODE))
-
         # Add left toolbar
         self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, CanvasToolBar(canvas=self.canvas))
 
@@ -68,10 +66,10 @@ class Editor(QMainWindow):
         # Add left toolbar
         self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, CanvasToolBar(canvas=self.canvas))
 
-    def getLayout(self, mode: EditorMode) -> QLayout:
+    def setMode(self, mode: EditorMode) -> None:
         match mode:
             case Editor.EditorMode.FREE_MODE:
-                return self.getFreeModeLayout()
+                self.workspace.setLayout(self.getFreeModeLayout())
             case Editor.EditorMode.SOLVE_MODE:
                 pass
             case Editor.EditorMode.CREATE_MODE:
