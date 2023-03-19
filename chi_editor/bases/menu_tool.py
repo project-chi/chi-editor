@@ -17,7 +17,7 @@ class MenuTool(QAction):
 
         self.setText(self.text_asset)
 
-        self.triggered().connect(self.exec())
+        self.triggered.connect(self.exec)
 
     def exec(self) -> None:
         pass
