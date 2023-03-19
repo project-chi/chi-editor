@@ -13,5 +13,5 @@ class CanvasMenuBar(QMenuBar):
 
         mode_menu = self.addMenu("Mode")
         for MenuTool in menu_tools:
-            menu_tool = MenuTool(editor=editor)
+            menu_tool = MenuTool(editor=editor, parent=mode_menu)
             mode_menu.addAction(menu_tool)
