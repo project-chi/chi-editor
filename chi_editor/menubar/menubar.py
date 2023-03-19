@@ -1,13 +1,17 @@
-from PyQt6.QtGui import QAction, QActionGroup
 from PyQt6.QtWidgets import QMenuBar
 
+from ..editor import Editor
 from .menu_tools import menu_tools
-from ..canvas import Canvas
 
 
 class CanvasMenuBar(QMenuBar):
-    _canvas: Canvas
+    _editor: Editor
 
-    def __init__(self, *args, canvas: Canvas, **kwargs) -> None:
+    def __init__(self, *args, editor: Editor, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self._canvas = canvas
+        self._editor = editor
+
+        mode_menu = self.addMenu("Mode")
+        for MenuTool in menu_tools:
+            menu_tool = MenuTool(editor=editor)
+            mode_menu.addAction(menu_tool)
