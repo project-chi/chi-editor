@@ -1,13 +1,17 @@
+from typing import TYPE_CHECKING
+
 from PyQt6.QtWidgets import QMenuBar
 
-from ..editor import Editor
 from .menu_tools import menu_tools
+
+if TYPE_CHECKING:
+    from ..editor import Editor
 
 
 class CanvasMenuBar(QMenuBar):
-    _editor: Editor
+    _editor: "Editor"
 
-    def __init__(self, *args, editor: Editor, **kwargs) -> None:
+    def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._editor = editor
 

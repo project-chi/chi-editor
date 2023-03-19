@@ -7,14 +7,12 @@ from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout
 from .canvas import Canvas
 from .constants import ASSETS
 from .toolbar import CanvasToolBar
+from .menubar.menubar import CanvasMenuBar
+
+from .editor_mode import EditorMode
 
 
 class Editor(QMainWindow):
-    class EditorMode(Enum):
-        FREE_MODE = 0
-        SOLVE_MODE = 1
-        CREATE_MODE = 2
-
     # Hierarchy:
     #
     #   window:
@@ -52,7 +50,6 @@ class Editor(QMainWindow):
         self.workspace.widget(0).show()
 
         # Add custom menuBar
-        from .menubar.menubar import CanvasMenuBar
         menubar = CanvasMenuBar(editor=self)
         self.setMenuBar(menubar)
 

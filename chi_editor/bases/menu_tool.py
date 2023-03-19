@@ -1,13 +1,17 @@
+from typing import TYPE_CHECKING
+
 from PyQt6.QtGui import QAction, QIcon
 
 from ..constants import RESOURCES
-from ..editor import Editor
+
+if TYPE_CHECKING:
+    from ..editor import Editor
 
 
 class MenuTool(QAction):
-    _editor: Editor
-    
-    def __init__(self, *args, editor: Editor, **kwargs) -> None:
+    _editor: "Editor"
+
+    def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._editor = editor
 

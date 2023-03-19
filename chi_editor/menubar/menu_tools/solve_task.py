@@ -1,11 +1,10 @@
 from ...bases.menu_tool import MenuTool
-
-from ...editor import Editor
+from ...editor_mode import EditorMode
 
 
 class SolveTask(MenuTool):
     def exec(self) -> None:
-        self._editor.setMode(Editor.EditorMode.SOLVE_MODE)
+        self._editor.setMode(EditorMode.SOLVE_MODE)
 
     @property
     def asset(self) -> str:
