@@ -9,7 +9,7 @@ class FreeMode(MenuTool):
 
     @property
     def asset(self) -> str:
-        raise NotImplemented
+        return ""
 
     @property
     def text_asset(self) -> str:
