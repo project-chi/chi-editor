@@ -2,7 +2,7 @@ from enum import Enum
 
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QIcon, QTransform
-from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QWidget, QLayout
+from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QWidget, QLayout, QToolBar
 
 from .canvas import Canvas
 from .constants import ASSETS
@@ -32,6 +32,9 @@ class Editor(QMainWindow):
     # GraphicsScene where to draw all graphical objects
     canvas: Canvas
 
+    # Toolbar that contains tools for manipulating canvas in free mode
+    _drawing_tool_bar: QToolBar
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -44,8 +47,13 @@ class Editor(QMainWindow):
         self.workspace = QWidget()  # create workspace
         self.setCentralWidget(self.workspace)
 
-        # Add left toolbar
-        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, CanvasToolBar(canvas=self.canvas))
+        # Set default (free) mode
+        self.setMode(Editor.EditorMode.FREE_MODE)
+
+        # Add custom menuBar
+        from .menubar.menubar import CanvasMenuBar
+        menubar = CanvasMenuBar(editor=self)
+        self.setMenuBar(menubar)
 
     def zoom_in(self):
         # Get the current scale factor of the view
@@ -63,18 +71,19 @@ class Editor(QMainWindow):
         new_scale = current_scale / 1.2
         self.graphics_view.setTransform(QTransform.fromScale(new_scale, new_scale))
 
-        # Add left toolbar
-        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, CanvasToolBar(canvas=self.canvas))
-
     def setMode(self, mode: EditorMode) -> None:
         match mode:
             case Editor.EditorMode.FREE_MODE:
                 self.workspace.setLayout(self.getFreeModeLayout())
+                # Add left toolbar
+                self._drawing_tool_bar = CanvasToolBar(canvas=self.canvas, parent=self)
+                self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self._drawing_tool_bar)
             case Editor.EditorMode.SOLVE_MODE:
-                pass
+                self.workspace.setLayout(self.getSolveModeLayout())
+                self.removeToolBar(self._drawing_tool_bar)
             case Editor.EditorMode.CREATE_MODE:
-                pass
-
+                self.workspace.setLayout(self.getCreateModeLayout())
+                self.removeToolBar(self._drawing_tool_bar)
     def getFreeModeLayout(self) -> QLayout:
         # Initialize QGraphicsView
         self.graphics_view = QGraphicsView(self)  # create QGraphicsView
@@ -108,4 +117,11 @@ class Editor(QMainWindow):
         layout = QVBoxLayout(self)
         layout.addWidget(self.graphics_view)
         return layout
-   
+
+    def getSolveModeLayout(self) -> QLayout:
+        layout = QVBoxLayout(self)
+        return layout
+
+    def getCreateModeLayout(self) -> QLayout:
+        layout = QVBoxLayout(self)
+        return layout
