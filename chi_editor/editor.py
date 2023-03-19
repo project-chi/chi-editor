@@ -1,3 +1,5 @@
+from enum import Enum
+
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QIcon, QTransform
 from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QHBoxLayout, QWidget
@@ -8,6 +10,10 @@ from .toolbar import CanvasToolBar
 
 
 class Editor(QMainWindow):
+    class EditorMode(Enum):
+        FREE_MODE = 0,
+        SOLVE_MODE = 1,
+        CREATE_MODE = 2
 
     # Hierarchy:
     #
@@ -96,3 +102,6 @@ class Editor(QMainWindow):
         # Update the scale factor of the view
         new_scale = current_scale / 1.2
         self.graphics_view.setTransform(QTransform.fromScale(new_scale, new_scale))
+
+    def switchMode(self, mode: EditorMode) -> None:
+        pass
