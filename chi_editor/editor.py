@@ -2,7 +2,7 @@ from enum import Enum
 
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QIcon, QTransform
-from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QWidget, QLayout, QToolBar
+from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QStackedWidget, QToolBar, QWidget
 
 from .canvas import Canvas
 from .constants import ASSETS
@@ -11,8 +11,8 @@ from .toolbar import CanvasToolBar
 
 class Editor(QMainWindow):
     class EditorMode(Enum):
-        FREE_MODE = 0,
-        SOLVE_MODE = 1,
+        FREE_MODE = 0
+        SOLVE_MODE = 1
         CREATE_MODE = 2
 
     # Hierarchy:
@@ -24,7 +24,7 @@ class Editor(QMainWindow):
     #       toolbar:
 
     # Contains everything except toolbar
-    workspace: QWidget
+    workspace: QStackedWidget
 
     # QGraphicsView contains drawable space
     graphics_view: QGraphicsView
@@ -44,16 +44,21 @@ class Editor(QMainWindow):
         self.resize(1000, 600)
 
         # The biggest part of interface
-        self.workspace = QWidget()  # create workspace
+        self.workspace = QStackedWidget()  # create workspace
         self.setCentralWidget(self.workspace)
 
         # Set default (free) mode
-        self.setMode(Editor.EditorMode.FREE_MODE)
+        self.createModes()
+        self.workspace.widget(0).show()
 
         # Add custom menuBar
         from .menubar.menubar import CanvasMenuBar
         menubar = CanvasMenuBar(editor=self)
         self.setMenuBar(menubar)
+
+        # Add toolbar
+        self._drawing_tool_bar = CanvasToolBar(canvas=self.canvas, parent=self)
+        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self._drawing_tool_bar)
 
     def zoom_in(self):
         # Get the current scale factor of the view
@@ -72,19 +77,15 @@ class Editor(QMainWindow):
         self.graphics_view.setTransform(QTransform.fromScale(new_scale, new_scale))
 
     def setMode(self, mode: EditorMode) -> None:
-        match mode:
-            case Editor.EditorMode.FREE_MODE:
-                self.workspace.setLayout(self.getFreeModeLayout())
-                # Add left toolbar
-                self._drawing_tool_bar = CanvasToolBar(canvas=self.canvas, parent=self)
-                self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self._drawing_tool_bar)
-            case Editor.EditorMode.SOLVE_MODE:
-                self.workspace.setLayout(self.getSolveModeLayout())
-                self.removeToolBar(self._drawing_tool_bar)
-            case Editor.EditorMode.CREATE_MODE:
-                self.workspace.setLayout(self.getCreateModeLayout())
-                self.removeToolBar(self._drawing_tool_bar)
-    def getFreeModeLayout(self) -> QLayout:
+        self.workspace.widget(self.workspace.currentIndex()).hide()
+        self.workspace.widget(mode.value).show()
+
+    def createModes(self) -> None:
+        self.workspace.addWidget(self.getFreeModeLayout())
+        self.workspace.addWidget(self.getSolveModeLayout())
+        self.workspace.addWidget(self.getCreateModeLayout())
+
+    def getFreeModeLayout(self) -> QWidget:
         # Initialize QGraphicsView
         self.graphics_view = QGraphicsView(self)  # create QGraphicsView
         self.graphics_view \
@@ -114,14 +115,17 @@ class Editor(QMainWindow):
 
         self.graphics_view.setLayout(v_button_group)
 
-        layout = QVBoxLayout(self)
+        free_mode_widget = QWidget()
+        layout = QVBoxLayout(free_mode_widget)
         layout.addWidget(self.graphics_view)
-        return layout
+        return free_mode_widget
 
-    def getSolveModeLayout(self) -> QLayout:
-        layout = QVBoxLayout(self)
-        return layout
+    def getSolveModeLayout(self) -> QWidget:
+        solve_mode_widget = QWidget()
+        layout = QVBoxLayout(solve_mode_widget)
+        return solve_mode_widget
 
-    def getCreateModeLayout(self) -> QLayout:
-        layout = QVBoxLayout(self)
-        return layout
+    def getCreateModeLayout(self) -> QWidget:
+        create_mode_widget = QWidget()
+        layout = QVBoxLayout(create_mode_widget)
+        return create_mode_widget
