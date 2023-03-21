@@ -34,6 +34,7 @@ class Editor(QMainWindow):
 
     # Toolbar that contains tools for manipulating canvas in free mode
     toolbars: list[QToolBar]
+    mode: EditorMode
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -66,6 +67,7 @@ class Editor(QMainWindow):
                 toolbar.toggleViewAction().setChecked(False)
                 toolbar.toggleViewAction().trigger()
         _solver_tool_bar.toggleViewAction().trigger()
+        self.mode = 0
 
     def zoom_in(self):
         # Get the current scale factor of the view
@@ -84,10 +86,11 @@ class Editor(QMainWindow):
         self.view_free.setTransform(QTransform.fromScale(new_scale, new_scale))
 
     def setMode(self, mode: EditorMode) -> None:
-        self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
+        self.toolbars[self.mode].toggleViewAction().trigger()
         self.workspace.widget(self.workspace.currentIndex()).hide()
         self.workspace.widget(mode.value).show()
         self.toolbars[mode.value].toggleViewAction().trigger()
+        self.mode = mode.value
 
     def createModes(self) -> None:
         self.workspace.addWidget(self.getFreeModeLayout())
