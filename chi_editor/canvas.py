@@ -9,7 +9,7 @@ Tool = TypeVar('Tool')
 
 
 class Canvas(QGraphicsScene):
-    current_action: Tool
+    current_action: Tool = None
     min_scene_rect: QRectF
 
     def __init__(self, *args, **kwargs) -> None:
@@ -17,13 +17,16 @@ class Canvas(QGraphicsScene):
         self.min_scene_rect = super().sceneRect()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        self.current_action.mouse_press_event(event)
+        if self.current_action:
+            self.current_action.mouse_press_event(event)
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        self.current_action.mouse_move_event(event)
+        if self.current_action:
+            self.current_action.mouse_move_event(event)
 
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        self.current_action.mouse_release_event(event)
+        if self.current_action:
+            self.current_action.mouse_release_event(event)
 
     def sceneRect(self) -> QRectF:
         return self.min_scene_rect
