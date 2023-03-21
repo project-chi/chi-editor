@@ -1,12 +1,12 @@
 import weakref
 
-from PyQt6.QtCore import QRectF, QPointF
-from PyQt6.QtGui import QPen, QColor, QBrush, QPainter, QImage
+from PyQt6.QtCore import QPointF, QRectF
+from PyQt6.QtGui import QBrush, QColor, QImage, QPainter, QPen
 from PyQt6.QtWidgets import (
     QGraphicsItem,
-    QStyleOptionGraphicsItem,
-    QGraphicsSceneMouseEvent,
     QGraphicsScene,
+    QGraphicsSceneMouseEvent,
+    QStyleOptionGraphicsItem,
 )
 
 from chi_editor.bases.alpha_atom import AlphaAtom

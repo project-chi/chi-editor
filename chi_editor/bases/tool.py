@@ -10,11 +10,11 @@ class Tool(QAction):
         super().__init__(*args, **kwargs)
         self.canvas = canvas
 
-        icon_path = RESOURCES / 'assets' / 'toolbar' / f'{self.asset}.png'
+        icon_path = RESOURCES / "assets" / "toolbar" / f"{self.asset}.png"
         if not icon_path.exists():
             raise ValueError(
-                f'can\'t find assets for {self.__class__.__name__}, checked path is {icon_path}\n'
-                f'    module reference: {self.__module__}'
+                f"can\'t find assets for {self.__class__.__name__}, checked path is {icon_path}\n"
+                f"    module reference: {self.__module__}"
             )
 
         self.setIcon(QIcon(str(icon_path)))
@@ -32,4 +32,4 @@ class Tool(QAction):
     @property
     def asset(self) -> str:
         """Returns the name of the icon for this tool without extension."""
-        raise NotImplemented
+        raise NotImplementedError

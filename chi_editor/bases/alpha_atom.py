@@ -7,14 +7,14 @@ from PyQt6 import QtCore
 if TYPE_CHECKING:
     from chi_editor.bases.molecule.molecule import Molecule
 
-from PyQt6.QtGui import QPen, QBrush, QColor, QFont, QPainter
+from PyQt6.QtCore import QRectF, Qt, QVariant
+from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
 from PyQt6.QtWidgets import (
     QGraphicsItem,
-    QStyleOptionGraphicsItem,
-    QGraphicsSceneMouseEvent,
     QGraphicsScene,
+    QGraphicsSceneMouseEvent,
+    QStyleOptionGraphicsItem,
 )
-from PyQt6.QtCore import QRectF, Qt, QVariant
 
 from .line import Line
 

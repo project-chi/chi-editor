@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from math import fabs, atan2, cos, degrees, radians
+from math import atan2, cos, degrees, fabs, radians
 
 from PyQt6.QtCore import QPointF, QRectF
-from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor
+from PyQt6.QtGui import QColor, QPainter, QPen, QPixmap
 from PyQt6.QtWidgets import (
+    QGraphicsEllipseItem,
     QGraphicsItem,
     QGraphicsPixmapItem,
-    QWidget,
     QStyleOptionGraphicsItem,
-    QGraphicsEllipseItem,
+    QWidget,
 )
 
 

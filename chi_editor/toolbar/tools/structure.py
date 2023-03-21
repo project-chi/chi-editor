@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-import rdkit.Chem.rdDepictor
-from PyQt6.QtCore import Qt, QPointF
-from PyQt6.QtGui import QImage, QPixmap
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsPixmapItem
 from datamol import incorrect_valence
+from PyQt6.QtCore import QPointF, Qt
+from PyQt6.QtGui import QImage, QPixmap
+from PyQt6.QtWidgets import QGraphicsPixmapItem, QGraphicsSceneMouseEvent
 from rdkit import Chem
 from rdkit.Chem import Mol
 

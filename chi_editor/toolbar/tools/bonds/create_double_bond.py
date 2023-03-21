@@ -1,9 +1,9 @@
-from PyQt6.QtWidgets import QGraphicsItem
 from PyQt6.QtCore import QPointF
+from PyQt6.QtWidgets import QGraphicsItem
 
-from ..bond import Bond
 from ....bases.line import Line
 from ....chem_bonds.double_bond import DoubleBond
+from ..bond import Bond
 
 
 class CreateDoubleBond(Bond):
@@ -13,4 +13,4 @@ class CreateDoubleBond(Bond):
 
     @property
     def asset(self) -> str:
-        return 'bond2'
+        return "bond2"

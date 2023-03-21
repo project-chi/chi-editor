@@ -19,4 +19,4 @@ class Eraser(Tool):
 
     @property
     def asset(self) -> str:
-        return 'eraser'
+        return "eraser"

@@ -2,8 +2,8 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QInputDialog, QWidget
 from rdkit import Chem
 
-from .structure import put_molecule
 from ...bases.tool import Tool
+from .structure import put_molecule
 
 
 class Smiles(Tool):
@@ -33,7 +33,7 @@ class SmilesDialog(QWidget):
         self.showDialog()
 
     def showDialog(self):
-        text, ok = QInputDialog.getText(self, 'input dialog', 'Put in your SMILES formula')
+        text, ok = QInputDialog.getText(self, "input dialog", "Put in your SMILES formula")
         if ok:
             self.smiles = str(text)
         else:

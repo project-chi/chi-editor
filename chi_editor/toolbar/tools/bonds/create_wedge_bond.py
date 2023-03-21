@@ -1,9 +1,9 @@
-from PyQt6.QtWidgets import QGraphicsItem
 from PyQt6.QtCore import QPointF
+from PyQt6.QtWidgets import QGraphicsItem
 
-from ..bond import Bond
 from ....bases.line import Line
 from ....chem_bonds.wedge_bond import WedgeBond
+from ..bond import Bond
 
 
 class CreateWedgeBond(Bond):
@@ -13,4 +13,4 @@ class CreateWedgeBond(Bond):
 
     @property
     def asset(self) -> str:
-        return 'bond1'
+        return "bond1"

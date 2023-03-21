@@ -1,11 +1,9 @@
-from typing import TypeVar
-from typing import overload
+from typing import TypeVar, overload
 
 from PyQt6.QtCore import QRectF
 from PyQt6.QtWidgets import QGraphicsScene, QGraphicsSceneMouseEvent
 
-
-Tool = TypeVar('Tool')
+Tool = TypeVar("Tool")
 
 
 class Canvas(QGraphicsScene):

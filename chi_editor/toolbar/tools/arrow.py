@@ -16,4 +16,4 @@ class Arrow(Tool):
 
     @property
     def asset(self) -> str:
-        return 'arrow'
+        return "arrow"

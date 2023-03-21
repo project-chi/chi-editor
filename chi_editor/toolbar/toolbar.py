@@ -1,8 +1,8 @@
 from PyQt6.QtGui import QAction, QActionGroup
 from PyQt6.QtWidgets import QToolBar
 
-from .tools import tools
 from ..canvas import Canvas
+from .tools import tools
 
 
 class CanvasToolBar(QToolBar):

@@ -1,5 +1,5 @@
-from PyQt6.QtGui import QPainter, QColor, QPen
 from PyQt6.QtCore import QPointF
+from PyQt6.QtGui import QColor, QPainter, QPen
 
 from ..bases.line import Line
 

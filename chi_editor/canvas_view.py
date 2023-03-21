@@ -1,6 +1,6 @@
 from PyQt6.QtCore import QPoint
+from PyQt6.QtGui import QMouseEvent, QResizeEvent
 from PyQt6.QtWidgets import QGraphicsView
-from PyQt6.QtGui import QResizeEvent, QMouseEvent
 
 
 class CanvasView(QGraphicsView):

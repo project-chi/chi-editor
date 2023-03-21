@@ -1,4 +1,3 @@
-import weakref
 from typing import Dict
 
 from rdkit import Chem

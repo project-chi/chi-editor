@@ -1,6 +1,13 @@
-from PyQt6.QtCore import Qt, QRectF
+from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QIcon, QTransform
-from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QHBoxLayout, QWidget
+from PyQt6.QtWidgets import (
+    QGraphicsView,
+    QHBoxLayout,
+    QMainWindow,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 from .canvas import Canvas
 from .constants import ASSETS
@@ -31,7 +38,7 @@ class Editor(QMainWindow):
 
         # Window settings
         self.setWindowTitle("Project Chi")
-        self.setWindowIcon(QIcon(str(ASSETS / 'project-chi.png')))
+        self.setWindowIcon(QIcon(str(ASSETS / "project-chi.png")))
         self.resize(1000, 600)
 
         # The biggest part of interface
