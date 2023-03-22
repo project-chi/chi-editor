@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 
 from PyQt6.QtWidgets import QMenuBar
 
-from .menu_tools import menu_tools
+from .menu_tools import mode_tools, task_tools
 
 if TYPE_CHECKING:
     from ..editor import Editor
@@ -16,6 +16,11 @@ class CanvasMenuBar(QMenuBar):
         self._editor = editor
 
         mode_menu = self.addMenu("Mode")
-        for MenuTool in menu_tools:
+        for MenuTool in mode_tools:
             menu_tool = MenuTool(editor=editor, parent=mode_menu)
             mode_menu.addAction(menu_tool)
+
+        task_menu = self.addMenu("Tasks")
+        for MenuTool in task_tools:
+            menu_tool = MenuTool(editor=editor, parent=task_menu)
+            task_menu.addAction(menu_tool)

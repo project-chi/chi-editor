@@ -3,8 +3,12 @@ from .solve_task import SolveTask
 from .free_mode import FreeMode
 from ...bases.menu_tool import MenuTool
 
-menu_tools: tuple[type[MenuTool], ...] = (
+mode_tools: tuple[type[MenuTool], ...] = (
     CreateTask,
     SolveTask,
     FreeMode,
+)
+
+task_tools: tuple[type[MenuTool], ...] = (
+
 )
