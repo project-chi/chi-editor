@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import weakref
 
 from PyQt6.QtCore import QPointF, QRectF
@@ -9,7 +13,9 @@ from PyQt6.QtWidgets import (
     QStyleOptionGraphicsItem,
 )
 
-from chi_editor.bases.alpha_atom import AlphaAtom
+if TYPE_CHECKING:
+    from chi_editor.bases.alpha_atom import AlphaAtom
+
 from chi_editor.bases.sources import Sources
 
 
