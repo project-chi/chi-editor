@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 
 from PyQt6 import QtCore
 
+from .sources import Sources
+
 if TYPE_CHECKING:
     from chi_editor.bases.molecule.molecule import Molecule
 
@@ -24,7 +26,7 @@ class AlphaAtom(QGraphicsItem):
     text_pen: QPen = QPen(QColor("black"), 10)
     text_font: QFont = QFont("Helvetica", 40)
     brush: QBrush = QBrush(QColor("white"))
-    rect: QRectF = QRectF(0, 0, 50, 50)
+    rect: QRectF = Sources.rect
 
     molecule: Molecule
     text: str

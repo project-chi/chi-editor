@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import (
 )
 
 from chi_editor.bases.alpha_atom import AlphaAtom
+from chi_editor.bases.sources import Sources
 
 
 def get_geometrical_center(atoms: list[AlphaAtom]) -> QPointF:
@@ -24,7 +25,7 @@ class MoleculeAnchor(QGraphicsItem):
     background_pen: QPen = QPen(QColor("lightgray"), 1)
     brush: QBrush = QBrush(QColor("lightgray"))
     rect: QRectF = QRectF(
-        AlphaAtom.rect.center().x() - 10, AlphaAtom.rect.center().y() - 10, 20, 20
+        Sources.rect.center().x() - 10, Sources.rect.center().y() - 10, 20, 20
     )
 
     atoms: weakref.WeakSet[AlphaAtom]
