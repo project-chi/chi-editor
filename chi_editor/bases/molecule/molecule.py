@@ -1,35 +1,38 @@
-import weakref
+from typing import TYPE_CHECKING
+from weakref import WeakSet
 
-from chi_editor.bases.alpha_atom import AlphaAtom
 from chi_editor.bases.molecule.molecule_anchor import MoleculeAnchor
+
+if TYPE_CHECKING:
+    from chi_editor.bases.alpha_atom import AlphaAtom
 
 
 class Molecule:
-    atoms: weakref.WeakSet[AlphaAtom]
-    anchor: MoleculeAnchor
+    atoms: "WeakSet[AlphaAtom]"
+    anchor: "MoleculeAnchor"
 
-    def __init__(self, atom: AlphaAtom) -> None:
-        self.atoms = weakref.WeakSet()
+    def __init__(self, atom: "AlphaAtom") -> None:
+        self.atoms = WeakSet()
         self.atoms.add(atom)
         self.anchor = MoleculeAnchor(self.atoms)
 
-    def add_atom(self, atom: AlphaAtom) -> None:
+    def add_atom(self, atom: "AlphaAtom") -> None:
         self.atoms.add(atom)
 
-    def remove_atom(self, atom: AlphaAtom) -> None:
+    def remove_atom(self, atom: "AlphaAtom") -> None:
         self.atoms.remove(atom)
         if len(self.atoms) == 0:
             self.anchor.remove()
 
     def destroy(self):
-        atoms_to_remove: weakref.WeakSet[AlphaAtom] = self.atoms.copy()
+        atoms_to_remove: "WeakSet[AlphaAtom]" = self.atoms.copy()
         for atom in atoms_to_remove:
             atom.remove()
 
     def update_atoms(self) -> None:
-        queue: list[AlphaAtom] = [atom for atom in self.atoms]
+        queue: "list[AlphaAtom]" = [atom for atom in self.atoms]
         while queue:
-            current_atom: AlphaAtom = queue.pop()
+            current_atom: "AlphaAtom" = queue.pop()
             if current_atom.molecule != self:
                 current_atom.molecule.remove_atom(current_atom)
             current_atom.molecule = self

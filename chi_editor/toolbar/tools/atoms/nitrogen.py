@@ -8,5 +8,5 @@ class Nitrogen(Atom):
         self._element = "N"
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "nitrogen"

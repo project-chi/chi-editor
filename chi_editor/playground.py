@@ -1,5 +1,3 @@
-from typing import Dict
-
 from rdkit import Chem
 
 from chi_editor.bases.alpha_atom import AlphaAtom
@@ -10,7 +8,7 @@ def mol_from_graphs(molecule: Molecule):
     # create empty editable mol object
     mol = Chem.RWMol()
 
-    atom_to_index: Dict[AlphaAtom, int] = {}
+    atom_to_index: dict[AlphaAtom, int] = {}
     # add atoms to mol and keep track of index
     for atom in molecule.atoms:
         atom_to_index[atom] = mol.AddAtom(Chem.Atom(atom.text))

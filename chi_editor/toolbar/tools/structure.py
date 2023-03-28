@@ -144,5 +144,5 @@ class Structure(Tool):
                 atom.add_to_canvas(self.canvas)
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "structure"

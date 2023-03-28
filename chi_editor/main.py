@@ -2,7 +2,7 @@ import sys
 
 from PyQt6.QtWidgets import QApplication
 
-from .editor import Editor
+from chi_editor.editor import Editor
 
 
 def main():

@@ -8,5 +8,5 @@ class Carbon(Atom):
         self._element = "C"
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "carbon"

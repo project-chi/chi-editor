@@ -12,5 +12,5 @@ class CreateDoubleBond(Bond):
         return DoubleBond(start_atom, mouse_pos)
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "bond2"

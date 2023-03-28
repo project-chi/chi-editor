@@ -1,30 +1,34 @@
-from __future__ import annotations
-
 from math import atan2, cos, degrees, fabs, radians
+from typing import TYPE_CHECKING
 
-from PyQt6.QtCore import QPointF, QRectF
-from PyQt6.QtGui import QColor, QPainter, QPen, QPixmap
-from PyQt6.QtWidgets import (
-    QGraphicsEllipseItem,
-    QGraphicsItem,
-    QGraphicsPixmapItem,
-    QStyleOptionGraphicsItem,
-    QWidget,
-)
+from PyQt6.QtCore import QPointF
+from PyQt6.QtGui import QColor, QPen, QPixmap
+from PyQt6.QtWidgets import QGraphicsEllipseItem, QGraphicsItem, QGraphicsPixmapItem
+
+if TYPE_CHECKING:
+    from typing import ClassVar
+
+    from PyQt6.QtCore import QRectF
+    from PyQt6.QtGui import QPainter
+
+    from chi_editor.bases.alpha_atom import AlphaAtom
 
 
 class Line(QGraphicsPixmapItem):
     """Connects two graphics items with a line."""
+    width: "ClassVar[float]" = 30.0
 
-    vertex1: QGraphicsItem
-    vertex2: QGraphicsItem
-    width: float = 30
-    height: float
-    multiplicity: int
+    vertex1: "AlphaAtom"
+    vertex2: "QGraphicsItem"
+    height: "float"
+    multiplicity: "int"
 
     def __init__(
-        self, start: QGraphicsItem, end: QGraphicsItem | QPointF, *args, **kwargs
-    ) -> None:
+        self,
+        start: "AlphaAtom",
+        end: "QGraphicsItem | QPointF",
+        *args, **kwargs,
+    ) -> "None":
         super().__init__(*args, **kwargs)
         self.vertex1 = start
 
@@ -43,18 +47,20 @@ class Line(QGraphicsPixmapItem):
 
         self.update_pixmap(self.vertex2)
 
-    def set_v2(self, end: QGraphicsItem) -> None:
+    def set_v2(self, end: "QGraphicsItem") -> "None":
         self.vertex2 = end
 
-    def remove(self):
+    def remove(self) -> "None":
         self.vertex1.lines.remove(self)
         self.vertex2.lines.remove(self)
         if self.scene():
             self.scene().removeItem(self)
 
     def update_pixmap(
-        self, moved_vertex: QGraphicsItem, following_mouse: bool = False
-    ) -> None:
+        self,
+        moved_vertex: "QGraphicsItem",
+        following_mouse: "bool" = False,
+    ) -> "None":
         moved_point = moved_vertex.sceneBoundingRect().center()
         self.setRotation(0)
         self.setScale(1)
@@ -88,19 +94,16 @@ class Line(QGraphicsPixmapItem):
 
         self.update()
 
-    def paint(
-        self,
-        painter: QPainter,
-        option: QStyleOptionGraphicsItem = None,
-        widget: QWidget = None,
-    ) -> None:
+    def paint(self, painter: "QPainter", *args) -> "None":
         painter.save()
         self.paint_line(painter)
         painter.restore()
 
-    def paint_line(self, painter: QPainter) -> None:
+    def paint_line(self, painter: "QPainter") -> "None":
         """This method determines how line is drawn.
-        It should be overrided by children classes"""
+
+        It should be overriden by children classes.
+        """
         pen = QPen(QColor("black"), 3)
         painter.setPen(pen)
 
@@ -108,5 +111,5 @@ class Line(QGraphicsPixmapItem):
             QPointF(self.width / 2, 0), QPointF(self.width / 2, self.height)
         )
 
-    def boundingRect(self) -> QRectF:
+    def boundingRect(self) -> "QRectF":
         return super().boundingRect()

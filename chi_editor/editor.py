@@ -9,13 +9,12 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from .canvas import Canvas
-from .constants import ASSETS
-from .toolbar import CanvasToolBar
+from chi_editor.canvas import Canvas
+from chi_editor.constants import ASSETS
+from chi_editor.toolbar import CanvasToolBar
 
 
 class Editor(QMainWindow):
-
     # Hierarchy:
     #
     #   window:
@@ -25,15 +24,15 @@ class Editor(QMainWindow):
     #       toolbar:
 
     # Contains everything except toolbar
-    workspace: QWidget
+    workspace: "QWidget"
 
     # QGraphicsView contains drawable space
-    graphics_view: QGraphicsView
+    graphics_view: "QGraphicsView"
 
     # GraphicsScene where to draw all graphical objects
-    canvas: Canvas
+    canvas: "Canvas"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> "None":
         super().__init__(*args, **kwargs)
 
         # Window settings
@@ -88,7 +87,7 @@ class Editor(QMainWindow):
         # Add left toolbar
         self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, CanvasToolBar(canvas=self.canvas))
 
-    def zoom_in(self):
+    def zoom_in(self) -> "None":
         # Get the current scale factor of the view
         current_scale = self.graphics_view.transform().m11()
 
@@ -96,7 +95,7 @@ class Editor(QMainWindow):
         new_scale = current_scale * 1.2
         self.graphics_view.setTransform(QTransform.fromScale(new_scale, new_scale))
 
-    def zoom_out(self):
+    def zoom_out(self) -> "None":
         # Get the current scale factor of the view
         current_scale = self.graphics_view.transform().m11()
 

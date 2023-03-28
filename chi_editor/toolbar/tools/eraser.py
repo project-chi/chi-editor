@@ -18,5 +18,5 @@ class Eraser(Tool):
 
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "eraser"

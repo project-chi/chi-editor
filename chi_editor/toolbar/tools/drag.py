@@ -16,5 +16,5 @@ class Drag(Tool):
             view.setDragMode(QGraphicsView.DragMode.NoDrag)
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "arrow"

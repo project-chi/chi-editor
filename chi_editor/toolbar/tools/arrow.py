@@ -15,5 +15,5 @@ class Arrow(Tool):
         super(Canvas, self.canvas).mouseReleaseEvent(event)
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "arrow"

@@ -12,5 +12,5 @@ class CreateWedgeBond(Bond):
         return WedgeBond(start_atom, mouse_pos)
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "bond1"

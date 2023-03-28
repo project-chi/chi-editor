@@ -1,43 +1,46 @@
-from typing import TypeVar, overload
+from typing import TYPE_CHECKING, overload
 
 from PyQt6.QtCore import QRectF
-from PyQt6.QtWidgets import QGraphicsScene, QGraphicsSceneMouseEvent
+from PyQt6.QtWidgets import QGraphicsScene
 
-Tool = TypeVar("Tool")
+if TYPE_CHECKING:
+    from chi_editor.bases.tool import Tool
+
+    from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
 
 
 class Canvas(QGraphicsScene):
-    current_action: Tool
-    min_scene_rect: QRectF
+    current_action: "Tool"
+    min_scene_rect: "QRectF"
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args, **kwargs) -> "None":
         super().__init__(*args, **kwargs)
         self.min_scene_rect = super().sceneRect()
 
-    def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+    def mousePressEvent(self, event: "QGraphicsSceneMouseEvent") -> "None":
         self.current_action.mouse_press_event(event)
 
-    def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+    def mouseMoveEvent(self, event: "QGraphicsSceneMouseEvent") -> "None":
         self.current_action.mouse_move_event(event)
 
-    def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+    def mouseReleaseEvent(self, event: "QGraphicsSceneMouseEvent") -> "None":
         self.current_action.mouse_release_event(event)
 
-    def sceneRect(self) -> QRectF:
+    def enlargeScene(self, sceneRect: "QRectF") -> "None":
+        self.min_scene_rect = self.min_scene_rect.united(sceneRect)
+
+    def sceneRect(self) -> "QRectF":
         return self.min_scene_rect
 
     @overload
-    def setSceneRect(self, sceneRect: QRectF) -> None:
+    def setSceneRect(self, sceneRect: "QRectF") -> "None":
         ...
-
-    def enlargeScene(self, sceneRect: QRectF) -> None:
-        self.min_scene_rect = self.min_scene_rect.united(sceneRect)
 
     @overload
-    def setSceneRect(self, x: float, y: float, w: float, h: float) -> None:
+    def setSceneRect(self, x: "float", y: "float", w: "float", h: "float") -> "None":
         ...
 
-    def setSceneRect(self, *args) -> None:
+    def setSceneRect(self, *args) -> "None":
         match args:
             case [QRectF() as sceneRect]:
                 self.enlargeScene(sceneRect)

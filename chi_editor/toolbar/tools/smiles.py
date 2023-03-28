@@ -18,7 +18,7 @@ class Smiles(Tool):
             self.canvas.removeItem(dialog.graphicsProxyWidget())
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "structure"
 
 

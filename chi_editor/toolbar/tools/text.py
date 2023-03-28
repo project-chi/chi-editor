@@ -18,7 +18,7 @@ class Text(Tool):
         self.canvas.addItem(new_text)
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "text"
 
 

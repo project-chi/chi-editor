@@ -64,5 +64,5 @@ class Bond(Tool):
         pass
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "bond"
