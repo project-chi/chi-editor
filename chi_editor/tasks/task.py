@@ -21,3 +21,12 @@ class Task:
     def checkAnswer(self, user_answer: str) -> bool:
         canon_user_answer = Chem.CanonSmiles(user_answer)
         return self._correct_answer == canon_user_answer
+
+    def title(self) -> str:
+        return self._title
+
+    def correct_answer(self) -> str:
+        return self._correct_answer
+
+    def task_type(self) -> TaskType:
+        return self._type
