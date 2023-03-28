@@ -1,11 +1,32 @@
 from .task import Task
 from .task_type import TaskType
 
-tasks_list: list[Task] = [
-    Task("Methane", "C", TaskType.ALKANES),
-    Task("Ethane", "CC", TaskType.ALKANES),
-    Task("Ethanol", "CCO", TaskType.ALCOHOLS),
-    Task("1-Butanol", "CCCCO", TaskType.ALCOHOLS),
-    Task("Benzene", "c1ccccc1", TaskType.AROMATIC),
-    Task("Toluene", "Cc1ccccc1", TaskType.AROMATIC)
+alkanes_list: tuple[list[Task], TaskType] = (
+    [
+        Task("Methane", "C", TaskType.ALKANES),
+        Task("Ethane", "CC", TaskType.ALKANES)
+    ],
+    TaskType.ALKANES
+)
+
+alcohols_list: tuple[list[Task], TaskType] = (
+    [
+        Task("Ethanol", "CCO", TaskType.ALCOHOLS),
+        Task("1-Butanol", "CCCCO", TaskType.ALCOHOLS),
+    ],
+    TaskType.ALCOHOLS
+)
+
+aromatic_list: tuple[list[Task], TaskType] = (
+    [
+        Task("Benzene", "c1ccccc1", TaskType.AROMATIC),
+        Task("Toluene", "Cc1ccccc1", TaskType.AROMATIC),
+    ],
+    TaskType.AROMATIC
+)
+
+tasks_list: list[tuple[list[Task], TaskType]] = [
+    alkanes_list,
+    alcohols_list,
+    aromatic_list,
 ]
