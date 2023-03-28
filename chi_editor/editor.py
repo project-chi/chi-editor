@@ -8,6 +8,7 @@ from .canvas import Canvas
 from .constants import ASSETS
 from .toolbar import CanvasToolBar
 from .menubar.menubar import CanvasMenuBar
+from .choose_task_dialog import ChooseTaskDialog
 
 from .editor_mode import EditorMode
 
@@ -35,6 +36,9 @@ class Editor(QMainWindow):
     # Toolbar that contains tools for manipulating canvas in free mode
     toolbars: list[QToolBar]
     mode: EditorMode
+
+    # Dialog where user chooses a task to solve
+    dialog: ChooseTaskDialog
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -171,3 +175,8 @@ class Editor(QMainWindow):
         create_mode_widget = QWidget()
         layout = QVBoxLayout(create_mode_widget)
         return create_mode_widget
+
+    def createChooseTaskDialog(self) -> None:
+        self.dialog = ChooseTaskDialog()
+        self.dialog.setModal(True)
+        self.dialog.exec()

@@ -3,7 +3,7 @@ from ...bases.menu_tool import MenuTool
 
 class ChooseTask(MenuTool):
     def exec(self) -> None:
-        pass
+        self._editor.createChooseTaskDialog()
 
     @property
     def asset(self) -> str:
