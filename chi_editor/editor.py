@@ -3,7 +3,9 @@ from enum import Enum
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QIcon, QTransform
 from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QStackedWidget, QToolBar, QWidget, \
-    QHBoxLayout, QSizePolicy, QDialog, QLabel
+    QHBoxLayout, QSizePolicy
+
+from rdkit import Chem
 
 from .canvas import Canvas
 from .constants import ASSETS
@@ -14,6 +16,7 @@ from .task_result_dialog import TaskResultDialog
 
 from .tasks.task import Task
 from .bases.molecule.molecule import Molecule
+from .bases.alpha_atom import AlphaAtom
 from .playground import mol_from_graphs
 
 from .editor_mode import EditorMode
@@ -191,6 +194,7 @@ class Editor(QMainWindow):
         submit = QPushButton("Submit", self)
         submit.setFixedSize(submit.sizeHint())
         submit.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        submit.clicked.connect(self.submitAnswer)
 
         # Stack layouts
         solve_canvas_layout.addWidget(submit)
@@ -202,6 +206,33 @@ class Editor(QMainWindow):
         layout = QVBoxLayout(solver_mode_widget)
         layout.addWidget(self.view_solver)
         return solver_mode_widget
+
+    def submitAnswer(self) -> None:
+        items = self.canvas_solver.items()
+
+        if len(items) == 0:
+            self.openResultDialog("No answer found")
+            return
+
+        molecule: Molecule = None
+
+        # Простите пожалуйста, Please forgive me, Entschuldigung bitte
+        for item in items:
+            if isinstance(item, AlphaAtom):
+                molecule = item.molecule
+                break
+
+        if molecule is None:
+            self.openResultDialog("Something was found, but not a molecule")
+            return
+
+        smiles_answer = Chem.MolToSmiles(mol_from_graphs(molecule))
+        answer_is_correct = self.task.checkAnswer(smiles_answer)
+
+        if answer_is_correct:
+            self.openResultDialog("Correct")
+        else:
+            self.openResultDialog("Wrong")
 
     def getCreateModeLayout(self) -> QWidget:
         create_mode_widget = QWidget()
