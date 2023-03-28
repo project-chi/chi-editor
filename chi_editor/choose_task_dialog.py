@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QHBoxLayout, QPushButton, QAbstractItemView
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from PyQt6.QtCore import Qt, QModelIndex
@@ -5,8 +7,16 @@ from PyQt6.QtCore import Qt, QModelIndex
 from .tasks.task import Task
 from .tasks import tasks_list
 
+from .editor_mode import EditorMode
+
+if TYPE_CHECKING:
+    from .editor import Editor
+
 
 class ChooseTaskDialog(QDialog):
+    # Main window
+    editor: "Editor"
+
     # View that holds all the tasks links
     view: QTreeView
 
@@ -22,9 +32,11 @@ class ChooseTaskDialog(QDialog):
     # Model that links to all the tasks
     model: QStandardItemModel
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.setWindowTitle("Choose a task")
+
+        self.editor = editor
 
         # Model init
         self.model = QStandardItemModel()
@@ -78,5 +90,6 @@ class ChooseTaskDialog(QDialog):
         self.chooseTask(task)
 
     def chooseTask(self, task: Task) -> None:
-        print(task.title())
+        self.editor.setMode(EditorMode.SOLVE_MODE)
+        self.editor.setTask(task=task)
         self.close()
