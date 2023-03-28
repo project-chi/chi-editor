@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PyQt6.QtWidgets import QDialog, QLabel
+from PyQt6.QtWidgets import QDialog, QLabel, QVBoxLayout, QSizePolicy
 
 if TYPE_CHECKING:
     from .editor import Editor
@@ -17,6 +17,10 @@ class TaskResultDialog(QDialog):
         super().__init__(*args, **kwargs)
         self.editor = editor
         self._label = QLabel(self)
+
+        layout = QVBoxLayout(self)
+        layout.addWidget(self._label)
+        self._label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
     def setText(self, text: str) -> None:
         self._label.setText(text)
