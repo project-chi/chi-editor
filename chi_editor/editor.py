@@ -2,13 +2,19 @@ from enum import Enum
 
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QIcon, QTransform
-from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QStackedWidget, QToolBar, QWidget
+from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QStackedWidget, QToolBar, QWidget, \
+    QHBoxLayout, QSizePolicy, QDialog, QLabel
 
 from .canvas import Canvas
 from .constants import ASSETS
 from .toolbar import CanvasToolBar
 from .menubar.menubar import CanvasMenuBar
 from .choose_task_dialog import ChooseTaskDialog
+from .task_result_dialog import TaskResultDialog
+
+from .tasks.task import Task
+from .bases.molecule.molecule import Molecule
+from .playground import mol_from_graphs
 
 from .editor_mode import EditorMode
 
@@ -38,7 +44,13 @@ class Editor(QMainWindow):
     mode: EditorMode
 
     # Dialog where user chooses a task to solve
-    dialog: ChooseTaskDialog
+    choose_task_dialog: ChooseTaskDialog
+
+    # Dialog with solving results
+    result_dialog: TaskResultDialog
+
+    # Task that user currently solves
+    task: Task = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -73,6 +85,13 @@ class Editor(QMainWindow):
         _solver_tool_bar.toggleViewAction().trigger()
         self.mode = 0
 
+        # Create dialogs (they won't show for now)
+        self.choose_task_dialog = ChooseTaskDialog(editor=self)
+        self.choose_task_dialog.setModal(True)
+
+        self.result_dialog = TaskResultDialog(editor=self)
+        self.result_dialog.setModal(True)
+
     def zoom_in(self):
         # Get the current scale factor of the view
         current_scale = self.view_free.transform().m11()
@@ -95,6 +114,9 @@ class Editor(QMainWindow):
         self.workspace.widget(mode.value).show()
         self.toolbars[mode.value].toggleViewAction().trigger()
         self.mode = mode.value
+
+    def setTask(self, task: Task) -> None:
+        self.task = task
 
     def createModes(self) -> None:
         self.workspace.addWidget(self.getFreeModeLayout())
@@ -149,10 +171,12 @@ class Editor(QMainWindow):
         # Bind GraphicsScene to GraphicsView
         self.view_solver.setScene(self.canvas_solver)
 
+        # Main solve canvas layout
+        solve_canvas_layout = QHBoxLayout(self)
+
         # Box contains magnifying glass
-        v_button_group = QVBoxLayout(self)
-        v_button_group.addStretch(1)
-        v_button_group.setAlignment(Qt.AlignmentFlag.AlignRight)
+        zoom_layout = QVBoxLayout(self)
+        zoom_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         scale_plus = QPushButton("Zoom In", self)
         scale_plus.clicked.connect(self.zoom_in)
@@ -160,11 +184,19 @@ class Editor(QMainWindow):
         scale_minus = QPushButton("Zoom Out", self)
         scale_minus.clicked.connect(self.zoom_out)
 
-        v_button_group.addWidget(scale_minus)
-        v_button_group.addWidget(scale_plus)
-        v_button_group.addStretch(1)
+        zoom_layout.addWidget(scale_minus)
+        zoom_layout.addWidget(scale_plus)
 
-        self.view_solver.setLayout(v_button_group)
+        # Button to submit answers
+        submit = QPushButton("Submit", self)
+        submit.setFixedSize(submit.sizeHint())
+        submit.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+
+        # Stack layouts
+        solve_canvas_layout.addWidget(submit)
+        solve_canvas_layout.addLayout(zoom_layout)
+
+        self.view_solver.setLayout(solve_canvas_layout)
 
         solver_mode_widget = QWidget()
         layout = QVBoxLayout(solver_mode_widget)
@@ -176,7 +208,9 @@ class Editor(QMainWindow):
         layout = QVBoxLayout(create_mode_widget)
         return create_mode_widget
 
-    def createChooseTaskDialog(self) -> None:
-        self.dialog = ChooseTaskDialog()
-        self.dialog.setModal(True)
-        self.dialog.exec()
+    def openChooseTaskDialog(self) -> None:
+        self.choose_task_dialog.exec()
+
+    def openResultDialog(self, message: str) -> None:
+        self.result_dialog.setText(message)
+        self.result_dialog.exec()
