@@ -6,7 +6,7 @@ from ...bases.menu_tool import MenuTool
 
 mode_tools: tuple[type[MenuTool], ...] = (
     CreateTask,
-    SolveTask,
+    # SolveTask,
     FreeMode,
 )
 
