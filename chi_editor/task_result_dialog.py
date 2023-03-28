@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from .editor import Editor
 
 
-class ChooseTaskDialog(QDialog):
+class TaskResultDialog(QDialog):
     # Main window
     editor: "Editor"
 
