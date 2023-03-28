@@ -1,19 +1,34 @@
+from typing import TYPE_CHECKING
+
 from PyQt6.QtGui import QActionGroup
 from PyQt6.QtWidgets import QToolBar
 
-from .button_factory import Tools, create_buttons
+from chi_editor.toolbar.tools import tools
+
+if TYPE_CHECKING:
+    from PyQt6.QtGui import QAction
+
+    from chi_editor.canvas import Canvas
 
 
-def create_toolbar() -> QToolBar:
-    toolbar = QToolBar()
-    toolbar.setStyleSheet("""QToolBar { background-color: rgb(212, 204, 234); }""")
-    toolbar.setMovable(False)
+class CanvasToolBar(QToolBar):
+    _canvas: "Canvas"
 
-    action_group = QActionGroup(toolbar)
-    action_group.setExclusive(True)
+    def __init__(self, *args, canvas: "Canvas", **kwargs) -> "None":
+        super().__init__(*args, **kwargs)
+        self._canvas = canvas
+        self.setStyleSheet("""QToolBar { background-color: rgb(212, 204, 234); }""")
+        self.setMovable(False)
 
-    for tool_button in create_buttons(Tools):
-        toolbar.addAction(tool_button)
-        action_group.addAction(tool_button)
+        action_group = QActionGroup(self)
+        action_group.setExclusive(True)
 
-    return toolbar
+        for Tool in tools:
+            tool = Tool(canvas)
+            self.addAction(tool)
+            action_group.addAction(tool)
+
+        self.actionTriggered.connect(self.changeAction)
+
+    def changeAction(self, action: "QAction") -> "None":
+        self._canvas.current_action = action

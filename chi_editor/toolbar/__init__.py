@@ -1,1 +1,1 @@
-from .toolbar import create_toolbar
+from .toolbar import CanvasToolBar
