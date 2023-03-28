@@ -1,5 +1,5 @@
-from task import Task
-from task_type import TaskType
+from .task import Task
+from .task_type import TaskType
 
 tasks_list: list[Task] = [
     Task("Methane", "C", TaskType.ALKANES),
