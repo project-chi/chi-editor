@@ -18,6 +18,7 @@ class Molecule:
 
     def remove_atom(self, atom: AlphaAtom) -> None:
         self.atoms.remove(atom)
+        self.update_atoms()
         if len(self.atoms) == 0:
             self.anchor.remove()
 
