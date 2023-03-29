@@ -123,7 +123,17 @@ class Editor(QMainWindow):
         return self.getLayout(0)
 
     def getSolveModeLayout(self) -> QWidget:
-        return self.getLayout(1)
+        solve_widget = self.getLayout(1)
+        solve_layout = solve_widget.layout()
+
+        # Button to submit answers
+        submit = QPushButton("Submit", self)
+        submit.setFixedSize(submit.sizeHint())
+        submit.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        submit.clicked.connect(self.submitAnswer)
+
+        solve_layout.addWidget(submit)
+        return solve_widget
 
     def getLayout(self, index) -> QWidget:
         # Initialize QGraphicsView
@@ -154,17 +164,10 @@ class Editor(QMainWindow):
         zoom_layout.addWidget(scale_minus)
         zoom_layout.addWidget(scale_plus)
 
-        # Button to submit answers
-        submit = QPushButton("Submit", self)
-        submit.setFixedSize(submit.sizeHint())
-        submit.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        submit.clicked.connect(self.submitAnswer)
-
         # Stack layouts
-        solve_canvas_layout.addWidget(submit)
         solve_canvas_layout.addLayout(zoom_layout)
 
-        self.view_solver.setLayout(solve_canvas_layout)
+        self.views[index].setLayout(solve_canvas_layout)
 
         solver_mode_widget = QWidget()
         layout = QVBoxLayout(solver_mode_widget)
@@ -172,7 +175,7 @@ class Editor(QMainWindow):
         return solver_mode_widget
 
     def submitAnswer(self) -> None:
-        items = self.canvas_solver.items()
+        items = self.canvases[EditorMode.SOLVE_MODE.value].items()
 
         if len(items) == 0:
             self.openResultDialog("No answer found")
