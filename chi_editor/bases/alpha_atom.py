@@ -57,7 +57,7 @@ class AlphaAtom(QGraphicsItem):
         super().setPos(pos)
         self.molecule.update_atoms()
 
-    def remove(self):
+    def remove(self) -> None:
         list_of_lines = list(self.lines)
         for line in list_of_lines:
             line.remove()
