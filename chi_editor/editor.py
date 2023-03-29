@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout
 from rdkit import Chem
 
 from .canvas import Canvas
+from .canvas_view import CanvasView
 from .constants import ASSETS
 from .toolbar import CanvasToolBar
 from .menubar.menubar import CanvasMenuBar
@@ -35,16 +36,13 @@ class Editor(QMainWindow):
     workspace: QStackedWidget
 
     # QGraphicsView contains drawable space
-    view_free: QGraphicsView
-    view_solver: QGraphicsView
+    views: list[QGraphicsView] = [None, None, None]
 
     # GraphicsScene where to draw all graphical objects
-    canvas_free: Canvas
-    canvas_solver: Canvas
+    canvases: list[Canvas] = [None, None, None]
 
     # Toolbar that contains tools for manipulating canvas in free mode
-    toolbars: list[QToolBar]
-    mode: EditorMode
+    toolbars: list[QToolBar] = [None, None, None]
 
     # Dialog where user chooses a task to solve
     choose_task_dialog: ChooseTaskDialog
@@ -76,17 +74,14 @@ class Editor(QMainWindow):
         self.setMenuBar(menubar)
 
         # Add toolbar
-        _drawing_tool_bar = CanvasToolBar(canvas=self.canvas_free, parent=self)
-        _solver_tool_bar = CanvasToolBar(canvas=self.canvas_solver, parent=self)
-        self.toolbars = [_drawing_tool_bar, _solver_tool_bar, None]
-        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, _drawing_tool_bar)
-        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, _solver_tool_bar)
+        for index in range(3):
+            self.toolbars[index] = CanvasToolBar(canvas=self.canvases[index], parent=self)
+            self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.toolbars[index])
         for toolbar in self.toolbars:
-            if toolbar:
-                toolbar.toggleViewAction().setChecked(False)
-                toolbar.toggleViewAction().trigger()
-        _solver_tool_bar.toggleViewAction().trigger()
-        self.mode = 0
+            toolbar.toggleViewAction().setChecked(False)
+            toolbar.toggleViewAction().trigger()
+            toolbar.toggleViewAction().trigger()
+        self.toolbars[0].toggleViewAction().trigger()
 
         # Create dialogs (they won't show for now)
         self.choose_task_dialog = ChooseTaskDialog(editor=self)
@@ -95,28 +90,26 @@ class Editor(QMainWindow):
         self.result_dialog = TaskResultDialog(editor=self)
         self.result_dialog.setModal(True)
 
-    def zoom_in(self):
+    def zoom_in(self, index: int):
         # Get the current scale factor of the view
-        current_scale = self.view_free.transform().m11()
+        current_scale = self.views[index].transform().m11()
 
         # Update the scale factor of the view
         new_scale = current_scale * 1.2
-        self.view_free.setTransform(QTransform.fromScale(new_scale, new_scale))
+        self.views[index].setTransform(QTransform.fromScale(new_scale, new_scale))
 
-    def zoom_out(self):
+    def zoom_out(self, index: int):
         # Get the current scale factor of the view
-        current_scale = self.view_free.transform().m11()
+        current_scale = self.views[index].transform().m11()
 
         # Update the scale factor of the view
         new_scale = current_scale / 1.2
-        self.view_free.setTransform(QTransform.fromScale(new_scale, new_scale))
+        self.views[index].setTransform(QTransform.fromScale(new_scale, new_scale))
 
     def setMode(self, mode: EditorMode) -> None:
-        self.toolbars[self.mode].toggleViewAction().trigger()
-        self.workspace.widget(self.workspace.currentIndex()).hide()
-        self.workspace.widget(mode.value).show()
-        self.toolbars[mode.value].toggleViewAction().trigger()
-        self.mode = mode.value
+        self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
+        self.workspace.setCurrentIndex(mode.value)
+        self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
 
     def setTask(self, task: Task) -> None:
         self.task = task
@@ -127,52 +120,23 @@ class Editor(QMainWindow):
         self.workspace.addWidget(self.getCreateModeLayout())
 
     def getFreeModeLayout(self) -> QWidget:
-        # Initialize QGraphicsView
-        self.view_free = QGraphicsView(self)  # create QGraphicsView
-        self.view_free \
-            .setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)  # Set QGraphicsView position
-        self.view_free.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
-
-        # Initialize GGraphicsScene called canvas
-        self.canvas_free = Canvas(QRectF(self.view_free.geometry()))
-
-        # Bind GraphicsScene to GraphicsView
-        self.view_free.setScene(self.canvas_free)
-
-        # Box contains magnifying glass
-        v_button_group = QVBoxLayout(self)
-        v_button_group.addStretch(1)
-        v_button_group.setAlignment(Qt.AlignmentFlag.AlignRight)
-
-        scale_plus = QPushButton("Zoom In", self)
-        scale_plus.clicked.connect(self.zoom_in)
-
-        scale_minus = QPushButton("Zoom Out", self)
-        scale_minus.clicked.connect(self.zoom_out)
-
-        v_button_group.addWidget(scale_minus)
-        v_button_group.addWidget(scale_plus)
-        v_button_group.addStretch(1)
-
-        self.view_free.setLayout(v_button_group)
-
-        free_mode_widget = QWidget()
-        layout = QVBoxLayout(free_mode_widget)
-        layout.addWidget(self.view_free)
-        return free_mode_widget
+        return self.getLayout(0)
 
     def getSolveModeLayout(self) -> QWidget:
+        return self.getLayout(1)
+
+    def getLayout(self, index) -> QWidget:
         # Initialize QGraphicsView
-        self.view_solver = QGraphicsView(self)  # create QGraphicsView
-        self.view_solver \
+        self.views[index] = QGraphicsView(self)  # create QGraphicsView
+        self.views[index] \
             .setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)  # Set QGraphicsView position
-        self.view_solver.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
+        self.views[index].setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
 
         # Initialize GGraphicsScene called canvas
-        self.canvas_solver = Canvas(QRectF(self.view_solver.geometry()))
+        self.canvases[index] = Canvas(QRectF(self.views[index].geometry()))
 
         # Bind GraphicsScene to GraphicsView
-        self.view_solver.setScene(self.canvas_solver)
+        self.views[index].setScene(self.canvases[index])
 
         # Main solve canvas layout
         solve_canvas_layout = QHBoxLayout(self)
@@ -182,10 +146,10 @@ class Editor(QMainWindow):
         zoom_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         scale_plus = QPushButton("Zoom In", self)
-        scale_plus.clicked.connect(self.zoom_in)
+        scale_plus.clicked.connect(lambda: self.zoom_in(index))
 
         scale_minus = QPushButton("Zoom Out", self)
-        scale_minus.clicked.connect(self.zoom_out)
+        scale_minus.clicked.connect(lambda: self.zoom_out(index))
 
         zoom_layout.addWidget(scale_minus)
         zoom_layout.addWidget(scale_plus)
@@ -204,7 +168,7 @@ class Editor(QMainWindow):
 
         solver_mode_widget = QWidget()
         layout = QVBoxLayout(solver_mode_widget)
-        layout.addWidget(self.view_solver)
+        layout.addWidget(self.views[index])
         return solver_mode_widget
 
     def submitAnswer(self) -> None:
