@@ -53,6 +53,7 @@ class Line(QGraphicsPixmapItem):
     def remove(self) -> "None":
         self.vertex1.lines.remove(self)
         self.vertex2.lines.remove(self)
+        self.vertex1.molecule.update_atoms()
         if self.scene():
             self.scene().removeItem(self)
 
