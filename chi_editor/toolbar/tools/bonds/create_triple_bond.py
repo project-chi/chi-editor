@@ -1,9 +1,9 @@
-from PyQt6.QtWidgets import QGraphicsItem
 from PyQt6.QtCore import QPointF
+from PyQt6.QtWidgets import QGraphicsItem
 
-from ..bond import Bond
 from ....bases.line import Line
 from ....chem_bonds.triple_bond import TripleBond
+from ..bond import Bond
 
 
 class CreateTripleBond(Bond):
@@ -12,5 +12,5 @@ class CreateTripleBond(Bond):
         return TripleBond(start_atom, mouse_pos)
 
     @property
-    def asset(self) -> str:
-        return 'bond3'
+    def picture(self) -> str:
+        return "bond3"

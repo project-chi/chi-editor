@@ -1,28 +1,22 @@
-from enum import Enum
-
-from PyQt6.QtCore import Qt, QRectF
+from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QIcon, QTransform
-from PyQt6.QtWidgets import QMainWindow, QGraphicsView, QPushButton, QVBoxLayout, QStackedWidget, QToolBar, QWidget, \
-    QHBoxLayout, QSizePolicy
+from PyQt6.QtWidgets import (
+    QGraphicsView,
+    QHBoxLayout,
+    QMainWindow,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
-from rdkit import Chem
-
-from .canvas import Canvas
-from .canvas_view import CanvasView
-from .constants import ASSETS
-from .toolbar import CanvasToolBar
-from .menubar.menubar import CanvasMenuBar
-from .choose_task_dialog import ChooseTaskDialog
-from .task_result_dialog import TaskResultDialog
+from chi_editor.canvas import Canvas
+from chi_editor.constants import ASSETS
+from chi_editor.toolbar import CanvasToolBar
 
 from .tasks.task import Task
 from .bases.molecule.molecule import Molecule
 from .bases.alpha_atom import AlphaAtom
 from .playground import mol_from_graphs
-
-from .editor_mode import EditorMode
-
-
 class Editor(QMainWindow):
     # Hierarchy:
     #
@@ -33,32 +27,21 @@ class Editor(QMainWindow):
     #       toolbar:
 
     # Contains everything except toolbar
-    workspace: QStackedWidget
+
+    workspace: "QWidget"
 
     # QGraphicsView contains drawable space
-    views: list[QGraphicsView] = [None, None, None]
+    graphics_view: "QGraphicsView"
 
     # GraphicsScene where to draw all graphical objects
-    canvases: list[Canvas] = [None, None, None]
+    canvas: "Canvas"
 
-    # Toolbar that contains tools for manipulating canvas in free mode
-    toolbars: list[QToolBar] = [None, None, None]
-
-    # Dialog where user chooses a task to solve
-    choose_task_dialog: ChooseTaskDialog
-
-    # Dialog with solving results
-    result_dialog: TaskResultDialog
-
-    # Task that user currently solves
-    task: Task = None
-
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> "None":
         super().__init__(*args, **kwargs)
 
         # Window settings
         self.setWindowTitle("Project Chi")
-        self.setWindowIcon(QIcon(str(ASSETS / 'project-chi.png')))
+        self.setWindowIcon(QIcon(str(ASSETS / "project-chi.png")))
         self.resize(1000, 600)
 
         # The biggest part of interface
@@ -181,7 +164,10 @@ class Editor(QMainWindow):
             self.openResultDialog("No answer found")
             return
 
-        molecule: Molecule = None
+
+    def zoom_in(self) -> "None":
+        # Get the current scale factor of the view
+        current_scale = self.graphics_view.transform().m11()
 
         # Простите пожалуйста, Please forgive me, Entschuldigung bitte
         for item in items:
@@ -189,9 +175,9 @@ class Editor(QMainWindow):
                 molecule = item.molecule
                 break
 
-        if molecule is None:
-            self.openResultDialog("Something was found, but not a molecule")
-            return
+    def zoom_out(self) -> "None":
+        # Get the current scale factor of the view
+        current_scale = self.graphics_view.transform().m11()
 
         smiles_answer = Chem.MolToSmiles(mol_from_graphs(molecule))
         answer_is_correct = self.task.checkAnswer(smiles_answer)

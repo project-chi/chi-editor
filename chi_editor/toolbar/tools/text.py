@@ -1,6 +1,11 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont, QKeyEvent, QFocusEvent
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsTextItem, QGraphicsItem, QGraphicsSceneHoverEvent
+from PyQt6.QtGui import QFocusEvent, QFont, QKeyEvent
+from PyQt6.QtWidgets import (
+    QGraphicsItem,
+    QGraphicsSceneHoverEvent,
+    QGraphicsSceneMouseEvent,
+    QGraphicsTextItem,
+)
 
 from ...bases.tool import Tool
 
@@ -13,15 +18,15 @@ class Text(Tool):
         self.canvas.addItem(new_text)
 
     @property
-    def asset(self) -> str:
-        return 'text'
+    def picture(self) -> str:
+        return "text"
 
 
 class TextItem(QGraphicsTextItem):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.setPlainText('H')
-        self.setFont(QFont('Impact'))
+        self.setPlainText("H")
+        self.setFont(QFont("Impact"))
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         self.setAcceptHoverEvents(True)
 
@@ -51,8 +56,8 @@ class TextItem(QGraphicsTextItem):
 class HoverText(QGraphicsTextItem):
     def __init__(self, *args, is_right: bool, parent: TextItem, **kwargs):
         super().__init__(*args, **kwargs)
-        self.setPlainText('+')
-        self.setFont(QFont('Impact'))
+        self.setPlainText("+")
+        self.setFont(QFont("Impact"))
         self.setAcceptHoverEvents(True)
         self.setParentItem(parent)
         self.setPos(parent.boundingRect().width() - 7 if is_right else -10, 0)

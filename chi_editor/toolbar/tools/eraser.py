@@ -20,5 +20,5 @@ class Eraser(Tool):
             self.canvas.clear()
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "eraser"

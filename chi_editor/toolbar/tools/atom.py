@@ -13,5 +13,5 @@ class Atom(Tool):
         new_atom.add_to_canvas(self.canvas)
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "carbon"

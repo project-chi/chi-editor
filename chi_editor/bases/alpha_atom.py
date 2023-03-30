@@ -1,36 +1,33 @@
-from __future__ import annotations
-
 from typing import TYPE_CHECKING
 
-from PyQt6 import QtCore
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QBrush, QColor, QFont, QPen
+from PyQt6.QtWidgets import QGraphicsItem
+
+from chi_editor.bases.line import Line
+from chi_editor.bases.molecule import Molecule
+from chi_editor.bases.sources import BASIC_RECTANGLE
 
 if TYPE_CHECKING:
-    from chi_editor.bases.molecule.molecule import Molecule
+    from typing import ClassVar
 
-from PyQt6.QtGui import QPen, QBrush, QColor, QFont, QPainter
-from PyQt6.QtWidgets import (
-    QGraphicsItem,
-    QStyleOptionGraphicsItem,
-    QGraphicsSceneMouseEvent,
-    QGraphicsScene,
-)
-from PyQt6.QtCore import QRectF, Qt, QVariant
-
-from .line import Line
+    from PyQt6.QtCore import QPointF, QRectF, QVariant
+    from PyQt6.QtGui import QPainter
+    from PyQt6.QtWidgets import QGraphicsScene, QGraphicsSceneMouseEvent
 
 
 class AlphaAtom(QGraphicsItem):
-    background_pen: QPen = QPen(QColor("white"), 1)
-    text_pen: QPen = QPen(QColor("black"), 10)
-    text_font: QFont = QFont("Helvetica", 40)
-    brush: QBrush = QBrush(QColor("white"))
-    rect: QRectF = QRectF(0, 0, 50, 50)
+    background_pen: "ClassVar[QPen]" = QPen(QColor("white"), 1)
+    text_pen: "ClassVar[QPen]" = QPen(QColor("black"), 10)
+    text_font: "ClassVar[QFont]" = QFont("Helvetica", 40)
+    brush: "ClassVar[QBrush]" = QBrush(QColor("white"))
+    rect: "ClassVar[QRectF]" = BASIC_RECTANGLE
 
-    molecule: Molecule
-    text: str
-    lines: list[Line]
+    molecule: "Molecule"
+    text: "str"
+    lines: "list[Line]"
 
-    def __init__(self, element: str, *args, **kwargs) -> None:
+    def __init__(self, element: "str", *args, **kwargs) -> "None":
         super().__init__(*args, **kwargs)
 
         self.text = element
@@ -41,11 +38,9 @@ class AlphaAtom(QGraphicsItem):
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
         self.setFlag(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
-        from chi_editor.bases.molecule.molecule import Molecule
-
         self.molecule = Molecule(self)
 
-    def get_adjacent_atoms(self) -> list:
+    def get_adjacent_atoms(self) -> "list":
         adjacent_atoms = []
         for line in self.lines:
             adjacent_atoms.append(
@@ -53,11 +48,11 @@ class AlphaAtom(QGraphicsItem):
             )
         return adjacent_atoms
 
-    def setPos(self, pos: QtCore.QPointF) -> None:
+    def setPos(self, pos: "QPointF") -> "None":
         super().setPos(pos)
         self.molecule.update_atoms()
 
-    def remove(self) -> None:
+    def remove(self) -> "None":
         list_of_lines = list(self.lines)
         for line in list_of_lines:
             line.remove()
@@ -66,7 +61,7 @@ class AlphaAtom(QGraphicsItem):
 
         self.scene().removeItem(self)
 
-    def add_line(self, new_line: Line) -> bool:
+    def add_line(self, new_line: "Line") -> "bool":
         for existing in self.lines:
             if (existing.vertex1, existing.vertex2) == (
                 new_line.vertex1,
@@ -80,25 +75,25 @@ class AlphaAtom(QGraphicsItem):
         self.lines.append(new_line)
         return True
 
-    def add_to_canvas(self, canvas: QGraphicsScene):
+    def add_to_canvas(self, canvas: "QGraphicsScene") -> "None":
         canvas.addItem(self)
         self.molecule.anchor.add_to_canvas(canvas)
 
     def itemChange(
-        self, change: QGraphicsItem.GraphicsItemChange, value: QVariant
-    ) -> QVariant:
+        self,
+        change: "QGraphicsItem.GraphicsItemChange",
+        value: "QVariant",
+    ) -> "QVariant":
         for line in self.lines:
             line.update_pixmap(self)
         return super().itemChange(change, value)
 
-    def boundingRect(self) -> QRectF:
+    def boundingRect(self) -> "QRectF":
         # adjust for boarder width
         adjust = self.background_pen.width() / 2
         return self.rect.adjusted(-adjust, -adjust, adjust, adjust)
 
-    def paint(
-        self, painter: QPainter, option: QStyleOptionGraphicsItem, widget=None
-    ) -> None:
+    def paint(self, painter: "QPainter", *args) -> "None":
         # save + restore to reset pen and brush
         painter.save()
         painter.setPen(self.background_pen)
@@ -109,6 +104,6 @@ class AlphaAtom(QGraphicsItem):
         painter.drawText(self.rect, Qt.AlignmentFlag.AlignCenter, self.text)
         painter.restore()
 
-    def mouseMoveEvent(self, event: "QGraphicsSceneMouseEvent") -> None:
+    def mouseMoveEvent(self, event: "QGraphicsSceneMouseEvent") -> "None":
         super().mouseMoveEvent(event)
         self.molecule.update_atoms()

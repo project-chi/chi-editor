@@ -1,15 +1,15 @@
 from __future__ import annotations
 
+from PyQt6.QtCore import QPointF, Qt
 from PyQt6.QtWidgets import (
-    QGraphicsSceneMouseEvent,
     QGraphicsEllipseItem,
     QGraphicsItem,
+    QGraphicsSceneMouseEvent,
 )
-from PyQt6.QtCore import Qt, QPointF
 
-from ...bases.tool import Tool
-from ...bases.line import Line
 from ...bases.alpha_atom import AlphaAtom
+from ...bases.line import Line
+from ...bases.tool import Tool
 
 
 class Bond(Tool):
@@ -64,5 +64,5 @@ class Bond(Tool):
         pass
 
     @property
-    def asset(self) -> str:
+    def picture(self) -> str:
         return "bond"

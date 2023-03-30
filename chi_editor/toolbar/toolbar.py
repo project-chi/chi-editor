@@ -1,14 +1,20 @@
-from PyQt6.QtGui import QAction, QActionGroup
+from typing import TYPE_CHECKING
+
+from PyQt6.QtGui import QActionGroup
 from PyQt6.QtWidgets import QToolBar
 
-from .tools import tools
-from ..canvas import Canvas
+from chi_editor.toolbar.tools import tools
+
+if TYPE_CHECKING:
+    from PyQt6.QtGui import QAction
+
+    from chi_editor.canvas import Canvas
 
 
 class CanvasToolBar(QToolBar):
-    _canvas: Canvas
+    _canvas: "Canvas"
 
-    def __init__(self, *args, canvas: Canvas, **kwargs) -> None:
+    def __init__(self, *args, canvas: "Canvas", **kwargs) -> "None":
         super().__init__(*args, **kwargs)
         self._canvas = canvas
         self.setStyleSheet("""QToolBar { background-color: rgb(212, 204, 234); }""")
@@ -18,11 +24,11 @@ class CanvasToolBar(QToolBar):
         action_group.setExclusive(True)
 
         for Tool in tools:
-            tool = Tool(canvas=canvas)
+            tool = Tool(canvas)
             self.addAction(tool)
             action_group.addAction(tool)
 
         self.actionTriggered.connect(self.changeAction)
 
-    def changeAction(self, action: QAction) -> None:
+    def changeAction(self, action: "QAction") -> "None":
         self._canvas.current_action = action

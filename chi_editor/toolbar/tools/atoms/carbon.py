@@ -1,4 +1,3 @@
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
 
 from ..atom import Atom
 
@@ -6,8 +5,8 @@ from ..atom import Atom
 class Carbon(Atom):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self._element = 'C'
+        self._element = "C"
 
     @property
-    def asset(self) -> str:
-        return 'carbon'
+    def picture(self) -> str:
+        return "carbon"
