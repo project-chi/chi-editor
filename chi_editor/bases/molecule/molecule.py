@@ -18,7 +18,6 @@ class Molecule:
 
     def add_atom(self, atom: "AlphaAtom") -> None:
         self.atoms.add(atom)
-        atom.molecule = self
 
     def remove_atom(self, atom: "AlphaAtom") -> None:
         self.atoms.remove(atom)
@@ -36,7 +35,8 @@ class Molecule:
             current_atom: "AlphaAtom" = queue.pop()
             if current_atom.molecule != self:
                 current_atom.molecule.remove_atom(current_atom)
-            self.add_atom(current_atom)
+            current_atom.molecule = self
+            self.atoms.add(current_atom)
             queue.extend(
                 [
                     x
@@ -45,4 +45,3 @@ class Molecule:
                 ]
             )
         self.anchor.update_position([atom for atom in self.atoms])
-        return [atom for atom in self.atoms]
