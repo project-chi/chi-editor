@@ -1,13 +1,20 @@
 from typing import TYPE_CHECKING
 
-from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QHBoxLayout, QPushButton, QAbstractItemView
-from PyQt6.QtGui import QStandardItemModel, QStandardItem
-from PyQt6.QtCore import Qt, QModelIndex
-
-from .tasks.task import Task
-from .tasks import tasks_list
+from PyQt6.QtCore import QModelIndex, Qt
+from PyQt6.QtGui import QStandardItem, QStandardItemModel
+from PyQt6.QtWidgets import (
+    QAbstractItemView,
+    QDialog,
+    QHBoxLayout,
+    QPushButton,
+    QSizePolicy,
+    QTreeView,
+    QVBoxLayout,
+)
 
 from .editor_mode import EditorMode
+from .tasks import tasks_list
+from .tasks.task import Task
 
 if TYPE_CHECKING:
     from .editor import Editor

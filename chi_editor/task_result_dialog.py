@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PyQt6.QtWidgets import QDialog, QLabel, QVBoxLayout, QSizePolicy
+from PyQt6.QtWidgets import QDialog, QLabel, QSizePolicy, QVBoxLayout
 
 if TYPE_CHECKING:
     from .editor import Editor

@@ -15,7 +15,7 @@ class MenuTool(QAction):
         super().__init__(*args, **kwargs)
         self._editor = editor
 
-        icon_path = RESOURCES / 'assets' / 'toolbar' / f'{self.asset}.png'
+        icon_path = RESOURCES / "assets" / "toolbar" / f"{self.asset}.png"
         if icon_path.exists():
             self.setIcon(QIcon(str(icon_path)))
 
@@ -29,9 +29,9 @@ class MenuTool(QAction):
     @property
     def asset(self) -> str:
         """Returns the name of the icon for this menu tool without extension."""
-        raise NotImplemented
+        raise NotImplementedError
 
     @property
     def text_asset(self) -> str:
         """Returns the text of this tool."""
-        raise NotImplemented
+        raise NotImplementedError

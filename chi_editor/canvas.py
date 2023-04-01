@@ -4,9 +4,9 @@ from PyQt6.QtCore import QRectF
 from PyQt6.QtWidgets import QGraphicsScene
 
 if TYPE_CHECKING:
-    from chi_editor.bases.tool import Tool
-
     from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
+
+    from chi_editor.bases.tool import Tool
 
 
 class Canvas(QGraphicsScene):

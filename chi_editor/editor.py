@@ -13,10 +13,11 @@ from chi_editor.canvas import Canvas
 from chi_editor.constants import ASSETS
 from chi_editor.toolbar import CanvasToolBar
 
-from .tasks.task import Task
-from .bases.molecule.molecule import Molecule
 from .bases.alpha_atom import AlphaAtom
 from .playground import mol_from_graphs
+from .tasks.task import Task
+
+
 class Editor(QMainWindow):
     # Hierarchy:
     #
@@ -167,17 +168,16 @@ class Editor(QMainWindow):
 
     def zoom_in(self) -> "None":
         # Get the current scale factor of the view
-        current_scale = self.graphics_view.transform().m11()
+        self.graphics_view.transform().m11()
 
         # Простите пожалуйста, Please forgive me, Entschuldigung bitte
         for item in items:
             if isinstance(item, AlphaAtom):
-                molecule = item.molecule
                 break
 
     def zoom_out(self) -> "None":
         # Get the current scale factor of the view
-        current_scale = self.graphics_view.transform().m11()
+        self.graphics_view.transform().m11()
 
         smiles_answer = Chem.MolToSmiles(mol_from_graphs(molecule))
         answer_is_correct = self.task.checkAnswer(smiles_answer)
@@ -189,7 +189,7 @@ class Editor(QMainWindow):
 
     def getCreateModeLayout(self) -> QWidget:
         create_mode_widget = QWidget()
-        layout = QVBoxLayout(create_mode_widget)
+        QVBoxLayout(create_mode_widget)
         return create_mode_widget
 
     def openChooseTaskDialog(self) -> None:
