@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 
 class Line(QGraphicsPixmapItem):
     """Connects two graphics items with a line."""
+
     width: "ClassVar[float]" = 30.0
 
     vertex1: "AlphaAtom"
@@ -27,7 +28,8 @@ class Line(QGraphicsPixmapItem):
         self,
         start: "AlphaAtom",
         end: "QGraphicsItem | QPointF",
-        *args, **kwargs,
+        *args,
+        **kwargs,
     ) -> "None":
         super().__init__(*args, **kwargs)
         self.vertex1 = start
@@ -53,6 +55,7 @@ class Line(QGraphicsPixmapItem):
     def remove(self) -> "None":
         self.vertex1.lines.remove(self)
         self.vertex2.lines.remove(self)
+        self.vertex1.molecule.update_atoms()
         if self.scene():
             self.scene().removeItem(self)
 

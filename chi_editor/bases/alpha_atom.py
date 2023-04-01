@@ -5,7 +5,6 @@ from PyQt6.QtGui import QBrush, QColor, QFont, QPen
 from PyQt6.QtWidgets import QGraphicsItem
 
 from chi_editor.bases.line import Line
-from chi_editor.bases.molecule import Molecule
 from chi_editor.bases.sources import BASIC_RECTANGLE
 
 if TYPE_CHECKING:
@@ -14,6 +13,8 @@ if TYPE_CHECKING:
     from PyQt6.QtCore import QPointF, QRectF, QVariant
     from PyQt6.QtGui import QPainter
     from PyQt6.QtWidgets import QGraphicsScene, QGraphicsSceneMouseEvent
+
+    from chi_editor.bases.molecule import Molecule
 
 
 class AlphaAtom(QGraphicsItem):
@@ -37,6 +38,8 @@ class AlphaAtom(QGraphicsItem):
         self.setFlag(self.GraphicsItemFlag.ItemIsMovable)
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
         self.setFlag(self.GraphicsItemFlag.ItemSendsScenePositionChanges)
+
+        from chi_editor.bases.molecule.molecule import Molecule
 
         self.molecule = Molecule(self)
 
