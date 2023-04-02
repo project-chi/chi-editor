@@ -83,6 +83,7 @@ class ChooseTaskDialog(QDialog):
         task_item = self.model.itemFromIndex(current_index)
         task = task_item.data(Qt.ItemDataRole.UserRole)
         self.chooseTask(task)
+        self.editor.setFormulationOfTask()
 
     def handleDoubleClick(self, index: QModelIndex) -> None:
         task_item = self.model.itemFromIndex(index)

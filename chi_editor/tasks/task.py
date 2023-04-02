@@ -7,6 +7,9 @@ class Task:
     # Task's title
     _title: str
 
+    # Task's formulation
+    _formulation: str
+
     # Answer represented as one SMILES string
     _correct_answer: str
 
