@@ -13,7 +13,7 @@ from ...bases.tool import Tool
 from ...chem_bonds.double_bond import DoubleBond
 from ...chem_bonds.single_bond import SingleBond
 from ...chem_bonds.triple_bond import TripleBond
-from ...playground import mol_from_graphs
+from ...chem_utils import mol_from_graphs
 
 
 def create_atoms(molecule: Chem.Mol, position: QPointF) -> list[AlphaAtom]:
