@@ -11,13 +11,14 @@ from PyQt6.QtWidgets import (
     QToolBar,
     QSizePolicy,
     QLabel,
-    QGroupBox
+    QGroupBox,
 )
 
 from rdkit import Chem
 
 from chi_editor.canvas import Canvas
 from chi_editor.constants import ASSETS
+from chi_editor.task_creator import InputDialog
 from chi_editor.toolbar import CanvasToolBar
 from chi_editor.menubar.menubar import CanvasMenuBar
 from chi_editor.dialog_windows.choose_task_dialog import ChooseTaskDialog
@@ -228,7 +229,7 @@ class Editor(QMainWindow):
             self.openResultDialog("Wrong")
 
     def getCreateModeLayout(self) -> QWidget:
-        create_mode_widget = QWidget()
+        create_mode_widget = InputDialog()
         layout = QVBoxLayout(create_mode_widget)
         return create_mode_widget
 
