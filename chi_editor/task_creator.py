@@ -1,5 +1,8 @@
 from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout
 
+from chi_editor.api.server import Server
+from chi_editor.api.task import Kind
+
 
 class InputDialog(QDialog):
     def __init__(self, parent=None):
@@ -15,11 +18,14 @@ class InputDialog(QDialog):
         layout.addRow("Name of the task", self.name)
         layout.addRow("Formulate the problem", self.formulation)
         layout.addRow("Input the correct answer as SMILES", self.correct_answer)
-        layout.addRow("What type is this problem of?", self.type)
         layout.addWidget(button_box)
 
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
 
+        res_name, res_formulation, res_correct = self.getInputs()
+        server = Server("http://kapkekes.site:8000")
+        server.create_task(res_name, Kind.Molecule, res_formulation, res_correct)
+
     def getInputs(self):
-        return self.first.text(), self.second.text()
+        return self.name.text(), self.formulation.text(), self.correct_answer.text()
