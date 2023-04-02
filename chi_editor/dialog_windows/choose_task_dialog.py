@@ -79,11 +79,7 @@ class ChooseTaskDialog(QDialog):
                 type_item.appendRow(task_item)
 
     def handleAcceptClick(self):
-        current_index = self.view.currentIndex()
-        task_item = self.model.itemFromIndex(current_index)
-        task = task_item.data(Qt.ItemDataRole.UserRole)
-        self.chooseTask(task)
-        self.editor.setFormulationOfTask()
+        self.handleDoubleClick(self.view.currentIndex())
 
     def handleDoubleClick(self, index: QModelIndex) -> None:
         task_item = self.model.itemFromIndex(index)
