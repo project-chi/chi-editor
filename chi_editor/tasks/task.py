@@ -13,8 +13,9 @@ class Task:
     # Task's type
     _type: TaskType
 
-    def __init__(self, title: str, correct_answer: str, task_type: TaskType):
+    def __init__(self, title: str, formulation: str, correct_answer: str, task_type: TaskType):
         self._title = title
+        self._formulation = formulation
         self._correct_answer = Chem.CanonSmiles(correct_answer)
         self._type = task_type
 
@@ -30,3 +31,7 @@ class Task:
 
     def task_type(self) -> TaskType:
         return self._type
+
+    def formulation(self) -> str:
+        return self._formulation
+    
