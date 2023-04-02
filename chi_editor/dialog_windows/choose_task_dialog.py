@@ -78,6 +78,7 @@ class ChooseTaskDialog(QDialog):
                 task_item.setData(task, Qt.ItemDataRole.UserRole)  # UserRole means application specific role
                 type_item.appendRow(task_item)
 
+
     def handleAcceptClick(self):
         self.handleDoubleClick(self.view.currentIndex())
 
