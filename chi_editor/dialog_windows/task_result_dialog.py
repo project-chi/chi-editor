@@ -17,6 +17,7 @@ class TaskResultDialog(QDialog):
         super().__init__(*args, **kwargs)
         self.editor = editor
         self._label = QLabel(self)
+        self.setWindowTitle("Result")
 
         layout = QVBoxLayout(self)
         layout.addWidget(self._label)
