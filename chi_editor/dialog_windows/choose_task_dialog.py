@@ -4,8 +4,9 @@ from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QHBoxL
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from PyQt6.QtCore import Qt, QModelIndex
 
+from chi_editor.tasks.random_task import RandomTask
 from chi_editor.tasks.task import Task
-from chi_editor.tasks import tasks_list
+from chi_editor.tasks import tasks_list, TaskType
 
 from chi_editor.editor_mode import EditorMode
 
@@ -77,7 +78,9 @@ class ChooseTaskDialog(QDialog):
                 task_item = QStandardItem(task.title())
                 task_item.setData(task, Qt.ItemDataRole.UserRole)  # UserRole means application specific role
                 type_item.appendRow(task_item)
-
+        random_item = QStandardItem("Random")
+        random_item.setData(Task("Random", "C", "C", TaskType.Random), Qt.ItemDataRole.UserRole)
+        self.model.appendRow(random_item)
 
     def handleAcceptClick(self):
         self.handleDoubleClick(self.view.currentIndex())
@@ -85,6 +88,8 @@ class ChooseTaskDialog(QDialog):
     def handleDoubleClick(self, index: QModelIndex) -> None:
         task_item = self.model.itemFromIndex(index)
         task = task_item.data(Qt.ItemDataRole.UserRole)
+        if task.title() == "Random":
+            task = RandomTask()
         self.chooseTask(task)
         self.editor.setFormulationOfTask()
 
