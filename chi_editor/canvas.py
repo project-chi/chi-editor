@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class Canvas(QGraphicsScene):
-    current_action: "Tool"
+    current_action: "Tool" = None
     min_scene_rect: "QRectF"
 
     def __init__(self, *args, **kwargs) -> "None":
@@ -18,13 +18,16 @@ class Canvas(QGraphicsScene):
         self.min_scene_rect = super().sceneRect()
 
     def mousePressEvent(self, event: "QGraphicsSceneMouseEvent") -> "None":
-        self.current_action.mouse_press_event(event)
+        if self.current_action is not None:
+            self.current_action.mouse_press_event(event)
 
     def mouseMoveEvent(self, event: "QGraphicsSceneMouseEvent") -> "None":
-        self.current_action.mouse_move_event(event)
+        if self.current_action is not None:
+            self.current_action.mouse_move_event(event)
 
     def mouseReleaseEvent(self, event: "QGraphicsSceneMouseEvent") -> "None":
-        self.current_action.mouse_release_event(event)
+        if self.current_action is not None:
+            self.current_action.mouse_release_event(event)
 
     def enlargeScene(self, sceneRect: "QRectF") -> "None":
         self.min_scene_rect = self.min_scene_rect.united(sceneRect)
