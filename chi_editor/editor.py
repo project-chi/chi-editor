@@ -9,7 +9,9 @@ from PyQt6.QtWidgets import (
     QWidget,
     QStackedWidget,
     QToolBar,
-    QSizePolicy
+    QSizePolicy,
+    QLabel,
+    QGroupBox
 )
 
 from rdkit import Chem
@@ -58,6 +60,9 @@ class Editor(QMainWindow):
 
     # Task that user currently solves
     task: Task = None
+
+    # Text of the formulation of the current task
+    formulation: QLabel = None
 
     def __init__(self, *args, **kwargs) -> "None":
         super().__init__(*args, **kwargs)
@@ -138,7 +143,23 @@ class Editor(QMainWindow):
         submit.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         submit.clicked.connect(self.submitAnswer)
 
-        solve_layout.addWidget(submit)
+        # Text box creation
+
+        box_layout = QVBoxLayout()
+        group_box = QGroupBox("Formulation")
+        # group_box.setFixedSize(group_box.sizeHint())
+        # submit.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        formulation = QLabel("The formulation of a task will appear here")
+        self.formulation = formulation
+        box_layout.addWidget(formulation)
+        box_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        group_box.setLayout(box_layout)
+
+        # Formulation of the task
+        solve_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        solve_layout.addWidget(submit, alignment=Qt.AlignmentFlag.AlignBottom)
+        solve_layout.addWidget(group_box, alignment=Qt.AlignmentFlag.AlignTop)
+
         return solve_widget
 
     def getLayout(self, index) -> QWidget:
