@@ -21,6 +21,7 @@ aromatic_list: tuple[list[Task], TaskType] = (
     [
         Task("Benzene", "Draw a benzene", "c1ccccc1", TaskType.AROMATIC),
         Task("Toluene", "Draw a toluene", "Cc1ccccc1", TaskType.AROMATIC),
+        Task("Aspartame", "Draw an aspartame", "COC(=O)[C@H](Cc1ccccc1)NC(=O)[C@@H](N)CC(=O)O", TaskType.AROMATIC)
     ],
     TaskType.AROMATIC
 )
