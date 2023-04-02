@@ -88,6 +88,7 @@ class ChooseTaskDialog(QDialog):
         task_item = self.model.itemFromIndex(index)
         task = task_item.data(Qt.ItemDataRole.UserRole)
         self.chooseTask(task)
+        self.editor.setFormulationOfTask()
 
     def chooseTask(self, task: Task) -> None:
         self.editor.setMode(EditorMode.SOLVE_MODE)

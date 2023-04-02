@@ -238,3 +238,6 @@ class Editor(QMainWindow):
     def openResultDialog(self, message: str) -> None:
         self.result_dialog.setText(message)
         self.result_dialog.exec()
+
+    def setFormulationOfTask(self) -> None:
+        self.formulation.setText(self.task.formulation())
