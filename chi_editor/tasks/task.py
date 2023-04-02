@@ -34,4 +34,3 @@ class Task:
 
     def formulation(self) -> str:
         return self._formulation
-    
