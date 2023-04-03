@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING
+from random import choice
 
 from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QHBoxLayout, QPushButton, QAbstractItemView
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from PyQt6.QtCore import Qt, QModelIndex
 
-from chi_editor.tasks.random_task import RandomTask
-from chi_editor.tasks.task import Task
-from chi_editor.tasks import tasks_list, TaskType
+from chi_editor.api.server import Server
+from chi_editor.api.task import Task, Kind
 
 from chi_editor.editor_mode import EditorMode
 
@@ -33,15 +33,23 @@ class ChooseTaskDialog(QDialog):
     # Model that links to all the tasks
     model: QStandardItemModel
 
+    # Mapping from kinds to their entries in model
+    kind_items: dict[Kind, QStandardItem]
+
+    # Tasks database server
+    server: Server
+
     def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.setWindowTitle("Choose a task")
 
         self.editor = editor
+        self.server = Server("http://kapkekes.site:8000")
 
         # Model init
         self.model = QStandardItemModel()
-        self.fillModel()
+        self.kind_items = {}
+        self.fillModelKinds()
 
         # View init
         self.view = QTreeView(self)
@@ -62,25 +70,49 @@ class ChooseTaskDialog(QDialog):
         self.view_layout.setContentsMargins(0, 0, 2, 2)
 
         # Buttons
+        self.load_tasks_button = QPushButton("Load tasks")
+        self.load_tasks_button.setFixedSize(self.load_tasks_button.sizeHint())
+        self.load_tasks_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.load_tasks_button.clicked.connect(self.loadTasks)
+
         self.accept_button = QPushButton("Choose task")
         self.accept_button.setFixedSize(self.accept_button.sizeHint())  # sizeHint() is minimal size to fit the text
         self.accept_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-
         self.accept_button.clicked.connect(self.handleAcceptClick)
 
-        self.view_layout.addWidget(self.accept_button)
+        self.random_task_button = QPushButton("Get random task")
+        self.random_task_button.setFixedSize(self.random_task_button.sizeHint())
+        self.random_task_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.random_task_button.clicked.connect(self.handleRandomTaskClick)
 
-    def fillModel(self) -> None:
-        for tasks_desc in tasks_list:
-            type_item = QStandardItem(tasks_desc[1].name)
+        self.view_layout.addWidget(self.load_tasks_button)
+        self.view_layout.addWidget(self.accept_button)
+        self.view_layout.addWidget(self.random_task_button)
+
+    def fillModelKinds(self) -> None:
+        for kind in Kind:
+            type_item = QStandardItem(kind.name)
+            type_item.setData(kind, Qt.ItemDataRole.UserRole)
             self.model.appendRow(type_item)
-            for task in tasks_desc[0]:
-                task_item = QStandardItem(task.title())
-                task_item.setData(task, Qt.ItemDataRole.UserRole)  # UserRole means application specific role
-                type_item.appendRow(task_item)
-        random_item = QStandardItem("Random")
-        random_item.setData(Task("Random", "C", "C", TaskType.Random), Qt.ItemDataRole.UserRole)
-        self.model.appendRow(random_item)
+            self.kind_items.update({kind: type_item})
+
+    def _clearTasksList(self) -> None:
+        for r in range(0, self.model.rowCount()):  # run through top level categories and remove their contents (rows)
+            kind_row = self.model.item(r)
+            kind_row.removeRows(0, kind_row.rowCount())
+
+    def loadTasks(self) -> None:
+        self._clearTasksList()
+
+        task_ids = self.server.get_tasks()
+        tasks = map(lambda tid: self.server.get_task(tid), task_ids)
+
+        for task in tasks:
+            task_item = QStandardItem(task.name)
+            task_item.setData(task, Qt.ItemDataRole.UserRole)
+
+            kind_item = self.kind_items.get(task.kind)  # get item containing corresponding kind with dictionary
+            kind_item.appendRow(task_item)
 
     def handleAcceptClick(self):
         self.handleDoubleClick(self.view.currentIndex())
@@ -88,8 +120,12 @@ class ChooseTaskDialog(QDialog):
     def handleDoubleClick(self, index: QModelIndex) -> None:
         task_item = self.model.itemFromIndex(index)
         task = task_item.data(Qt.ItemDataRole.UserRole)
-        if task.title() == "Random":
-            task = RandomTask()
+        self.chooseTask(task)
+        self.editor.setFormulationOfTask()
+
+    def handleRandomTaskClick(self) -> None:
+        task_ids = self.server.get_tasks()
+        task = self.server.get_task(choice(task_ids))
         self.chooseTask(task)
         self.editor.setFormulationOfTask()
 
