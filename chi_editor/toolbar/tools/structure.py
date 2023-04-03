@@ -32,7 +32,7 @@ def create_atoms(molecule: Chem.Mol, position: QPointF) -> list[AlphaAtom]:
         positions = molecule.GetConformer().GetAtomPosition(atom.GetIdx())
         new_atom = AlphaAtom(atom.GetSymbol())
         new_atom.setPos(
-            position + (QPointF(positions.x, positions.y) - molecule_center) * 100,
+            position + (QPointF(positions.x, positions.y) - molecule_center) * 70,
         )
         atoms.append(new_atom)
     return atoms
@@ -96,9 +96,7 @@ def put_bonds(canvas, molecule: Chem.Mol, atoms: list[AlphaAtom]) -> None:
 def put_molecule(canvas, molecule: Chem.Mol, position: QPointF) -> None:
     if molecule is None:
         return
-    atoms: list[AlphaAtom] = create_atoms(
-        molecule, position
-    )
+    atoms: list[AlphaAtom] = create_atoms(molecule, position)
     for atom in atoms:
         atom.add_to_canvas(canvas)
     put_bonds(canvas, molecule, atoms)
