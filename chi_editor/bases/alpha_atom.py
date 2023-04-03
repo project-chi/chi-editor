@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 class AlphaAtom(QGraphicsItem):
     background_pen: "ClassVar[QPen]" = QPen(QColor("white"), 1)
     text_pen: "ClassVar[QPen]" = QPen(QColor("black"), 10)
-    text_font: "ClassVar[QFont]" = QFont("Helvetica", 40)
+    text_font: "ClassVar[QFont]" = QFont("Helvetica", 30)
     brush: "ClassVar[QBrush]" = QBrush(QColor("white"))
     rect: "ClassVar[QRectF]" = BASIC_RECTANGLE
 
