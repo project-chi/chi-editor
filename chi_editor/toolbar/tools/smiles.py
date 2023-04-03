@@ -19,7 +19,7 @@ class Smiles(Tool):
 
     @property
     def picture(self) -> str:
-        return "structure"
+        return "smiles"
 
 
 class SmilesDialog(QWidget):
@@ -33,7 +33,9 @@ class SmilesDialog(QWidget):
         self.showDialog()
 
     def showDialog(self):
-        text, ok = QInputDialog.getText(self, "input dialog", "Put in your SMILES formula")
+        text, ok = QInputDialog.getText(
+            self, "input dialog", "Put in your SMILES formula"
+        )
         if ok:
             self.smiles = str(text)
         else:
