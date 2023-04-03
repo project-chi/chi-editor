@@ -17,4 +17,4 @@ class Drag(Tool):
 
     @property
     def picture(self) -> str:
-        return "arrow"
+        return "hand"
