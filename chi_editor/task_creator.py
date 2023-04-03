@@ -20,12 +20,13 @@ class InputDialog(QDialog):
         layout.addRow("Input the correct answer as SMILES", self.correct_answer)
         layout.addWidget(button_box)
 
-        button_box.accepted.connect(self.accept)
+        button_box.accepted.connect(self.sendTask)
         button_box.rejected.connect(self.reject)
-
-        res_name, res_formulation, res_correct = self.getInputs()
-        server = Server("http://kapkekes.site:8000")
-        server.create_task(res_name, Kind.Molecule, res_formulation, res_correct)
 
     def getInputs(self):
         return self.name.text(), self.formulation.text(), self.correct_answer.text()
+
+    def sendTask(self):
+        res_name, res_formulation, res_correct = self.getInputs()
+        server = Server("http://kapkekes.site:8000")
+        server.create_task(res_name, Kind.Molecule, res_formulation, res_correct)
