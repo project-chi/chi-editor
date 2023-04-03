@@ -24,7 +24,7 @@ from chi_editor.menubar.menubar import CanvasMenuBar
 from chi_editor.dialog_windows.choose_task_dialog import ChooseTaskDialog
 from chi_editor.dialog_windows.task_result_dialog import TaskResultDialog
 
-from chi_editor.tasks.task import Task
+from chi_editor.api.task import Task
 from chi_editor.bases.molecule.molecule import Molecule
 from chi_editor.bases.alpha_atom import AlphaAtom
 from chi_editor.chem_utils import mol_from_graphs
@@ -221,7 +221,7 @@ class Editor(QMainWindow):
             return
 
         smiles_answer = Chem.MolToSmiles(mol_from_graphs(molecule))
-        answer_is_correct = self.task.checkAnswer(smiles_answer)
+        answer_is_correct = self.checkAnswer(smiles_answer)
 
         if answer_is_correct:
             self.openResultDialog("Correct")
@@ -241,4 +241,11 @@ class Editor(QMainWindow):
         self.result_dialog.exec()
 
     def setFormulationOfTask(self) -> None:
-        self.formulation.setText(self.task.formulation())
+        self.formulation.setText(self.task.problem)
+
+    def checkAnswer(self, user_answer: str) -> bool:
+        mol = Chem.MolFromSmiles(user_answer)
+        Chem.RemoveStereochemistry(mol)
+        user_smiles = Chem.MolToSmiles(mol)
+        canon_user_answer = Chem.CanonSmiles(user_smiles)
+        return self.task.solution == canon_user_answer
