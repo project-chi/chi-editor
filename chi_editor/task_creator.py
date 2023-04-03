@@ -33,7 +33,6 @@ class InputDialog(QDialog):
 
     def clearAll(self):
         self.name.clear()
-        self.type.clear()
         self.formulation.clear()
         self.correct_answer.clear()
 
