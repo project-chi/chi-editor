@@ -26,12 +26,19 @@ class InputDialog(QDialog):
         layout.addWidget(button_box)
 
         button_box.accepted.connect(self.sendTask)
-        button_box.rejected.connect(self.reject)
+        button_box.rejected.connect(self.clearAll)
 
     def getInputs(self):
         return self.name.text(), self.formulation.text(), self.correct_answer.text()
+
+    def clearAll(self):
+        self.name.clear()
+        self.type.clear()
+        self.formulation.clear()
+        self.correct_answer.clear()
 
     def sendTask(self):
         res_name, res_formulation, res_correct = self.getInputs()
         server = Server("http://kapkekes.site:8000")
         server.create_task(res_name, Kind.Molecule, res_formulation, res_correct)
+        self.clearAll()
