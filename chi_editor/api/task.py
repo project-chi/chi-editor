@@ -11,9 +11,9 @@ class Kind(Enum):
 
 
 class Task(BaseModel):
-    identifier: UUID | None
+    identifier: UUID
     name: str
     kind: Kind
     problem: str
-    initial: str | None
+    initial: str
     solution: str
