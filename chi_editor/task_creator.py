@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout, QComboBox
+from PyQt6.QtCore import Qt
 
 from chi_editor.api.server import Server
 from chi_editor.api.task import Kind
@@ -16,7 +17,7 @@ class InputDialog(QDialog):
 
         # Fill type combo box
         for kind in Kind:
-            self.type.addItem(kind.name)
+            self.type.addItem(kind.name, userData=kind)
 
         layout = QFormLayout(self)
         layout.addRow("Choose type of the task", self.type)
@@ -29,9 +30,10 @@ class InputDialog(QDialog):
         button_box.rejected.connect(self.reject)
 
     def getInputs(self):
-        return self.name.text(), self.formulation.text(), self.correct_answer.text()
+        current_type = self.type.currentData(Qt.ItemDataRole.UserRole)
+        return self.name.text(), current_type, self.formulation.text(), self.correct_answer.text()
 
     def sendTask(self):
-        res_name, res_formulation, res_correct = self.getInputs()
+        res_name, res_type, res_formulation, res_correct = self.getInputs()
         server = Server("http://kapkekes.site:8000")
-        server.create_task(res_name, Kind.Molecule, res_formulation, res_correct)
+        server.create_task(res_name, res_type, res_formulation, res_correct)
