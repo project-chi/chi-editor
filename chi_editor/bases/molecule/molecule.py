@@ -21,10 +21,11 @@ class Molecule:
         self.atoms.add(atom)
         atom.molecule = self
 
-    def remove_atom(self, atom: "AlphaAtom") -> None:
+    def remove_atom(self, atom: "AlphaAtom", update: bool = True) -> None:
         if atom in self.atoms:
             self.atoms.remove(atom)
-        self.update_atoms()
+        if update:
+            self.update_atoms()
         if len(self.atoms) == 0:
             self.anchor.remove()
 
@@ -55,7 +56,7 @@ class Molecule:
         while queue:
             current_atom: AlphaAtom = queue.pop()
             if current_atom.molecule != self:
-                current_atom.molecule.remove_atom(current_atom)
+                current_atom.molecule.remove_atom(current_atom, False)
             self.add_atom(current_atom)
             queue.extend(
                 [
