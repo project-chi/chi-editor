@@ -1,7 +1,8 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent, QGraphicsPixmapItem
 
-from chi_editor.bases.molecule import MoleculeAnchor
+from chi_editor.bases.alpha_atom import AlphaAtom
+from chi_editor.bases.line import Line
 from chi_editor.bases.tool import Tool
 
 
@@ -13,8 +14,10 @@ class Eraser(Tool):
             )
             if not items:
                 return super(Eraser, self).mouse_press_event(event)
-            elif not isinstance(items[0], MoleculeAnchor):
+            elif isinstance(items[0], AlphaAtom) or isinstance(items[0], Line):
                 items[0].remove()
+            elif isinstance(items[0], QGraphicsPixmapItem):
+                self.canvas.removeItem(items[0])
         else:
             self.canvas.clear()
 
