@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout
+from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout, QComboBox
 
 from chi_editor.api.server import Server
 from chi_editor.api.task import Kind
@@ -11,10 +11,15 @@ class InputDialog(QDialog):
         self.name = QLineEdit(self)
         self.formulation = QLineEdit(self)
         self.correct_answer = QLineEdit(self)
-        self.type = QLineEdit(self)
+        self.type = QComboBox(self)
         button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel, self)
 
+        # Fill type combo box
+        for kind in Kind:
+            self.type.addItem(kind.name)
+
         layout = QFormLayout(self)
+        layout.addRow("Choose type of the task", self.type)
         layout.addRow("Name of the task", self.name)
         layout.addRow("Formulate the problem", self.formulation)
         layout.addRow("Input the correct answer as SMILES", self.correct_answer)
