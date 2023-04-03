@@ -20,12 +20,11 @@ tools: tuple[type[Tool], ...] = (
     CreateSingleBond,
     CreateDoubleBond,
     CreateTripleBond,
-    CreateWedgeBond,
     Carbon,
     Nitrogen,
     Oxygen,
     Structure,
     Smiles,
     Eraser,
-    Drag
+    Drag,
 )
