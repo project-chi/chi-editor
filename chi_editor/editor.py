@@ -202,36 +202,22 @@ class Editor(QMainWindow):
         layout.addWidget(self.views[index])
         return solver_mode_widget
 
+    def getCreateModeLayout(self) -> QWidget:
+        create_widget = self.getLayout(EditorMode.CREATE_MODE.value)
+        create_layout = create_widget.layout()
+        create_mode_widget = InputDialog(self.canvases[EditorMode.CREATE_MODE.value])
+        QVBoxLayout(create_mode_widget)
+        create_layout.addWidget(create_mode_widget)
+        return create_widget
+
     def submitAnswer(self) -> None:
-        items = self.canvases[EditorMode.SOLVE_MODE.value].items()
-
-        if len(items) == 0:
-            self.openResultDialog("No answer found")
-            return
-
-        molecule: Molecule | None = None
-
-        for item in items:
-            if isinstance(item, AlphaAtom):
-                molecule = item.molecule
-                break
-
-        if molecule is None:
-            self.openResultDialog("Something was found, but not a molecule")
-            return
-
-        smiles_answer = Chem.MolToSmiles(mol_from_graphs(molecule))
+        smiles_answer = self.canvases[EditorMode.SOLVE_MODE.value].findMolecule()
         answer_is_correct = self.checkAnswer(smiles_answer)
 
         if answer_is_correct:
             self.openResultDialog("Correct")
         else:
             self.openResultDialog("Wrong")
-
-    def getCreateModeLayout(self) -> QWidget:
-        create_mode_widget = InputDialog()
-        layout = QVBoxLayout(create_mode_widget)
-        return create_mode_widget
 
     def openChooseTaskDialog(self) -> None:
         self.choose_task_dialog.exec()
