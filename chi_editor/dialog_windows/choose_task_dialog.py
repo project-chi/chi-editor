@@ -104,8 +104,7 @@ class ChooseTaskDialog(QDialog):
     def loadTasks(self) -> None:
         self._clearTasksList()
 
-        task_ids = self.server.get_tasks()
-        tasks = map(lambda tid: self.server.get_task(tid), task_ids)
+        tasks = self.server.get_tasks_raw()
 
         for task in tasks:
             task_item = QStandardItem(task.name)
