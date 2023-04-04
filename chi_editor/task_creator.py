@@ -1,20 +1,26 @@
-from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout, QComboBox
+from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout, QComboBox, QGraphicsScene
 from PyQt6.QtCore import Qt
 
 from chi_editor.api.server import Server, default_url
 from chi_editor.api.task import Kind
+from chi_editor.canvas import Canvas
 
 
 class InputDialog(QDialog):
-    def __init__(self, parent=None):
+    canvas: Canvas
+
+    def __init__(self, canvas: Canvas, parent=None):
         super().__init__(parent)
 
+        self.canvas = canvas
         self.name = QLineEdit(self)
         self.formulation = QLineEdit(self)
         self.correct_answer = QLineEdit(self)
         self.type = QComboBox(self)
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel, self)
-
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | \
+                                      QDialogButtonBox.StandardButton.Help | \
+                                      QDialogButtonBox.StandardButton.Cancel, self)
+        button_box.button(QDialogButtonBox.StandardButton.Help).setText("Parse")
         # Fill type combo box
         for kind in Kind:
             self.type.addItem(kind.name, userData=kind)
@@ -28,6 +34,7 @@ class InputDialog(QDialog):
 
         button_box.accepted.connect(self.sendTask)
         button_box.rejected.connect(self.clearAll)
+        button_box.helpRequested.connect(self.parseInput)
 
     def getInputs(self):
         current_type = self.type.currentData(Qt.ItemDataRole.UserRole)
@@ -43,3 +50,6 @@ class InputDialog(QDialog):
         server = Server(default_url)
         server.create_task(res_name, res_type, res_formulation, res_correct)
         self.clearAll()
+
+    def parseInput(self):
+        self.correct_answer.setText(self.canvas.findMolecule())
