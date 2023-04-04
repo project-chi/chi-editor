@@ -244,8 +244,12 @@ class Editor(QMainWindow):
         self.formulation.setText(self.task.problem)
 
     def checkAnswer(self, user_answer: str) -> bool:
-        mol = Chem.MolFromSmiles(user_answer)
-        Chem.RemoveStereochemistry(mol)
-        user_smiles = Chem.MolToSmiles(mol)
+        mol_user = Chem.MolFromSmiles(user_answer)
+        Chem.RemoveStereochemistry(mol_user)
+        user_smiles = Chem.MolToSmiles(mol_user)
+        mol_correct = Chem.MolFromSmiles(self.task.solution)
+        Chem.RemoveStereochemistry(mol_correct)
+        correct_smiles = Chem.MolToSmiles(mol_correct)
         canon_user_answer = Chem.CanonSmiles(user_smiles)
-        return self.task.solution == canon_user_answer
+        correct_answer = Chem.CanonSmiles(correct_smiles)
+        return correct_answer == canon_user_answer
