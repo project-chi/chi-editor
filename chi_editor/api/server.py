@@ -6,6 +6,7 @@ from chi_editor.api.task import Kind, Task
 
 default_url: str = "https://project-chi.kapkekes.site/api"
 
+
 class Server:
     _server_url: str
 
@@ -54,6 +55,11 @@ class Server:
             raise ValueError(f"there is no post with {uuid = }")
 
         return Task.parse_obj(response.json())
+
+    def get_tasks_raw(self) -> list[Task]:
+        request_url = f"{self._server_url}/tasks/raw"
+        response = requests.get(request_url)
+        return [Task.parse_obj(task) for task in response.json()]
 
     def update_task(
         self,
