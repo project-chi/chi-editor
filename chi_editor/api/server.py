@@ -4,12 +4,13 @@ import requests
 
 from chi_editor.api.task import Kind, Task
 
+default_url: str = "https://project-chi.kapkekes.site/api"
 
 class Server:
     _server_url: str
 
     def __init__(self, server_url: str) -> None:
-        swagger_response = requests.get(f"{server_url}/docs")
+        swagger_response = requests.get(f"{server_url}/documentation")
         if not swagger_response.ok:
             raise ValueError("can't find server at this URL")
 

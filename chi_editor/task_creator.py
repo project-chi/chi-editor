@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout, QComboBox
 from PyQt6.QtCore import Qt
 
-from chi_editor.api.server import Server
+from chi_editor.api.server import Server, default_url
 from chi_editor.api.task import Kind
 
 
@@ -41,6 +41,6 @@ class InputDialog(QDialog):
 
     def sendTask(self):
         res_name, res_type, res_formulation, res_correct = self.getInputs()
-        server = Server("http://kapkekes.site:8000")
+        server = Server(default_url)
         server.create_task(res_name, res_type, res_formulation, res_correct)
         self.clearAll()

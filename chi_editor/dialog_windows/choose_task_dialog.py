@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QHBoxL
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from PyQt6.QtCore import Qt, QModelIndex
 
-from chi_editor.api.server import Server
+from chi_editor.api.server import Server, default_url
 from chi_editor.api.task import Task, Kind
 
 from chi_editor.editor_mode import EditorMode
@@ -44,7 +44,7 @@ class ChooseTaskDialog(QDialog):
         self.setWindowTitle("Choose a task")
 
         self.editor = editor
-        self.server = Server("http://kapkekes.site:8000")
+        self.server = Server(default_url)
 
         # Model init
         self.model = QStandardItemModel()
