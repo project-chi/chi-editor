@@ -1,9 +1,13 @@
+from chi_editor.api.server import default_url, Server
 from chi_editor.bases.menu_tool import MenuTool
 
 
 class ClearTasks(MenuTool):
     def exec(self) -> None:
-        # self._editor.server.deleteAllTasks()
+        server = Server(default_url)
+        tasks = server.get_tasks()
+        for task in tasks:
+            server.delete_task(task)
         pass
 
     @property
