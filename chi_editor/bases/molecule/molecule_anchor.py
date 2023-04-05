@@ -30,7 +30,7 @@ class MoleculeAnchor(QGraphicsItem):
     background_pen: "ClassVar[QPen]" = QPen(QColor("lightgray"), 1)
     brush: "ClassVar[QBrush]" = QBrush(QColor("lightgray"))
     rect: "ClassVar[QRectF]" = QRectF(
-        BASIC_RECTANGLE.center().x() - 8, BASIC_RECTANGLE.center().y() - 8, 16, 16
+        BASIC_RECTANGLE.center().x() - 10, BASIC_RECTANGLE.center().y() - 10, 20, 20
     )
 
     atoms: "WeakSet[AlphaAtom]"

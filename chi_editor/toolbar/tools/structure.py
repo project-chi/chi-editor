@@ -32,7 +32,7 @@ def create_atoms(molecule: Chem.Mol, position: QPointF) -> list[AlphaAtom]:
         positions = molecule.GetConformer().GetAtomPosition(atom.GetIdx())
         new_atom = AlphaAtom(atom.GetSymbol())
         new_atom.setPos(
-            position + (QPointF(positions.x, positions.y) - molecule_center) * 70,
+            position + (QPointF(positions.x, positions.y) - molecule_center) * 100,
         )
         atoms.append(new_atom)
     return atoms
