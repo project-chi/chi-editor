@@ -86,6 +86,8 @@ class Editor(QMainWindow):
         for index in range(3):
             self.toolbars[index] = CanvasToolBar(canvas=self.canvases[index], parent=self)
             self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.toolbars[index])
+            self.zoom_out(index)
+            self.zoom_out(index)
         for toolbar in self.toolbars:
             toolbar.toggleViewAction().setChecked(False)
             toolbar.toggleViewAction().trigger()
@@ -97,7 +99,6 @@ class Editor(QMainWindow):
         self.choose_task_dialog.setModal(True)
 
         self.result_dialog = TaskResultDialog(editor=self)
-        self.result_dialog.setModal(True)
 
     def zoom_in(self, index: int):
         # Get the current scale factor of the view

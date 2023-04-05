@@ -119,8 +119,9 @@ class ChooseTaskDialog(QDialog):
     def handleDoubleClick(self, index: QModelIndex) -> None:
         task_item = self.model.itemFromIndex(index)
         task = task_item.data(Qt.ItemDataRole.UserRole)
-        self.chooseTask(task)
-        self.editor.setFormulationOfTask()
+        if isinstance(task, Task):
+            self.chooseTask(task)
+            self.editor.setFormulationOfTask()
 
     def handleRandomTaskClick(self) -> None:
         task_ids = self.server.get_tasks()
