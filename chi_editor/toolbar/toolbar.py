@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QActionGroup
 from PyQt6.QtWidgets import QToolBar
 
@@ -27,6 +28,7 @@ class CanvasToolBar(QToolBar):
             tool = Tool(canvas)
             self.addAction(tool)
             action_group.addAction(tool)
+            self.widgetForAction(tool).setStyleSheet("padding: 5px")
 
         self.actionTriggered.connect(self.changeAction)
 
