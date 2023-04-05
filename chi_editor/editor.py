@@ -25,9 +25,6 @@ from chi_editor.dialog_windows.choose_task_dialog import ChooseTaskDialog
 from chi_editor.dialog_windows.task_result_dialog import TaskResultDialog
 
 from chi_editor.api.task import Task
-from chi_editor.bases.molecule.molecule import Molecule
-from chi_editor.bases.alpha_atom import AlphaAtom
-from chi_editor.chem_utils import mol_from_graphs
 
 from chi_editor.editor_mode import EditorMode
 
