@@ -3,7 +3,7 @@ from chi_editor.bases.menu_tool import MenuTool
 from chi_editor.dialog_windows.choose_task.remote_task_dialog import RemoteTaskDialog
 
 
-class ChooseTask(MenuTool):
+class ChooseRemoteTask(MenuTool):
     _choose_dialog: RemoteTaskDialog
 
     def __init__(self, *args, **kwargs) -> None:
