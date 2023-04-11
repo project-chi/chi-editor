@@ -76,18 +76,6 @@ class RemoteTaskDialog(ChooseTaskDialog):
         self.view_layout.addWidget(self.accept_button)
         self.view_layout.addWidget(self.random_task_button)
 
-    def fillModelKinds(self) -> None:
-        for kind in Kind:
-            type_item = QStandardItem(kind.name)
-            type_item.setData(kind, Qt.ItemDataRole.UserRole)
-            self.model.appendRow(type_item)
-            self.kind_items.update({kind: type_item})
-
-    def _clearTasksList(self) -> None:
-        for r in range(0, self.model.rowCount()):  # run through top level categories and remove their contents (rows)
-            kind_row = self.model.item(r)
-            kind_row.removeRows(0, kind_row.rowCount())
-
     def loadTasks(self) -> None:
         self._clearTasksList()
 
@@ -115,8 +103,3 @@ class RemoteTaskDialog(ChooseTaskDialog):
         task = self.server.get_task(choice(task_ids))
         self.chooseTask(task)
         self.editor.setFormulationOfTask()
-
-    def chooseTask(self, task: Task) -> None:
-        self.editor.setMode(EditorMode.SOLVE_MODE)
-        self.editor.setTask(task=task)
-        self.close()
