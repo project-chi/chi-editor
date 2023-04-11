@@ -21,7 +21,7 @@ from chi_editor.constants import ASSETS
 from chi_editor.task_creator import InputDialog
 from chi_editor.toolbar import CanvasToolBar
 from chi_editor.menubar.menubar import CanvasMenuBar
-from chi_editor.dialog_windows.choose_task_dialog import ChooseTaskDialog
+from chi_editor.dialog_windows.choose_task.choose_task_dialog import ChooseTaskDialog
 from chi_editor.dialog_windows.task_result_dialog import TaskResultDialog
 
 from chi_editor.api.task import Task
