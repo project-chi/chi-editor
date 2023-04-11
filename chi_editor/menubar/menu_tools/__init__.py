@@ -1,8 +1,8 @@
 from .create_task import CreateTask
 from .solve_task import SolveTask
 from .free_mode import FreeMode
-from .choose_task import ChooseTask
-from .clear_tasks import ClearTasks
+from chi_editor.menubar.menu_tools.tasks.choose_task import ChooseTask
+from chi_editor.menubar.menu_tools.tasks.clear_tasks import ClearTasks
 from ...bases.menu_tool import MenuTool
 
 mode_tools: tuple[type[MenuTool], ...] = (
