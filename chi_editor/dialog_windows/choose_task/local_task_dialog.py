@@ -1,10 +1,12 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
+from pathlib import Path
 from random import choice
 
 from PyQt6.QtWidgets import QTreeView, QSizePolicy, QVBoxLayout, QHBoxLayout, QPushButton
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from PyQt6.QtCore import Qt, QModelIndex
 
+from chi_editor.constants import RESOURCES
 from chi_editor.api.task import Task, Kind
 
 from chi_editor.editor_mode import EditorMode
@@ -38,8 +40,14 @@ class LocalTaskDialog(ChooseTaskDialog):
     # Mapping from kinds to their entries in model
     kind_items: dict[Kind, QStandardItem]
 
+    # Default folder for local task files
+    default_dir: ClassVar[Path] = RESOURCES / "local_tasks"
+
     def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, editor=editor, **kwargs)
+
+        # Fill model
+        self._fillModel()
 
         # View layout
         self.view_layout = QHBoxLayout(self.view)
@@ -48,6 +56,15 @@ class LocalTaskDialog(ChooseTaskDialog):
 
         # Buttons
         self.setButtons()
+
+    def _fillModel(self) -> None:
+        for json_file in self.default_dir.glob("*.json"):
+            task = Task.parse_file(json_file)
+            task_item = QStandardItem(task.name)
+            task_item.setData(task, Qt.ItemDataRole.UserRole)
+
+            kind_item = self.kind_items.get(task.kind)  # get item containing corresponding kind with dictionary
+            kind_item.appendRow(task_item)
 
     def setButtons(self) -> None:
         self.accept_button = QPushButton("Choose task")
