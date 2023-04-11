@@ -21,7 +21,7 @@ from chi_editor.constants import ASSETS
 from chi_editor.task_creator import InputDialog
 from chi_editor.toolbar import CanvasToolBar
 from chi_editor.menubar.menubar import CanvasMenuBar
-from chi_editor.dialog_windows.choose_task.choose_task_dialog import ChooseTaskDialog
+from chi_editor.dialog_windows.choose_task.remote_task_dialog import RemoteTaskDialog
 from chi_editor.dialog_windows.task_result_dialog import TaskResultDialog
 
 from chi_editor.api.task import Task
@@ -51,7 +51,7 @@ class Editor(QMainWindow):
     toolbars: list[QToolBar] = [None, None, None]
 
     # Dialog where user chooses a task to solve
-    choose_task_dialog: ChooseTaskDialog
+    choose_task_dialog: RemoteTaskDialog
 
     # Dialog with solving results
     result_dialog: TaskResultDialog
@@ -95,7 +95,7 @@ class Editor(QMainWindow):
         self.toolbars[0].toggleViewAction().trigger()
 
         # Create dialogs (they won't show instantly)
-        self.choose_task_dialog = ChooseTaskDialog(editor=self)
+        self.choose_task_dialog = RemoteTaskDialog(editor=self)
         self.choose_task_dialog.setModal(True)
 
         self.result_dialog = TaskResultDialog(editor=self)
