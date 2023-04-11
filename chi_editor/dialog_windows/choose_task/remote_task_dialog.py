@@ -45,29 +45,9 @@ class RemoteTaskDialog(ChooseTaskDialog):
 
     def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, editor=editor, **kwargs)
-        self.setWindowTitle("Choose a task")
 
-        self.editor = editor
         self.server = Server(default_url)
-
-        # Model init
-        self.model = QStandardItemModel()
-        self.kind_items = {}
-        self.fillModelKinds()
-
-        # View init
-        self.view = QTreeView(self)
-        self.view.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
-        self.view.setModel(self.model)
-        self.view.doubleClicked.connect(self.handleDoubleClick)
-        self.view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.view.setHeaderHidden(True)
-
-        # Main layout
-        self.layout = QVBoxLayout(self)
-        self.layout.setContentsMargins(0, 2, 0, 0)
-        self.layout.addWidget(self.view)
-
+        
         # View layout
         self.view_layout = QHBoxLayout(self.view)
         self.view_layout.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
