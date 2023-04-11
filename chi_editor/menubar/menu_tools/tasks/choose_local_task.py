@@ -1,14 +1,14 @@
 from chi_editor.bases.menu_tool import MenuTool
 
-from chi_editor.dialog_windows.choose_task.remote_task_dialog import RemoteTaskDialog
+from chi_editor.dialog_windows.choose_task.local_task_dialog import LocalTaskDialog
 
 
-class ChooseRemoteTask(MenuTool):
-    _choose_dialog: RemoteTaskDialog
+class ChooseLocalTask(MenuTool):
+    _choose_dialog: LocalTaskDialog
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self._choose_dialog = RemoteTaskDialog(editor=self._editor)
+        self._choose_dialog = LocalTaskDialog(editor=self._editor)
         self._choose_dialog.setModal(True)
 
     def exec(self) -> None:
@@ -20,4 +20,4 @@ class ChooseRemoteTask(MenuTool):
 
     @property
     def text_asset(self) -> str:
-        return "Choose task remotely"
+        return "Choose task locally"
