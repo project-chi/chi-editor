@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt
 from chi_editor.api.server import Server, default_url
 from chi_editor.api.task import Kind
 from chi_editor.canvas import Canvas
+from chi_editor.utils.json_utils import create_task
 
 
 class InputDialog(QDialog):
@@ -19,8 +20,10 @@ class InputDialog(QDialog):
         self.type = QComboBox(self)
         button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | \
                                       QDialogButtonBox.StandardButton.Help | \
-                                      QDialogButtonBox.StandardButton.Cancel, self)
+                                      QDialogButtonBox.StandardButton.Cancel | \
+                                      QDialogButtonBox.StandardButton.Reset, self)
         button_box.button(QDialogButtonBox.StandardButton.Help).setText("Parse")
+        button_box.button(QDialogButtonBox.StandardButton.Reset).setText("Create Local")
         # Fill type combo box
         for kind in Kind:
             self.type.addItem(kind.name, userData=kind)
@@ -35,6 +38,8 @@ class InputDialog(QDialog):
         button_box.accepted.connect(self.sendTask)
         button_box.rejected.connect(self.clearAll)
         button_box.helpRequested.connect(self.parseInput)
+
+        button_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.createTask)
 
     def getInputs(self):
         current_type = self.type.currentData(Qt.ItemDataRole.UserRole)
@@ -53,3 +58,8 @@ class InputDialog(QDialog):
 
     def parseInput(self):
         self.correct_answer.setText(self.canvas.findMolecule())
+
+    def createTask(self):
+        res_name, res_type, res_formulation, res_correct = self.getInputs()
+        create_task(res_name, res_type.value, res_formulation, res_correct, "")
+        self.clearAll()
