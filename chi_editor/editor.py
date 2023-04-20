@@ -117,6 +117,7 @@ class Editor(QMainWindow):
 
     def setTask(self, task: Task) -> None:
         self.task = task
+        self.setFormulationOfTask()
 
     def createModes(self) -> None:
         self.workspace.addWidget(self.getFreeModeLayout())

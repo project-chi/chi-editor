@@ -92,4 +92,3 @@ class RemoteTaskDialog(ChooseTaskDialog):
         task_ids = self.server.get_tasks()
         task = self.server.get_task(choice(task_ids))
         self.chooseTask(task)
-        self.editor.setFormulationOfTask()
