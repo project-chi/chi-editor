@@ -88,16 +88,6 @@ class RemoteTaskDialog(ChooseTaskDialog):
             kind_item = self.kind_items.get(task.kind)  # get item containing corresponding kind with dictionary
             kind_item.appendRow(task_item)
 
-    def handleAcceptClick(self):
-        self.handleDoubleClick(self.view.currentIndex())
-
-    def handleDoubleClick(self, index: QModelIndex) -> None:
-        task_item = self.model.itemFromIndex(index)
-        task = task_item.data(Qt.ItemDataRole.UserRole)
-        if isinstance(task, Task):
-            self.chooseTask(task)
-            self.editor.setFormulationOfTask()
-
     def handleRandomTaskClick(self) -> None:
         task_ids = self.server.get_tasks()
         task = self.server.get_task(choice(task_ids))
