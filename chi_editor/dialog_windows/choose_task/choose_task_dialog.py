@@ -79,3 +79,6 @@ class ChooseTaskDialog(QDialog):
         self.editor.setMode(EditorMode.SOLVE_MODE)
         self.editor.setTask(task=task)
         self.close()
+
+    def handleDeleteClick(self, index: Task) -> None:
+        pass

@@ -30,6 +30,7 @@ class LocalTaskDialog(ChooseTaskDialog):
     # Buttons to manipulate items
     accept_button: QPushButton
     random_task_button: QPushButton
+    delete_button: QPushButton
 
     # Layout that holds view to make it expandable
     layout: QVBoxLayout
@@ -72,6 +73,11 @@ class LocalTaskDialog(ChooseTaskDialog):
         self.accept_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.accept_button.clicked.connect(self.handleAcceptClick)
 
+        self.delete_button = QPushButton("Delete task")
+        self.delete_button.setFixedSize(self.delete_button.sizeHint())  # sizeHint() is minimal size to fit the text
+        self.delete_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.delete_button.clicked.connect(self.handleDeleteClick)
+
         self.random_task_button = QPushButton("Get random task")
         self.random_task_button.setFixedSize(self.random_task_button.sizeHint())
         self.random_task_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
@@ -79,6 +85,7 @@ class LocalTaskDialog(ChooseTaskDialog):
 
         self.view_layout.addWidget(self.accept_button)
         self.view_layout.addWidget(self.random_task_button)
+        self.view_layout.addWidget(self.delete_button)
 
     def handleRandomTaskClick(self) -> None:
         pass
