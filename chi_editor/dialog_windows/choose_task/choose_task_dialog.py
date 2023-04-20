@@ -81,3 +81,10 @@ class ChooseTaskDialog(QDialog):
 
     def handleDeleteClick(self, index: Task) -> None:
         pass
+
+    def handleRandomTaskClick(self) -> None:
+        pass
+
+    def loadTasks(self) -> None:
+        pass
+   
