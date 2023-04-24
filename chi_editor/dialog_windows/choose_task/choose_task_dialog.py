@@ -118,6 +118,10 @@ class ChooseTaskDialog(QDialog):
             kind_row.removeRows(0, kind_row.rowCount())
 
     def handleAcceptClick(self):
+        index = self.view.currentIndex()
+        if index.row() == -1:     # no index chosen
+            return
+
         self.handleDoubleClick(self.view.currentIndex())
 
     def handleDoubleClick(self, index: QModelIndex) -> None:
@@ -131,10 +135,21 @@ class ChooseTaskDialog(QDialog):
         self.editor.setTask(task=task)
         self.close()
 
-    def handleDeleteClick(self, index: Task) -> None:
-        pass
+    def handleDeleteClick(self) -> None:
+        index = self.view.currentIndex()
+        if index.row() == -1:     # no index chosen
+            return
+
+        # Delete from local model
+        task_item = self.model.itemFromIndex(index)
+        task = task_item.data(Qt.ItemDataRole.UserRole)
+        if isinstance(task, Task):
+            self.model.removeRow(index.row())
 
     def handleRandomTaskClick(self) -> None:
+        if self.model.rowCount() == 0:  # no kinds in the model
+            return
+
         type_id: int = randint(0, self.model.rowCount() - 1)
         type_item = self.model.itemFromIndex(self.model.index(type_id, 0))
 
