@@ -1,5 +1,5 @@
-from typing import TYPE_CHECKING
-from random import choice
+from typing import TYPE_CHECKING, cast
+from random import randint
 
 from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QAbstractItemView
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
@@ -91,8 +91,12 @@ class ChooseTaskDialog(QDialog):
         pass
 
     def handleRandomTaskClick(self) -> None:
-        pass
+        type_id: int = randint(0, self.model.rowCount() - 1)
+        type_item = self.model.itemFromIndex(self.model.index(type_id, 0))
+
+        task_id = randint(0, type_item.rowCount() - 1)
+        task_item = type_item.child(task_id, 0)
+        self.chooseTask(task_item.data(Qt.ItemDataRole.UserRole))
 
     def loadTasks(self) -> None:
         pass
-   
