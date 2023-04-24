@@ -1,9 +1,10 @@
 from typing import TYPE_CHECKING, cast
 from random import randint
 
-from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QAbstractItemView, QHBoxLayout, QPushButton
+from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QAbstractItemView, QHBoxLayout, QPushButton, \
+    QLineEdit
 from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
-from PyQt6.QtCore import Qt, QModelIndex
+from PyQt6.QtCore import Qt, QModelIndex, QSortFilterProxyModel
 
 from chi_editor.api.task import Task, Kind
 from chi_editor.editor_mode import EditorMode
@@ -28,11 +29,14 @@ class ChooseTaskDialog(QDialog):
     # Extra buttons
     load_tasks_button: QPushButton
 
+    searchbar: QLineEdit
+
     # Layout that holds view to make it expandable
     layout: QVBoxLayout
 
     # Model that links to all the tasks
     model: QStandardItemModel
+    proxy_model: QSortFilterProxyModel
 
     # Mapping from kinds to their entries in model
     kind_items: dict[Kind, QStandardItem]
@@ -45,12 +49,14 @@ class ChooseTaskDialog(QDialog):
 
         # Model init
         self.model = QStandardItemModel()
+        self.proxy_model = QSortFilterProxyModel()
+        self.proxy_model.setSourceModel(self.model)
         self.kind_items = {}
 
         # View init
         self.view = QTreeView(self)
         self.view.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
-        self.view.setModel(self.model)
+        self.view.setModel(self.proxy_model)
         self.view.doubleClicked.connect(self.handleDoubleClick)
         self.view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.view.setHeaderHidden(True)
@@ -93,6 +99,11 @@ class ChooseTaskDialog(QDialog):
         header_layout = QHBoxLayout(self)
         header_layout.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
 
+        self.searchbar = QLineEdit()
+        self.searchbar.textChanged.connect(self.proxy_model.setFilterFixedString)
+        self.searchbar.setFixedSize(self.searchbar.sizeHint())
+        self.searchbar.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+
         self.load_tasks_button = QPushButton()
         icon_path = str(ASSETS / "refresh_icon.svg")
         self.load_tasks_button.setIcon(QIcon(icon_path))
@@ -100,6 +111,7 @@ class ChooseTaskDialog(QDialog):
         self.load_tasks_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.load_tasks_button.clicked.connect(self.loadTasks)
 
+        header_layout.addWidget(self.searchbar)
         header_layout.addWidget(self.load_tasks_button)
 
         self.layout.addLayout(header_layout)
@@ -126,17 +138,16 @@ class ChooseTaskDialog(QDialog):
             kind_row.removeRows(0, kind_row.rowCount())
 
     def handleAcceptClick(self):
-        index = self.view.currentIndex()
-        if index.row() == -1:     # no index chosen
+        if self.view.currentIndex().row() == -1:  # no index chosen
             return
 
-        self.handleDoubleClick(self.view.currentIndex())
+        self.handleDoubleClick()
 
-    def handleDoubleClick(self, index: QModelIndex) -> None:
-        task_item = self.model.itemFromIndex(index)
-        task = task_item.data(Qt.ItemDataRole.UserRole)
-        if isinstance(task, Task):
-            self.chooseTask(task)
+    def handleDoubleClick(self) -> None:
+        index = self.view.currentIndex()
+        data = index.data(Qt.ItemDataRole.UserRole)
+        if isinstance(data, Task):
+            self.chooseTask(data)
 
     def chooseTask(self, task: Task) -> None:
         self.editor.setMode(EditorMode.SOLVE_MODE)
@@ -148,8 +159,7 @@ class ChooseTaskDialog(QDialog):
         if index.row() == -1:  # no index chosen
             return
 
-        task_item = self.model.itemFromIndex(index)
-        data = task_item.data(Qt.ItemDataRole.UserRole)
+        data = index.data(Qt.ItemDataRole.UserRole)
         if not isinstance(data, Task):
             return
 
