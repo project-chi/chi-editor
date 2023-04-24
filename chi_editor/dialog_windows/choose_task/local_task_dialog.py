@@ -61,11 +61,7 @@ class LocalTaskDialog(ChooseTaskDialog):
     def _fillModel(self) -> None:
         for json_file in self.default_dir.glob("*.json"):
             task = Task.parse_file(json_file)
-            task_item = QStandardItem(task.name)
-            task_item.setData(task, Qt.ItemDataRole.UserRole)
-
-            kind_item = self.kind_items.get(task.kind)  # get item containing corresponding kind with dictionary
-            kind_item.appendRow(task_item)
+            self.addTask(task)
 
     def setButtons(self) -> None:
         self.accept_button = QPushButton("Choose task")
@@ -86,6 +82,3 @@ class LocalTaskDialog(ChooseTaskDialog):
         self.view_layout.addWidget(self.accept_button)
         self.view_layout.addWidget(self.random_task_button)
         self.view_layout.addWidget(self.delete_button)
-
-    def handleRandomTaskClick(self) -> None:
-        pass

@@ -82,13 +82,4 @@ class RemoteTaskDialog(ChooseTaskDialog):
         tasks = self.server.get_tasks_raw()
 
         for task in tasks:
-            task_item = QStandardItem(task.name)
-            task_item.setData(task, Qt.ItemDataRole.UserRole)
-
-            kind_item = self.kind_items.get(task.kind)  # get item containing corresponding kind with dictionary
-            kind_item.appendRow(task_item)
-
-    def handleRandomTaskClick(self) -> None:
-        task_ids = self.server.get_tasks()
-        task = self.server.get_task(choice(task_ids))
-        self.chooseTask(task)
+            self.addTask(task)
