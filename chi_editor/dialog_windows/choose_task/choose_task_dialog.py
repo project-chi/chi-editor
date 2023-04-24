@@ -51,6 +51,8 @@ class ChooseTaskDialog(QDialog):
         self.model = QStandardItemModel()
         self.proxy_model = QSortFilterProxyModel()
         self.proxy_model.setSourceModel(self.model)
+        self.proxy_model.setRecursiveFilteringEnabled(True)
+        self.proxy_model.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         self.kind_items = {}
 
         # View init
@@ -101,8 +103,7 @@ class ChooseTaskDialog(QDialog):
 
         self.searchbar = QLineEdit()
         self.searchbar.textChanged.connect(self.proxy_model.setFilterFixedString)
-        self.searchbar.setFixedSize(self.searchbar.sizeHint())
-        self.searchbar.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+        self.searchbar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         self.load_tasks_button = QPushButton()
         icon_path = str(ASSETS / "refresh_icon.svg")
