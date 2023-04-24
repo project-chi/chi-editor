@@ -2,12 +2,12 @@ from typing import TYPE_CHECKING, cast
 from random import randint
 
 from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QAbstractItemView, QHBoxLayout, QPushButton
-from PyQt6.QtGui import QStandardItemModel, QStandardItem
+from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
 from PyQt6.QtCore import Qt, QModelIndex
 
 from chi_editor.api.task import Task, Kind
-
 from chi_editor.editor_mode import EditorMode
+from chi_editor.constants import ASSETS
 
 if TYPE_CHECKING:
     from chi_editor.editor import Editor
@@ -93,7 +93,9 @@ class ChooseTaskDialog(QDialog):
         header_layout = QHBoxLayout(self)
         header_layout.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
 
-        self.load_tasks_button = QPushButton("<->")
+        self.load_tasks_button = QPushButton()
+        icon_path = str(ASSETS / "refresh_icon.svg")
+        self.load_tasks_button.setIcon(QIcon(icon_path))
         self.load_tasks_button.setFixedSize(self.load_tasks_button.sizeHint())
         self.load_tasks_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.load_tasks_button.clicked.connect(self.loadTasks)
