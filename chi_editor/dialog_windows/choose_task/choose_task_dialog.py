@@ -142,8 +142,13 @@ class ChooseTaskDialog(QDialog):
         self.close()
 
     def handleDeleteClick(self) -> None:
+        """
+        Delete chosen task from the list.
+
+        Default implementation deletes only the entry from local task model.
+        """
         index = self.view.currentIndex()
-        if index.row() == -1:     # no index chosen
+        if index.row() == -1:  # no index chosen
             return
 
         # Delete from local model
