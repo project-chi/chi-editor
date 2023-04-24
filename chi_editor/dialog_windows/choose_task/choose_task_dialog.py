@@ -38,7 +38,6 @@ class ChooseTaskDialog(QDialog):
         # Model init
         self.model = QStandardItemModel()
         self.kind_items = {}
-        self.fillModelKinds()
 
         # View init
         self.view = QTreeView(self)
@@ -53,12 +52,21 @@ class ChooseTaskDialog(QDialog):
         self.layout.setContentsMargins(0, 2, 0, 0)
         self.layout.addWidget(self.view)
 
-    def fillModelKinds(self) -> None:
-        for kind in Kind:
-            type_item = QStandardItem(kind.name)
-            type_item.setData(kind, Qt.ItemDataRole.UserRole)
-            self.model.appendRow(type_item)
-            self.kind_items.update({kind: type_item})
+    def updateKindsDict(self, kind: Kind) -> None:
+        kind_item = QStandardItem(kind.name)
+        kind_item.setData(kind, Qt.ItemDataRole.UserRole)
+        self.model.appendRow(kind_item)
+        self.kind_items.update({kind: kind_item})
+
+    def addTask(self, task: Task):
+        task_item = QStandardItem(task.name)
+        task_item.setData(task, Qt.ItemDataRole.UserRole)
+
+        if task.kind not in self.kind_items:
+            self.updateKindsDict(task.kind)
+
+        kind_item = self.kind_items.get(task.kind)  # get item containing corresponding kind with dictionary
+        kind_item.appendRow(task_item)
 
     def _clearTasksList(self) -> None:
         for r in range(0, self.model.rowCount()):  # run through top level categories and remove their contents (rows)
