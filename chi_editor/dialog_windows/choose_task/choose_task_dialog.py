@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, cast
 from random import randint
 
-from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QAbstractItemView
+from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QAbstractItemView, QHBoxLayout, QPushButton
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from PyQt6.QtCore import Qt, QModelIndex
 
@@ -19,6 +19,14 @@ class ChooseTaskDialog(QDialog):
 
     # View that holds all the tasks links
     view: QTreeView
+
+    # Buttons to manipulate tasks
+    accept_button: QPushButton
+    random_task_button: QPushButton
+    delete_button: QPushButton
+
+    # Extra buttons
+    load_tasks_button: QPushButton
 
     # Layout that holds view to make it expandable
     layout: QVBoxLayout
@@ -50,7 +58,43 @@ class ChooseTaskDialog(QDialog):
         # Main layout
         self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 2, 0, 0)
+
+        self.setHeaderBar()
         self.layout.addWidget(self.view)
+        self.setMainButtons()
+
+    def setMainButtons(self) -> None:
+        # Buttons layout
+        view_layout = QHBoxLayout(self)
+        view_layout.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
+
+        self.accept_button = QPushButton("Choose task")
+        self.accept_button.setFixedSize(self.accept_button.sizeHint())  # sizeHint() is minimal size to fit the text
+        self.accept_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.accept_button.clicked.connect(self.handleAcceptClick)
+
+        self.random_task_button = QPushButton("Get random task")
+        self.random_task_button.setFixedSize(self.random_task_button.sizeHint())
+        self.random_task_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.random_task_button.clicked.connect(self.handleRandomTaskClick)
+
+        view_layout.addWidget(self.accept_button)
+        view_layout.addWidget(self.random_task_button)
+
+        self.layout.addLayout(view_layout)
+
+    def setHeaderBar(self) -> None:
+        header_layout = QHBoxLayout(self)
+        header_layout.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
+
+        self.load_tasks_button = QPushButton("<->")
+        self.load_tasks_button.setFixedSize(self.load_tasks_button.sizeHint())
+        self.load_tasks_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.load_tasks_button.clicked.connect(self.loadTasks)
+
+        header_layout.addWidget(self.load_tasks_button)
+
+        self.layout.addLayout(header_layout)
 
     def updateKindsDict(self, kind: Kind) -> None:
         kind_item = QStandardItem(kind.name)
