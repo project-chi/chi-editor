@@ -30,3 +30,7 @@ class LocalTaskDialog(ChooseTaskDialog):
         for json_file in self.default_dir.glob("*.json"):
             task = Task.parse_file(json_file)
             self.addTask(task)
+
+    def deleteTaskFromDatabase(self, task: Task) -> None:
+        for file in self.default_dir.glob(task.name + ".json"):
+            file.unlink()

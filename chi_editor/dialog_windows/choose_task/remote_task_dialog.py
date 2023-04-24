@@ -31,3 +31,6 @@ class RemoteTaskDialog(ChooseTaskDialog):
 
         for task in tasks:
             self.addTask(task)
+
+    def deleteTaskFromDatabase(self, task: Task) -> None:
+        self.server.delete_task(task.identifier)
