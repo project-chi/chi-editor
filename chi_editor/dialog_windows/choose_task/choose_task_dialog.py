@@ -146,16 +146,18 @@ class ChooseTaskDialog(QDialog):
         if index.row() == -1:  # no index chosen
             return
 
+        task_item = self.model.itemFromIndex(index)
+        data = task_item.data(Qt.ItemDataRole.UserRole)
+        if not isinstance(data, Task):
+            return
+
         self._deleteTaskFromModel(index)
-        self.deleteTaskFromDatabase(index)
+        self.deleteTaskFromDatabase(data)
 
     def _deleteTaskFromModel(self, index: QModelIndex) -> None:
-        task_item = self.model.itemFromIndex(index)
-        task = task_item.data(Qt.ItemDataRole.UserRole)
-        if isinstance(task, Task):
-            self.model.removeRow(index.row(), index.parent())
+        self.model.removeRow(index.row(), index.parent())
 
-    def deleteTaskFromDatabase(self, index: QModelIndex) -> None:
+    def deleteTaskFromDatabase(self, task: Task) -> None:
         pass
 
     def handleRandomTaskClick(self) -> None:
