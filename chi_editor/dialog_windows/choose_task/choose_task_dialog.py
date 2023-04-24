@@ -142,21 +142,21 @@ class ChooseTaskDialog(QDialog):
         self.close()
 
     def handleDeleteClick(self) -> None:
-        """
-        Delete chosen task from the list.
-
-        Default implementation deletes only the entry from local task model.
-        """
         index = self.view.currentIndex()
         if index.row() == -1:  # no index chosen
             return
 
-        # Delete from local model
+        self._deleteTaskFromModel(index)
+        self.deleteTaskFromDatabase(index)
+
+    def _deleteTaskFromModel(self, index: QModelIndex) -> None:
         task_item = self.model.itemFromIndex(index)
         task = task_item.data(Qt.ItemDataRole.UserRole)
         if isinstance(task, Task):
             self.model.removeRow(index.row(), index.parent())
-            self.view.update()
+
+    def deleteTaskFromDatabase(self, index: QModelIndex) -> None:
+        pass
 
     def handleRandomTaskClick(self) -> None:
         if self.model.rowCount() == 0:  # no kinds in the model
