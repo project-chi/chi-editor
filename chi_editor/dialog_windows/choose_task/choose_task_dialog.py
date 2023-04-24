@@ -78,8 +78,14 @@ class ChooseTaskDialog(QDialog):
         self.random_task_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.random_task_button.clicked.connect(self.handleRandomTaskClick)
 
+        self.delete_button = QPushButton("Delete task")
+        self.delete_button.setFixedSize(self.delete_button.sizeHint())
+        self.delete_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.delete_button.clicked.connect(self.handleDeleteClick)
+
         view_layout.addWidget(self.accept_button)
         view_layout.addWidget(self.random_task_button)
+        view_layout.addWidget(self.delete_button)
 
         self.layout.addLayout(view_layout)
 
@@ -144,7 +150,8 @@ class ChooseTaskDialog(QDialog):
         task_item = self.model.itemFromIndex(index)
         task = task_item.data(Qt.ItemDataRole.UserRole)
         if isinstance(task, Task):
-            self.model.removeRow(index.row())
+            self.model.removeRow(index.row(), index.parent())
+            self.view.update()
 
     def handleRandomTaskClick(self) -> None:
         if self.model.rowCount() == 0:  # no kinds in the model
