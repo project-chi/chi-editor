@@ -34,6 +34,7 @@ class InputDialog(QDialog):
         # Fill type combo box
         for kind in Kind:
             self.type.addItem(kind.name, userData=kind)
+        self.type.setCurrentIndex(1)
         self.type.currentIndexChanged.connect(self.changeCanvas)
 
         layout = QFormLayout(self)
@@ -52,11 +53,11 @@ class InputDialog(QDialog):
     def changeCanvas(self, index: int):
         match index:
             case 0:
-                self.active_canvas = self.canvas
-            case 1:
-                self.active_canvas = self.canvas_reaction
-            case 3:
                 self.active_canvas = self.canvas_chain
+            case 1:
+                self.active_canvas = self.canvas
+            case 2:
+                self.active_canvas = self.canvas_reaction
         self.window().changeCanvas(self.active_canvas, EditorMode.CREATE_MODE.value)
 
     def getInputs(self):
