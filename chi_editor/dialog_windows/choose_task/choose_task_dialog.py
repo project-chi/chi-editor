@@ -28,6 +28,7 @@ class ChooseTaskDialog(QDialog):
 
     # Extra buttons
     load_tasks_button: QPushButton
+    settings_button: QPushButton
 
     searchbar: QLineEdit
 
@@ -113,8 +114,15 @@ class ChooseTaskDialog(QDialog):
         self.load_tasks_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.load_tasks_button.clicked.connect(self.loadTasks)
 
+        self.settings_button = QPushButton()
+        icon_path = str(ASSETS / "settings-icon-symbol.png")
+        self.settings_button.setIcon(QIcon(icon_path))
+        self.settings_button.setFixedSize(self.settings_button.sizeHint())
+        self.settings_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+
         header_layout.addWidget(self.searchbar)
         header_layout.addWidget(self.load_tasks_button)
+        header_layout.addWidget(self.settings_button)
 
         self.layout.addLayout(header_layout)
 
