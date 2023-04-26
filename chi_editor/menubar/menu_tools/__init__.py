@@ -15,5 +15,5 @@ mode_tools: tuple[type[MenuTool], ...] = (
 task_tools: tuple[type[MenuTool], ...] = (
     ChooseRemoteTask,
     ChooseLocalTask,
-    ClearTasks,
+    # ClearTasks,
 )
