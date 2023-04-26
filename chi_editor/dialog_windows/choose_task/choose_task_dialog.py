@@ -44,6 +44,7 @@ class ChooseTaskDialog(QDialog):
 
     # Settings menu
     settings_menu: QMenu
+    _menu_show_toggle: bool = True
 
     def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -153,7 +154,12 @@ class ChooseTaskDialog(QDialog):
             kind_row.removeRows(0, kind_row.rowCount())
 
     def handleSettingsPressed(self) -> None:
-        self.settings_menu.exec(self.settings_button.mapToGlobal(self.settings_button.rect().bottomLeft()))
+        if self._menu_show_toggle:
+            self._menu_show_toggle = False
+            self.settings_menu.exec(self.settings_button.mapToGlobal(self.settings_button.rect().bottomLeft()))
+        else:
+            self._menu_show_toggle = True
+            self.settings_menu.close()
 
     def handleAcceptClick(self):
         if self.view.currentIndex().row() == -1:  # no index chosen
