@@ -2,12 +2,11 @@ from typing import TYPE_CHECKING, cast
 from random import randint
 
 from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QAbstractItemView, QHBoxLayout, QPushButton, \
-    QLineEdit
+    QLineEdit, QMenu
 from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
 from PyQt6.QtCore import Qt, QModelIndex, QSortFilterProxyModel, QPoint
 
 from chi_editor.api.task import Task, Kind
-from chi_editor.dialog_windows.choose_task.settings_menu import SettingsMenu
 from chi_editor.editor_mode import EditorMode
 from chi_editor.constants import ASSETS
 
@@ -44,14 +43,14 @@ class ChooseTaskDialog(QDialog):
     kind_items: dict[Kind, QStandardItem]
 
     # Settings menu
-    settings_menu: SettingsMenu
+    settings_menu: QMenu
 
     def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.setWindowTitle("Choose a task")
 
         self.editor = editor
-        self.settings_menu = SettingsMenu(self)
+        self.settings_menu = QMenu(self)
 
         # Model init
         self.model = QStandardItemModel()

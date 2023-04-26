@@ -23,6 +23,7 @@ class LocalTaskDialog(ChooseTaskDialog):
 
     def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, editor=editor, **kwargs)
+        self.settings_menu.addAction("Change default directory")
 
     def loadTasks(self) -> None:
         self._clearTasksList()
