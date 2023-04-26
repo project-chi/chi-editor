@@ -4,9 +4,10 @@ from random import randint
 from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QAbstractItemView, QHBoxLayout, QPushButton, \
     QLineEdit
 from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
-from PyQt6.QtCore import Qt, QModelIndex, QSortFilterProxyModel
+from PyQt6.QtCore import Qt, QModelIndex, QSortFilterProxyModel, QPoint
 
 from chi_editor.api.task import Task, Kind
+from chi_editor.dialog_windows.choose_task.settings_menu import SettingsMenu
 from chi_editor.editor_mode import EditorMode
 from chi_editor.constants import ASSETS
 
@@ -42,11 +43,15 @@ class ChooseTaskDialog(QDialog):
     # Mapping from kinds to their entries in model
     kind_items: dict[Kind, QStandardItem]
 
+    # Settings menu
+    settings_menu: SettingsMenu
+
     def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.setWindowTitle("Choose a task")
 
         self.editor = editor
+        self.settings_menu = SettingsMenu(self)
 
         # Model init
         self.model = QStandardItemModel()
@@ -119,6 +124,7 @@ class ChooseTaskDialog(QDialog):
         self.settings_button.setIcon(QIcon(icon_path))
         self.settings_button.setFixedSize(self.settings_button.sizeHint())
         self.settings_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.settings_button.clicked.connect(self.handleSettingsPressed)
 
         header_layout.addWidget(self.searchbar)
         header_layout.addWidget(self.load_tasks_button)
@@ -146,6 +152,9 @@ class ChooseTaskDialog(QDialog):
         for r in range(0, self.model.rowCount()):  # run through top level categories and remove their contents (rows)
             kind_row = self.model.item(r)
             kind_row.removeRows(0, kind_row.rowCount())
+
+    def handleSettingsPressed(self) -> None:
+        self.settings_menu.exec(self.settings_button.mapToGlobal(self.settings_button.rect().bottomLeft()))
 
     def handleAcceptClick(self):
         if self.view.currentIndex().row() == -1:  # no index chosen
