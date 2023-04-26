@@ -53,6 +53,7 @@ class ChooseTaskDialog(QDialog):
         self.proxy_model.setSourceModel(self.model)
         self.proxy_model.setRecursiveFilteringEnabled(True)
         self.proxy_model.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.proxy_model.setAutoAcceptChildRows(True)
         self.kind_items = {}
 
         # View init
