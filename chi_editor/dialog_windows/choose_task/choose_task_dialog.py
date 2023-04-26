@@ -1,8 +1,16 @@
 from typing import TYPE_CHECKING, cast
 from random import randint
 
-from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QAbstractItemView, QHBoxLayout, QPushButton, \
-    QLineEdit
+from PyQt6.QtWidgets import (
+    QDialog,
+    QTreeView,
+    QSizePolicy,
+    QVBoxLayout,
+    QAbstractItemView,
+    QHBoxLayout,
+    QPushButton,
+    QLineEdit,
+)
 from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
 from PyQt6.QtCore import Qt, QModelIndex, QSortFilterProxyModel
 
@@ -57,7 +65,9 @@ class ChooseTaskDialog(QDialog):
 
         # View init
         self.view = QTreeView(self)
-        self.view.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+        self.view.setSizePolicy(
+            QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
+        )
         self.view.setModel(self.proxy_model)
         self.view.doubleClicked.connect(self.handleDoubleClick)
         self.view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -73,22 +83,32 @@ class ChooseTaskDialog(QDialog):
 
     def setMainButtons(self) -> None:
         # Buttons layout
-        view_layout = QHBoxLayout(self)
-        view_layout.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
+        view_layout = QHBoxLayout()
+        view_layout.setAlignment(
+            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom
+        )
 
         self.accept_button = QPushButton("Choose task")
-        self.accept_button.setFixedSize(self.accept_button.sizeHint())  # sizeHint() is minimal size to fit the text
-        self.accept_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.accept_button.setFixedSize(
+            self.accept_button.sizeHint()
+        )  # sizeHint() is minimal size to fit the text
+        self.accept_button.setSizePolicy(
+            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
+        )
         self.accept_button.clicked.connect(self.handleAcceptClick)
 
         self.random_task_button = QPushButton("Get random task")
         self.random_task_button.setFixedSize(self.random_task_button.sizeHint())
-        self.random_task_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.random_task_button.setSizePolicy(
+            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
+        )
         self.random_task_button.clicked.connect(self.handleRandomTaskClick)
 
         self.delete_button = QPushButton("Delete task")
         self.delete_button.setFixedSize(self.delete_button.sizeHint())
-        self.delete_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.delete_button.setSizePolicy(
+            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
+        )
         self.delete_button.clicked.connect(self.handleDeleteClick)
 
         view_layout.addWidget(self.accept_button)
@@ -98,18 +118,24 @@ class ChooseTaskDialog(QDialog):
         self.layout.addLayout(view_layout)
 
     def setHeaderBar(self) -> None:
-        header_layout = QHBoxLayout(self)
-        header_layout.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
+        header_layout = QHBoxLayout()
+        header_layout.setAlignment(
+            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop
+        )
 
         self.searchbar = QLineEdit()
         self.searchbar.textChanged.connect(self.proxy_model.setFilterFixedString)
-        self.searchbar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.searchbar.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
 
         self.load_tasks_button = QPushButton()
         icon_path = str(ASSETS / "refresh_icon.svg")
         self.load_tasks_button.setIcon(QIcon(icon_path))
         self.load_tasks_button.setFixedSize(self.load_tasks_button.sizeHint())
-        self.load_tasks_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.load_tasks_button.setSizePolicy(
+            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
+        )
         self.load_tasks_button.clicked.connect(self.loadTasks)
 
         header_layout.addWidget(self.searchbar)
@@ -130,11 +156,15 @@ class ChooseTaskDialog(QDialog):
         if task.kind not in self.kind_items:
             self.updateKindsDict(task.kind)
 
-        kind_item = self.kind_items.get(task.kind)  # get item containing corresponding kind with dictionary
+        kind_item = self.kind_items.get(
+            task.kind
+        )  # get item containing corresponding kind with dictionary
         kind_item.appendRow(task_item)
 
     def _clearTasksList(self) -> None:
-        for r in range(0, self.model.rowCount()):  # run through top level categories and remove their contents (rows)
+        for r in range(
+            0, self.model.rowCount()
+        ):  # run through top level categories and remove their contents (rows)
             kind_row = self.model.item(r)
             kind_row.removeRows(0, kind_row.rowCount())
 

@@ -80,7 +80,9 @@ class Editor(QMainWindow):
 
         # Add toolbars
         for index in range(3):
-            self.toolbars[index] = CanvasToolBar(canvas=self.canvases[index], parent=self)
+            self.toolbars[index] = CanvasToolBar(
+                canvas=self.canvases[index], parent=self
+            )
             self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.toolbars[index])
             self.zoom_out(index)
             self.zoom_out(index)
@@ -159,9 +161,12 @@ class Editor(QMainWindow):
     def getLayout(self, index) -> QWidget:
         # Initialize QGraphicsView
         self.views[index] = QGraphicsView(self)  # create QGraphicsView
-        self.views[index] \
-            .setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)  # Set QGraphicsView position
-        self.views[index].setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
+        self.views[index].setAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
+        )  # Set QGraphicsView position
+        self.views[index].setViewportUpdateMode(
+            QGraphicsView.ViewportUpdateMode.FullViewportUpdate
+        )
 
         # Initialize GGraphicsScene called canvas
         self.canvases[index] = Canvas(QRectF(self.views[index].geometry()))
@@ -170,10 +175,10 @@ class Editor(QMainWindow):
         self.views[index].setScene(self.canvases[index])
 
         # Main solve canvas layout
-        solve_canvas_layout = QHBoxLayout(self)
+        solve_canvas_layout = QHBoxLayout()
 
         # Box contains magnifying glass
-        zoom_layout = QVBoxLayout(self)
+        zoom_layout = QVBoxLayout()
         zoom_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         scale_plus = QPushButton("Zoom In", self)

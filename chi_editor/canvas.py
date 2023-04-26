@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, overload
 
 from PyQt6.QtCore import QRectF
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QGraphicsScene
 from rdkit import Chem
 
@@ -21,6 +22,7 @@ class Canvas(QGraphicsScene):
     def __init__(self, *args, **kwargs) -> "None":
         super().__init__(*args, **kwargs)
         self.min_scene_rect = super().sceneRect()
+        self.setBackgroundBrush(QColor("white"))
 
     def mousePressEvent(self, event: "QGraphicsSceneMouseEvent") -> "None":
         if self.current_action is not None:
