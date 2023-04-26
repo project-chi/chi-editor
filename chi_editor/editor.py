@@ -195,6 +195,9 @@ class Editor(QMainWindow):
         layout.addWidget(self.views[index])
         return solver_mode_widget
 
+    def changeCanvas(self, canvas: Canvas, index: int):
+        self.views[index].setScene(canvas)
+
     def getCreateModeLayout(self) -> QWidget:
         create_widget = self.getLayout(EditorMode.CREATE_MODE.value)
         create_layout = create_widget.layout()

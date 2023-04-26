@@ -5,15 +5,22 @@ from chi_editor.api.server import Server, default_url
 from chi_editor.api.task import Kind
 from chi_editor.canvas import Canvas
 from chi_editor.utils.json_utils import create_task
+from chi_editor.editor_mode import EditorMode
 
 
 class InputDialog(QDialog):
     canvas: Canvas
+    canvas_reaction: Canvas
+    canvas_chain: Canvas
+    active_canvas: Canvas
 
     def __init__(self, canvas: Canvas, parent=None):
         super().__init__(parent)
 
         self.canvas = canvas
+        self.canvas_reaction = None
+        self.canvas_chain = None
+        self.active_canvas = canvas
         self.name = QLineEdit(self)
         self.formulation = QLineEdit(self)
         self.correct_answer = QLineEdit(self)
@@ -27,6 +34,7 @@ class InputDialog(QDialog):
         # Fill type combo box
         for kind in Kind:
             self.type.addItem(kind.name, userData=kind)
+        self.type.currentIndexChanged.connect(self.changeCanvas)
 
         layout = QFormLayout(self)
         layout.addRow("Choose type of the task", self.type)
@@ -40,6 +48,16 @@ class InputDialog(QDialog):
         button_box.helpRequested.connect(self.parseInput)
 
         button_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.createTask)
+
+    def changeCanvas(self, index: int):
+        match index:
+            case 0:
+                self.active_canvas = self.canvas
+            case 1:
+                self.active_canvas = self.canvas_reaction
+            case 3:
+                self.active_canvas = self.canvas_chain
+        self.window().changeCanvas(self.active_canvas, EditorMode.CREATE_MODE.value)
 
     def getInputs(self):
         current_type = self.type.currentData(Qt.ItemDataRole.UserRole)
