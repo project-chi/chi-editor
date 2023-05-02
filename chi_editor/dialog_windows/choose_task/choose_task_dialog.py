@@ -77,7 +77,7 @@ class ChooseTaskDialog(QDialog):
         self.setMainButtons()
 
         # Size configuration
-        self.view.setMinimumSize(1, self.searchbar.minimumSizeHint().height())
+        self.view.setMinimumSize(1, self.view.fontMetrics().height())
         self.view.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
 
     def setMainButtons(self) -> None:

@@ -1,8 +1,9 @@
 from typing import TYPE_CHECKING, ClassVar
 from pathlib import Path
 
-from PyQt6.QtWidgets import QTreeView, QSizePolicy, QDialog
+from PyQt6.QtWidgets import QTreeView, QSizePolicy, QDialog, QVBoxLayout
 from PyQt6.QtGui import QFileSystemModel
+from PyQt6.QtCore import Qt
 
 from chi_editor.constants import RESOURCES, ASSETS
 
@@ -17,6 +18,9 @@ if TYPE_CHECKING:
 class LocalTaskDialog(ChooseTaskDialog):
     # Default folder for local task files
     default_dir: ClassVar[Path] = RESOURCES / "local_tasks"
+
+    # Layout that holds view to make it expandable
+    main_layout: QVBoxLayout
 
     # Custom task directory
     task_dir: Path = default_dir
@@ -34,9 +38,6 @@ class LocalTaskDialog(ChooseTaskDialog):
         self.dir_dialog.setWindowTitle("Choose directory")
 
         self.dir_view = QTreeView(self.dir_dialog)
-        self.dir_view.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-
-        self.dir_dialog.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
 
         self.dir_model = QFileSystemModel(self.dir_view)
         root_index = self.dir_model.setRootPath(str(self.default_dir.parent))
@@ -44,6 +45,14 @@ class LocalTaskDialog(ChooseTaskDialog):
 
         self.dir_view.setModel(self.dir_model)
         self.dir_view.setRootIndex(root_index)
+
+        self.main_layout = QVBoxLayout(self.dir_dialog)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.addWidget(self.dir_view)
+
+        # Sizes configuration
+        self.dir_view.setMinimumSize(1, self.dir_view.fontMetrics().height())
+        self.dir_view.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
 
     def setSettingsActions(self) -> None:
         self.settings_menu.addAction("Change task directory", self.showDirChangeDialog)
