@@ -80,21 +80,15 @@ class ChooseTaskDialog(QDialog):
     def setMainButtons(self) -> None:
         # Buttons layout
         view_layout = QHBoxLayout(self)
-        view_layout.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
+        view_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         self.accept_button = QPushButton("Choose task")
-        self.accept_button.setFixedSize(self.accept_button.sizeHint())  # sizeHint() is minimal size to fit the text
-        self.accept_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.accept_button.clicked.connect(self.handleAcceptClick)
 
         self.random_task_button = QPushButton("Get random task")
-        self.random_task_button.setFixedSize(self.random_task_button.sizeHint())
-        self.random_task_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.random_task_button.clicked.connect(self.handleRandomTaskClick)
 
         self.delete_button = QPushButton("Delete task")
-        self.delete_button.setFixedSize(self.delete_button.sizeHint())
-        self.delete_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.delete_button.clicked.connect(self.handleDeleteClick)
 
         view_layout.addWidget(self.accept_button)
@@ -105,7 +99,7 @@ class ChooseTaskDialog(QDialog):
 
     def setHeaderBar(self) -> None:
         header_layout = QHBoxLayout(self)
-        header_layout.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
+        header_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         self.searchbar = QLineEdit()
         self.searchbar.textChanged.connect(self.proxy_model.setFilterFixedString)
@@ -114,15 +108,11 @@ class ChooseTaskDialog(QDialog):
         self.load_tasks_button = QPushButton()
         icon_path = str(ASSETS / "refresh_icon.svg")
         self.load_tasks_button.setIcon(QIcon(icon_path))
-        self.load_tasks_button.setFixedSize(self.load_tasks_button.sizeHint())
-        self.load_tasks_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.load_tasks_button.clicked.connect(self.loadTasks)
 
         self.settings_button = QPushButton()
         icon_path = str(ASSETS / "settings-icon-symbol.png")
         self.settings_button.setIcon(QIcon(icon_path))
-        self.settings_button.setFixedSize(self.settings_button.sizeHint())
-        self.settings_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.settings_button.clicked.connect(self.handleSettingsPressed)
 
         self.setSettingsActions()
