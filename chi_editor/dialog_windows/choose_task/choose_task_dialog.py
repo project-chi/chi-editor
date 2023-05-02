@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 from random import randint
 
 from PyQt6.QtWidgets import (
@@ -10,9 +10,10 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QPushButton,
     QLineEdit,
+    QMenu,
 )
 from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
-from PyQt6.QtCore import Qt, QModelIndex, QSortFilterProxyModel, QPoint
+from PyQt6.QtCore import Qt, QModelIndex, QSortFilterProxyModel
 
 from chi_editor.api.task import Task, Kind
 from chi_editor.editor_mode import EditorMode
