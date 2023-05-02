@@ -1,18 +1,13 @@
-from typing import TYPE_CHECKING, ClassVar
+from typing import ClassVar
 from pathlib import Path
 
-from PyQt6.QtWidgets import QTreeView, QSizePolicy, QDialog, QVBoxLayout, QHeaderView, QFileDialog
-from PyQt6.QtGui import QFileSystemModel
-from PyQt6.QtCore import QDir
+from PyQt6.QtWidgets import QVBoxLayout, QFileDialog
 
 from chi_editor.constants import RESOURCES
 
 from chi_editor.api.task import Task
 
 from chi_editor.dialog_windows.choose_task.choose_task_dialog import ChooseTaskDialog
-
-if TYPE_CHECKING:
-    from chi_editor.editor import Editor
 
 
 class LocalTaskDialog(ChooseTaskDialog):
@@ -25,24 +20,15 @@ class LocalTaskDialog(ChooseTaskDialog):
     # Custom task directory
     task_dir: Path = default_dir
 
-    # Change local directory
-    dir_dialog: QDialog
-
-    def __init__(self, *args, editor: "Editor", **kwargs) -> None:
-        super().__init__(*args, editor=editor, **kwargs)
-
-        # Local file system
-        self.dir_dialog = QFileDialog(self)
-        self.dir_dialog.setWindowTitle("Choose directory")
-
     def setSettingsActions(self) -> None:
-        self.settings_menu.addAction("Change task directory", self.showDirChangeDialog)
+        self.settings_menu.addAction("Change task directory", self.chooseLocalDirectory)
 
-    def showDirChangeDialog(self) -> None:
-        self.dir_dialog.exec()
-
-    def _addDirBottomButtons(self) -> None:
-        pass
+    def chooseLocalDirectory(self) -> None:
+        new_local_dir_path = QFileDialog.getExistingDirectory(self, "Choose directory", str(self.task_dir.parent),
+                                                              QFileDialog.Option.ShowDirsOnly)
+        if new_local_dir_path == "":
+            return
+        self.task_dir = Path(new_local_dir_path)
 
     def loadTasks(self) -> None:
         self._clearTasksList()
