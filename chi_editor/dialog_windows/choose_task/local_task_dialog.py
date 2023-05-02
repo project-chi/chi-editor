@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING, ClassVar
 from pathlib import Path
 
-from PyQt6.QtWidgets import QTreeView, QSizePolicy, QDialog, QVBoxLayout
+from PyQt6.QtWidgets import QTreeView, QSizePolicy, QDialog, QVBoxLayout, QHeaderView
 from PyQt6.QtGui import QFileSystemModel
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QModelIndex, QDir
 
 from chi_editor.constants import RESOURCES, ASSETS
 
@@ -36,15 +36,24 @@ class LocalTaskDialog(ChooseTaskDialog):
         # Local file system
         self.dir_dialog = QDialog(self)
         self.dir_dialog.setWindowTitle("Choose directory")
+        self.dir_dialog.resize(400, 600)
 
         self.dir_view = QTreeView(self.dir_dialog)
 
         self.dir_model = QFileSystemModel(self.dir_view)
-        root_index = self.dir_model.setRootPath(str(self.default_dir.parent))
         self.dir_model.setReadOnly(True)
+        self.dir_model.setFilter(QDir.Filter.Dirs | QDir.Filter.NoDotAndDotDot)
 
         self.dir_view.setModel(self.dir_model)
+        root_index = self.dir_model.setRootPath(QDir.rootPath())
         self.dir_view.setRootIndex(root_index)
+        self.dir_view.header().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+        self.dir_view.setColumnHidden(1, True)
+        self.dir_view.setColumnHidden(2, True)
+        self.dir_view.setColumnHidden(3, True)
+
+        default_dir_index = self.dir_model.index(str(self.default_dir.parent))
+        self.dir_view.scrollTo(default_dir_index)
 
         self.main_layout = QVBoxLayout(self.dir_dialog)
         self.main_layout.setContentsMargins(0, 0, 0, 0)
@@ -58,6 +67,9 @@ class LocalTaskDialog(ChooseTaskDialog):
         self.settings_menu.addAction("Change task directory", self.showDirChangeDialog)
 
     def showDirChangeDialog(self):
+        default_dir_index = self.dir_model.index(str(self.default_dir.parent))
+        self.dir_view.scrollTo(default_dir_index)
+        self.dir_view.setCurrentIndex(default_dir_index)
         self.dir_dialog.exec()
 
     def loadTasks(self) -> None:
