@@ -66,11 +66,14 @@ class LocalTaskDialog(ChooseTaskDialog):
     def setSettingsActions(self) -> None:
         self.settings_menu.addAction("Change task directory", self.showDirChangeDialog)
 
-    def showDirChangeDialog(self):
+    def showDirChangeDialog(self) -> None:
         default_dir_index = self.dir_model.index(str(self.default_dir.parent))
         self.dir_view.scrollTo(default_dir_index)
         self.dir_view.setCurrentIndex(default_dir_index)
         self.dir_dialog.exec()
+
+    def _addBottomButtons(self) -> None:
+        pass
 
     def loadTasks(self) -> None:
         self._clearTasksList()
