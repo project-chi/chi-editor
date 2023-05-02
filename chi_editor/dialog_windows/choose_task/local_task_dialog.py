@@ -39,10 +39,11 @@ class LocalTaskDialog(ChooseTaskDialog):
         self.dir_dialog.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
 
         self.dir_model = QFileSystemModel(self.dir_view)
-        self.dir_model.setRootPath(str(RESOURCES))
+        root_index = self.dir_model.setRootPath(str(self.default_dir.parent))
         self.dir_model.setReadOnly(True)
 
         self.dir_view.setModel(self.dir_model)
+        self.dir_view.setRootIndex(root_index)
 
     def setSettingsActions(self) -> None:
         self.settings_menu.addAction("Change task directory", self.showDirChangeDialog)
