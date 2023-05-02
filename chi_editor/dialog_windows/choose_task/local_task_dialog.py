@@ -28,7 +28,6 @@ class LocalTaskDialog(ChooseTaskDialog):
 
     def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, editor=editor, **kwargs)
-        self.settings_menu.addAction("Change task directory", self.showDirChangeDialog)
 
         # Local file system
         self.dir_dialog = QDialog(self)
@@ -44,6 +43,9 @@ class LocalTaskDialog(ChooseTaskDialog):
         self.dir_model.setReadOnly(True)
 
         self.dir_view.setModel(self.dir_model)
+
+    def setSettingsActions(self) -> None:
+        self.settings_menu.addAction("Change task directory", self.showDirChangeDialog)
 
     def showDirChangeDialog(self):
         self.dir_dialog.exec()

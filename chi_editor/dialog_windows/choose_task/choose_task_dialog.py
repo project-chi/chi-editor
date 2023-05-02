@@ -125,11 +125,16 @@ class ChooseTaskDialog(QDialog):
         self.settings_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.settings_button.clicked.connect(self.handleSettingsPressed)
 
+        self.setSettingsActions()
+
         header_layout.addWidget(self.searchbar)
         header_layout.addWidget(self.load_tasks_button)
         header_layout.addWidget(self.settings_button)
 
         self.layout.addLayout(header_layout)
+
+    def setSettingsActions(self) -> None:
+        pass
 
     def updateKindsDict(self, kind: Kind) -> None:
         kind_item = QStandardItem(kind.name)
