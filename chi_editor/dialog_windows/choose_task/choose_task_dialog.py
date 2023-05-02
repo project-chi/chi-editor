@@ -1,8 +1,16 @@
 from typing import TYPE_CHECKING, cast
 from random import randint
 
-from PyQt6.QtWidgets import QDialog, QTreeView, QSizePolicy, QVBoxLayout, QAbstractItemView, QHBoxLayout, QPushButton, \
-    QLineEdit, QMenu
+from PyQt6.QtWidgets import (
+    QDialog,
+    QTreeView,
+    QSizePolicy,
+    QVBoxLayout,
+    QAbstractItemView,
+    QHBoxLayout,
+    QPushButton,
+    QLineEdit,
+)
 from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
 from PyQt6.QtCore import Qt, QModelIndex, QSortFilterProxyModel, QPoint
 
@@ -141,11 +149,15 @@ class ChooseTaskDialog(QDialog):
         if task.kind not in self.kind_items:
             self.updateKindsDict(task.kind)
 
-        kind_item = self.kind_items.get(task.kind)  # get item containing corresponding kind with dictionary
+        kind_item = self.kind_items.get(
+            task.kind
+        )  # get item containing corresponding kind with dictionary
         kind_item.appendRow(task_item)
 
     def _clearTasksList(self) -> None:
-        for r in range(0, self.model.rowCount()):  # run through top level categories and remove their contents (rows)
+        for r in range(
+            0, self.model.rowCount()
+        ):  # run through top level categories and remove their contents (rows)
             kind_row = self.model.item(r)
             kind_row.removeRows(0, kind_row.rowCount())
 

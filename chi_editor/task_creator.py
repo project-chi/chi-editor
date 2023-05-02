@@ -1,4 +1,10 @@
-from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout, QComboBox, QGraphicsScene
+from PyQt6.QtWidgets import (
+    QDialog,
+    QLineEdit,
+    QDialogButtonBox,
+    QFormLayout,
+    QComboBox,
+)
 from PyQt6.QtCore import Qt
 
 from chi_editor.api.server import Server, default_url
@@ -18,10 +24,12 @@ class InputDialog(QDialog):
         self.formulation = QLineEdit(self)
         self.correct_answer = QLineEdit(self)
         self.type = QComboBox(self)
-        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | \
-                                      QDialogButtonBox.StandardButton.Help | \
-                                      QDialogButtonBox.StandardButton.Cancel | \
-                                      QDialogButtonBox.StandardButton.Reset, self)
+        button_box = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok
+            | QDialogButtonBox.StandardButton.Help
+            | QDialogButtonBox.StandardButton.Cancel
+            | QDialogButtonBox.StandardButton.Reset,
+        )
         button_box.button(QDialogButtonBox.StandardButton.Help).setText("Parse")
         button_box.button(QDialogButtonBox.StandardButton.Reset).setText("Create Local")
         # Fill type combo box
@@ -39,11 +47,18 @@ class InputDialog(QDialog):
         button_box.rejected.connect(self.clearAll)
         button_box.helpRequested.connect(self.parseInput)
 
-        button_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.createTask)
+        button_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(
+            self.createTask
+        )
 
     def getInputs(self):
         current_type = self.type.currentData(Qt.ItemDataRole.UserRole)
-        return self.name.text(), current_type, self.formulation.text(), self.correct_answer.text()
+        return (
+            self.name.text(),
+            current_type,
+            self.formulation.text(),
+            self.correct_answer.text(),
+        )
 
     def clearAll(self):
         self.name.clear()

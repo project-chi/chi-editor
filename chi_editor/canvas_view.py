@@ -13,10 +13,7 @@ class CanvasView(QGraphicsView):
     def resizeEvent(self, event: "QResizeEvent") -> "None":
         super().resizeEvent(event)
         self.scene().setSceneRect(
-            0.0,
-            0.0,
-            float(event.size().width()),
-            float(event.size().height())
+            0.0, 0.0, float(event.size().width()), float(event.size().height())
         )
 
     def mousePressEvent(self, event: "QMouseEvent") -> "None":
