@@ -63,7 +63,6 @@ class ChooseTaskDialog(QDialog):
 
         # View init
         self.view = QTreeView(self)
-        self.view.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
         self.view.setModel(self.proxy_model)
         self.view.doubleClicked.connect(self.handleDoubleClick)
         self.view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -76,6 +75,10 @@ class ChooseTaskDialog(QDialog):
         self.setHeaderBar()
         self.layout.addWidget(self.view)
         self.setMainButtons()
+
+        # Size configuration
+        self.view.setMinimumSize(1, self.searchbar.minimumSizeHint().height())
+        self.view.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
 
     def setMainButtons(self) -> None:
         # Buttons layout
@@ -103,7 +106,6 @@ class ChooseTaskDialog(QDialog):
 
         self.searchbar = QLineEdit()
         self.searchbar.textChanged.connect(self.proxy_model.setFilterFixedString)
-        self.searchbar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         self.load_tasks_button = QPushButton()
         icon_path = str(ASSETS / "refresh_icon.svg")
