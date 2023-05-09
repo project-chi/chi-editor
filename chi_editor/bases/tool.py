@@ -11,6 +11,8 @@ if TYPE_CHECKING:
 
 
 class Tool(QAction):
+    canvas: "Canvas"
+
     def __init__(self, canvas: "Canvas", *args, **kwargs) -> "None":
         super().__init__(*args, **kwargs)
         self.canvas = canvas
@@ -38,3 +40,6 @@ class Tool(QAction):
     def picture(self) -> "str":
         """Returns the name of the icon for this tool without extension."""
         raise NotImplementedError
+
+    def change_canvas(self, canvas: "Canvas"):
+        self.canvas = canvas

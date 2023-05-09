@@ -46,8 +46,7 @@ class Editor(QMainWindow):
     # GraphicsScene where to draw all graphical objects
     canvases: list[Canvas] = [None, None, None]
 
-    # Toolbar that contains tools for manipulating canvas in free mode
-    toolbars: list[QToolBar] = [None, None, None]
+    toolbar = CanvasToolBar
 
     # Dialog with solving results
     result_dialog: TaskResultDialog
@@ -78,17 +77,17 @@ class Editor(QMainWindow):
         menubar = CanvasMenuBar(editor=self)
         self.setMenuBar(menubar)
 
-        # Add toolbars
+        # Add toolbar
+        self.toolbar = CanvasToolBar(canvas=self.canvases[0], parent=self)
+        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.toolbar)
+        self.toolbar.toggleViewAction().setChecked(False)
+        self.toolbar.toggleViewAction().trigger()
+        self.toolbar.toggleViewAction().trigger()
+
         for index in range(3):
-            self.toolbars[index] = CanvasToolBar(canvas=self.canvases[index], parent=self)
-            self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.toolbars[index])
             self.zoom_out(index)
             self.zoom_out(index)
-        for toolbar in self.toolbars:
-            toolbar.toggleViewAction().setChecked(False)
-            toolbar.toggleViewAction().trigger()
-            toolbar.toggleViewAction().trigger()
-        self.toolbars[0].toggleViewAction().trigger()
+        self.toolbar.toggleViewAction().trigger()
 
         # Create dialogs (they won't show instantly)
 
@@ -111,9 +110,11 @@ class Editor(QMainWindow):
         self.views[index].setTransform(QTransform.fromScale(new_scale, new_scale))
 
     def setMode(self, mode: EditorMode) -> None:
-        self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
+        self.toolbar.change_canvas(self.canvases[mode.value])
         self.workspace.setCurrentIndex(mode.value)
-        self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
+        # self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
+        # self.workspace.setCurrentIndex(mode.value)
+        # self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
 
     def setTask(self, task: Task) -> None:
         self.task = task
@@ -196,6 +197,7 @@ class Editor(QMainWindow):
     def changeCanvas(self, canvas: Canvas, index: int):
         self.views[index].setScene(canvas)
         self.canvases[index] = canvas
+        self.toolbar.change_canvas(self.canvases[index])
 
     def getCreateModeLayout(self) -> QWidget:
         create_widget = self.getLayout(EditorMode.CREATE_MODE.value)

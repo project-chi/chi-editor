@@ -34,3 +34,8 @@ class CanvasToolBar(QToolBar):
 
     def changeAction(self, action: "QAction") -> "None":
         self._canvas.current_action = action
+
+    def change_canvas(self, canvas: "Canvas"):
+        self._canvas = canvas
+        for Action in self.actions():
+            Action.change_canvas(canvas)
