@@ -77,7 +77,7 @@ class InputDialog(QDialog):
         self.clearAll()
 
     def parseInput(self):
-        self.correct_answer.setText(self.canvas_molecule.findMolecule())
+        self.correct_answer.setText(self.active_canvas.findMolecule())
 
     def createTask(self):
         res_name, res_type, res_formulation, res_correct = self.getInputs()
