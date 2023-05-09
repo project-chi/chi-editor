@@ -195,11 +195,15 @@ class Editor(QMainWindow):
 
     def changeCanvas(self, canvas: Canvas, index: int):
         self.views[index].setScene(canvas)
+        self.canvases[index] = canvas
 
     def getCreateModeLayout(self) -> QWidget:
         create_widget = self.getLayout(EditorMode.CREATE_MODE.value)
         create_layout = create_widget.layout()
-        create_mode_widget = InputDialog(self.canvases[EditorMode.CREATE_MODE.value])
+        create_mode_widget = InputDialog(self.canvases[EditorMode.CREATE_MODE.value],
+                                         Canvas(QRectF(self.views[EditorMode.CREATE_MODE.value].geometry())),
+                                         Canvas(QRectF(self.views[EditorMode.CREATE_MODE.value].geometry())))
+        create_mode_widget.canvas_changed.connect(self.changeCanvas)
         QVBoxLayout(create_mode_widget)
         create_layout.addWidget(create_mode_widget)
         return create_widget

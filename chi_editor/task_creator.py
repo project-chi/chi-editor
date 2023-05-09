@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout, QComboBox
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QRectF, pyqtSignal
 
 from chi_editor.api.server import Server, default_url
 from chi_editor.api.task import Kind
@@ -13,6 +13,7 @@ class InputDialog(QDialog):
     canvas_reaction: Canvas
     canvas_chain: Canvas
     active_canvas: Canvas
+    canvas_changed: pyqtSignal = pyqtSignal(Canvas, int)
 
     def __init__(self, canvas_molecule: Canvas, canvas_reaction: Canvas, canvas_chain: Canvas, parent=None):
         super().__init__(parent)
@@ -58,7 +59,7 @@ class InputDialog(QDialog):
                 self.active_canvas = self.canvas_molecule
             case 2:
                 self.active_canvas = self.canvas_reaction
-        self.window().changeCanvas(self.active_canvas, EditorMode.CREATE_MODE.value)
+        self.canvas_changed.emit(self.active_canvas, EditorMode.CREATE_MODE.value)
 
     def getInputs(self):
         current_type = self.type.currentData(Qt.ItemDataRole.UserRole)
