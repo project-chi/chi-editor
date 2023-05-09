@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout, QComboBox, QGraphicsScene
+from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout, QComboBox
 from PyQt6.QtCore import Qt
 
 from chi_editor.api.server import Server, default_url
@@ -9,18 +9,18 @@ from chi_editor.editor_mode import EditorMode
 
 
 class InputDialog(QDialog):
-    canvas: Canvas
+    canvas_molecule: Canvas
     canvas_reaction: Canvas
     canvas_chain: Canvas
     active_canvas: Canvas
 
-    def __init__(self, canvas: Canvas, parent=None):
+    def __init__(self, canvas_molecule: Canvas, canvas_reaction: Canvas, canvas_chain: Canvas, parent=None):
         super().__init__(parent)
 
-        self.canvas = canvas
-        self.canvas_reaction = None
-        self.canvas_chain = None
-        self.active_canvas = canvas
+        self.canvas_molecule = canvas_molecule
+        self.canvas_reaction = canvas_reaction
+        self.canvas_chain = canvas_chain
+        self.active_canvas = canvas_molecule
         self.name = QLineEdit(self)
         self.formulation = QLineEdit(self)
         self.correct_answer = QLineEdit(self)
@@ -55,7 +55,7 @@ class InputDialog(QDialog):
             case 0:
                 self.active_canvas = self.canvas_chain
             case 1:
-                self.active_canvas = self.canvas
+                self.active_canvas = self.canvas_molecule
             case 2:
                 self.active_canvas = self.canvas_reaction
         self.window().changeCanvas(self.active_canvas, EditorMode.CREATE_MODE.value)
@@ -76,7 +76,7 @@ class InputDialog(QDialog):
         self.clearAll()
 
     def parseInput(self):
-        self.correct_answer.setText(self.canvas.findMolecule())
+        self.correct_answer.setText(self.canvas_molecule.findMolecule())
 
     def createTask(self):
         res_name, res_type, res_formulation, res_correct = self.getInputs()

@@ -141,8 +141,6 @@ class Editor(QMainWindow):
 
         box_layout = QVBoxLayout()
         group_box = QGroupBox("Formulation")
-        # group_box.setFixedSize(group_box.sizeHint())
-        # submit.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         formulation = QLabel("The formulation of a task will appear here")
         self.formulation = formulation
         box_layout.addWidget(formulation)
