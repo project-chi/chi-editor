@@ -22,6 +22,9 @@ class InputDialog(QDialog):
         self.canvas_reaction = canvas_reaction
         self.canvas_chain = canvas_chain
         self.active_canvas = canvas_molecule
+        canvas_molecule.canvas_in_focus.connect(lambda: self.changeCanvas(1))
+        canvas_chain.canvas_in_focus.connect(lambda: self.changeCanvas(0))
+        canvas_reaction.canvas_in_focus.connect(lambda: self.changeCanvas(2))
         self.name = QLineEdit(self)
         self.formulation = QLineEdit(self)
         self.correct_answer = QLineEdit(self)
@@ -49,6 +52,7 @@ class InputDialog(QDialog):
         button_box.rejected.connect(self.clearAll)
         button_box.helpRequested.connect(self.parseInput)
 
+        self.canvas_molecule.focusItemChanged
         button_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.createTask)
 
     def changeCanvas(self, index: int):

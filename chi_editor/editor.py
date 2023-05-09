@@ -45,6 +45,7 @@ class Editor(QMainWindow):
 
     # GraphicsScene where to draw all graphical objects
     canvases: list[Canvas] = [None, None, None]
+    active_canvas: Canvas = None
 
     toolbar = CanvasToolBar
 
@@ -71,6 +72,7 @@ class Editor(QMainWindow):
 
         # Set default (free) mode
         self.createModes()
+        self.active_canvas = self.canvases[EditorMode.SOLVE_MODE.value]
         self.workspace.widget(0).show()
 
         # Add custom menuBar
@@ -81,8 +83,6 @@ class Editor(QMainWindow):
         self.toolbar = CanvasToolBar(canvas=self.canvases[0], parent=self)
         self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.toolbar)
         self.toolbar.toggleViewAction().setChecked(False)
-        self.toolbar.toggleViewAction().trigger()
-        self.toolbar.toggleViewAction().trigger()
 
         for index in range(3):
             self.zoom_out(index)
@@ -112,9 +112,6 @@ class Editor(QMainWindow):
     def setMode(self, mode: EditorMode) -> None:
         self.toolbar.change_canvas(self.canvases[mode.value])
         self.workspace.setCurrentIndex(mode.value)
-        # self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
-        # self.workspace.setCurrentIndex(mode.value)
-        # self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
 
     def setTask(self, task: Task) -> None:
         self.task = task
@@ -181,8 +178,16 @@ class Editor(QMainWindow):
         scale_minus = QPushButton("Zoom Out", self)
         scale_minus.clicked.connect(lambda: self.zoom_out(index))
 
+        add_right = QPushButton("Add Right")
+        scale_plus.clicked.connect(lambda: self.active_canvas.add_right_drawing_space)
+
+        add_left = QPushButton("Add Left")
+        scale_minus.clicked.connect(lambda: self.active_canvas.add_left_drawing_space())
+
         zoom_layout.addWidget(scale_minus)
         zoom_layout.addWidget(scale_plus)
+        zoom_layout.addWidget(add_right)
+        zoom_layout.addWidget(add_left)
 
         # Stack layouts
         solve_canvas_layout.addLayout(zoom_layout)
@@ -198,6 +203,7 @@ class Editor(QMainWindow):
         self.views[index].setScene(canvas)
         self.canvases[index] = canvas
         self.toolbar.change_canvas(self.canvases[index])
+        self.active_canvas = canvas
 
     def getCreateModeLayout(self) -> QWidget:
         create_widget = self.getLayout(EditorMode.CREATE_MODE.value)
