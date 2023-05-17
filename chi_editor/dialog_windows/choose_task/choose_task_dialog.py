@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 from random import randint
 
 from PyQt6.QtWidgets import (
@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QPushButton,
     QLineEdit,
+    QMenu,
 )
 from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
 from PyQt6.QtCore import Qt, QModelIndex, QSortFilterProxyModel
@@ -36,6 +37,7 @@ class ChooseTaskDialog(QDialog):
 
     # Extra buttons
     load_tasks_button: QPushButton
+    settings_button: QPushButton
 
     searchbar: QLineEdit
 
@@ -49,11 +51,15 @@ class ChooseTaskDialog(QDialog):
     # Mapping from kinds to their entries in model
     kind_items: dict[Kind, QStandardItem]
 
+    # Settings menu
+    settings_menu: QMenu
+
     def __init__(self, *args, editor: "Editor", **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.setWindowTitle("Choose a task")
 
         self.editor = editor
+        self.settings_menu = QMenu(self)
 
         # Model init
         self.model = QStandardItemModel()
@@ -61,13 +67,11 @@ class ChooseTaskDialog(QDialog):
         self.proxy_model.setSourceModel(self.model)
         self.proxy_model.setRecursiveFilteringEnabled(True)
         self.proxy_model.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.proxy_model.setAutoAcceptChildRows(True)
         self.kind_items = {}
 
         # View init
         self.view = QTreeView(self)
-        self.view.setSizePolicy(
-            QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
-        )
         self.view.setModel(self.proxy_model)
         self.view.doubleClicked.connect(self.handleDoubleClick)
         self.view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -81,34 +85,22 @@ class ChooseTaskDialog(QDialog):
         self.layout.addWidget(self.view)
         self.setMainButtons()
 
+        # Size configuration
+        self.view.setMinimumSize(1, self.view.fontMetrics().height())
+        self.view.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+
     def setMainButtons(self) -> None:
         # Buttons layout
-        view_layout = QHBoxLayout()
-        view_layout.setAlignment(
-            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom
-        )
+        view_layout = QHBoxLayout(self)
+        view_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         self.accept_button = QPushButton("Choose task")
-        self.accept_button.setFixedSize(
-            self.accept_button.sizeHint()
-        )  # sizeHint() is minimal size to fit the text
-        self.accept_button.setSizePolicy(
-            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
-        )
         self.accept_button.clicked.connect(self.handleAcceptClick)
 
         self.random_task_button = QPushButton("Get random task")
-        self.random_task_button.setFixedSize(self.random_task_button.sizeHint())
-        self.random_task_button.setSizePolicy(
-            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
-        )
         self.random_task_button.clicked.connect(self.handleRandomTaskClick)
 
         self.delete_button = QPushButton("Delete task")
-        self.delete_button.setFixedSize(self.delete_button.sizeHint())
-        self.delete_button.setSizePolicy(
-            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
-        )
         self.delete_button.clicked.connect(self.handleDeleteClick)
 
         view_layout.addWidget(self.accept_button)
@@ -118,30 +110,32 @@ class ChooseTaskDialog(QDialog):
         self.layout.addLayout(view_layout)
 
     def setHeaderBar(self) -> None:
-        header_layout = QHBoxLayout()
-        header_layout.setAlignment(
-            Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop
-        )
+        header_layout = QHBoxLayout(self)
+        header_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         self.searchbar = QLineEdit()
         self.searchbar.textChanged.connect(self.proxy_model.setFilterFixedString)
-        self.searchbar.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
-        )
 
         self.load_tasks_button = QPushButton()
         icon_path = str(ASSETS / "refresh_icon.svg")
         self.load_tasks_button.setIcon(QIcon(icon_path))
-        self.load_tasks_button.setFixedSize(self.load_tasks_button.sizeHint())
-        self.load_tasks_button.setSizePolicy(
-            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
-        )
         self.load_tasks_button.clicked.connect(self.loadTasks)
+
+        self.settings_button = QPushButton()
+        icon_path = str(ASSETS / "settings-icon-symbol.png")
+        self.settings_button.setIcon(QIcon(icon_path))
+        self.settings_button.clicked.connect(self.handleSettingsPressed)
+
+        self.setSettingsActions()
 
         header_layout.addWidget(self.searchbar)
         header_layout.addWidget(self.load_tasks_button)
+        header_layout.addWidget(self.settings_button)
 
         self.layout.addLayout(header_layout)
+
+    def setSettingsActions(self) -> None:
+        pass
 
     def updateKindsDict(self, kind: Kind) -> None:
         kind_item = QStandardItem(kind.name)
@@ -167,6 +161,12 @@ class ChooseTaskDialog(QDialog):
         ):  # run through top level categories and remove their contents (rows)
             kind_row = self.model.item(r)
             kind_row.removeRows(0, kind_row.rowCount())
+
+    def handleSettingsPressed(self) -> None:
+        if self.settings_menu.isHidden():
+            self.settings_menu.exec(self.settings_button.mapToGlobal(self.settings_button.rect().bottomLeft()))
+        else:
+            self.settings_menu.close()
 
     def handleAcceptClick(self):
         if self.view.currentIndex().row() == -1:  # no index chosen
