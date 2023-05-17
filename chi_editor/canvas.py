@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING, overload
 
 from PyQt6.QtCore import QRectF, pyqtSignal
-from PyQt6.QtWidgets import QGraphicsScene, QGraphicsRectItem
+from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import QGraphicsScene
 from rdkit import Chem
 
 from chi_editor.bases.alpha_atom import AlphaAtom

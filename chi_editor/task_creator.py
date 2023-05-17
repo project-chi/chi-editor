@@ -52,7 +52,6 @@ class InputDialog(QDialog):
         button_box.rejected.connect(self.clearAll)
         button_box.helpRequested.connect(self.parseInput)
 
-        self.canvas_molecule.focusItemChanged
         button_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.createTask)
 
     def changeCanvas(self, index: int):
