@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, overload
 
-from PyQt6.QtCore import QRectF
+from PyQt6.QtCore import QRectF, pyqtSignal
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QGraphicsScene
 from rdkit import Chem
@@ -18,13 +18,22 @@ if TYPE_CHECKING:
 class Canvas(QGraphicsScene):
     current_action: "Tool" = None
     min_scene_rect: "QRectF"
+    canvas_in_focus: pyqtSignal = pyqtSignal()
 
     def __init__(self, *args, **kwargs) -> "None":
         super().__init__(*args, **kwargs)
         self.min_scene_rect = super().sceneRect()
-        self.setBackgroundBrush(QColor("white"))
+
+    def add_left_drawing_space(self):
+        #TODO
+        pass
+
+    def add_right_drawing_space(self):
+        #TODO
+        pass
 
     def mousePressEvent(self, event: "QGraphicsSceneMouseEvent") -> "None":
+        self.canvas_in_focus.emit()
         if self.current_action is not None:
             self.current_action.mouse_press_event(event)
 

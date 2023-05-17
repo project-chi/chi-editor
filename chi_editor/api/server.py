@@ -11,9 +11,9 @@ class Server:
     _server_url: str
 
     def __init__(self, server_url: str) -> None:
-        swagger_response = requests.get(f"{server_url}/documentation")
-        if not swagger_response.ok:
-            raise ValueError("can't find server at this URL")
+        # swagger_response = requests.get(f"{server_url}/documentation")
+        # if not swagger_response.ok:
+        #     raise ValueError("can't find server at this URL")
 
         self._server_url = server_url
 

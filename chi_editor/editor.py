@@ -45,9 +45,9 @@ class Editor(QMainWindow):
 
     # GraphicsScene where to draw all graphical objects
     canvases: list[Canvas] = [None, None, None]
+    active_canvas: Canvas = None
 
-    # Toolbar that contains tools for manipulating canvas in free mode
-    toolbars: list[QToolBar] = [None, None, None]
+    toolbar = CanvasToolBar
 
     # Dialog with solving results
     result_dialog: TaskResultDialog
@@ -72,25 +72,22 @@ class Editor(QMainWindow):
 
         # Set default (free) mode
         self.createModes()
+        self.active_canvas = self.canvases[EditorMode.SOLVE_MODE.value]
         self.workspace.widget(0).show()
 
         # Add custom menuBar
         menubar = CanvasMenuBar(editor=self)
         self.setMenuBar(menubar)
 
-        # Add toolbars
+        # Add toolbar
+        self.toolbar = CanvasToolBar(canvas=self.canvases[0], parent=self)
+        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.toolbar)
+        self.toolbar.toggleViewAction().setChecked(False)
+
         for index in range(3):
-            self.toolbars[index] = CanvasToolBar(
-                canvas=self.canvases[index], parent=self
-            )
-            self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.toolbars[index])
             self.zoom_out(index)
             self.zoom_out(index)
-        for toolbar in self.toolbars:
-            toolbar.toggleViewAction().setChecked(False)
-            toolbar.toggleViewAction().trigger()
-            toolbar.toggleViewAction().trigger()
-        self.toolbars[0].toggleViewAction().trigger()
+        self.toolbar.toggleViewAction().trigger()
 
         # Create dialogs (they won't show instantly)
 
@@ -113,9 +110,8 @@ class Editor(QMainWindow):
         self.views[index].setTransform(QTransform.fromScale(new_scale, new_scale))
 
     def setMode(self, mode: EditorMode) -> None:
-        self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
+        self.toolbar.change_canvas(self.canvases[mode.value])
         self.workspace.setCurrentIndex(mode.value)
-        self.toolbars[self.workspace.currentIndex()].toggleViewAction().trigger()
 
     def setTask(self, task: Task) -> None:
         self.task = task
@@ -143,8 +139,6 @@ class Editor(QMainWindow):
 
         box_layout = QVBoxLayout()
         group_box = QGroupBox("Formulation")
-        # group_box.setFixedSize(group_box.sizeHint())
-        # submit.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         formulation = QLabel("The formulation of a task will appear here")
         self.formulation = formulation
         box_layout.addWidget(formulation)
@@ -161,12 +155,9 @@ class Editor(QMainWindow):
     def getLayout(self, index) -> QWidget:
         # Initialize QGraphicsView
         self.views[index] = QGraphicsView(self)  # create QGraphicsView
-        self.views[index].setAlignment(
-            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
-        )  # Set QGraphicsView position
-        self.views[index].setViewportUpdateMode(
-            QGraphicsView.ViewportUpdateMode.FullViewportUpdate
-        )
+        self.views[index] \
+            .setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)  # Set QGraphicsView position
+        self.views[index].setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
 
         # Initialize GGraphicsScene called canvas
         self.canvases[index] = Canvas(QRectF(self.views[index].geometry()))
@@ -175,10 +166,10 @@ class Editor(QMainWindow):
         self.views[index].setScene(self.canvases[index])
 
         # Main solve canvas layout
-        solve_canvas_layout = QHBoxLayout()
+        solve_canvas_layout = QHBoxLayout(self)
 
         # Box contains magnifying glass
-        zoom_layout = QVBoxLayout()
+        zoom_layout = QVBoxLayout(self)
         zoom_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
         scale_plus = QPushButton("Zoom In", self)
@@ -187,8 +178,16 @@ class Editor(QMainWindow):
         scale_minus = QPushButton("Zoom Out", self)
         scale_minus.clicked.connect(lambda: self.zoom_out(index))
 
+        add_right = QPushButton("Add Right")
+        scale_plus.clicked.connect(lambda: self.active_canvas.add_right_drawing_space)
+
+        add_left = QPushButton("Add Left")
+        scale_minus.clicked.connect(lambda: self.active_canvas.add_left_drawing_space())
+
         zoom_layout.addWidget(scale_minus)
         zoom_layout.addWidget(scale_plus)
+        zoom_layout.addWidget(add_right)
+        zoom_layout.addWidget(add_left)
 
         # Stack layouts
         solve_canvas_layout.addLayout(zoom_layout)
@@ -200,10 +199,19 @@ class Editor(QMainWindow):
         layout.addWidget(self.views[index])
         return solver_mode_widget
 
+    def changeCanvas(self, canvas: Canvas, index: int):
+        self.views[index].setScene(canvas)
+        self.canvases[index] = canvas
+        self.toolbar.change_canvas(self.canvases[index])
+        self.active_canvas = canvas
+
     def getCreateModeLayout(self) -> QWidget:
         create_widget = self.getLayout(EditorMode.CREATE_MODE.value)
         create_layout = create_widget.layout()
-        create_mode_widget = InputDialog(self.canvases[EditorMode.CREATE_MODE.value])
+        create_mode_widget = InputDialog(self.canvases[EditorMode.CREATE_MODE.value],
+                                         Canvas(QRectF(self.views[EditorMode.CREATE_MODE.value].geometry())),
+                                         Canvas(QRectF(self.views[EditorMode.CREATE_MODE.value].geometry())))
+        create_mode_widget.canvas_changed.connect(self.changeCanvas)
         QVBoxLayout(create_mode_widget)
         create_layout.addWidget(create_mode_widget)
         return create_widget
