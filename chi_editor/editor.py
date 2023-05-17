@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QRectF, Qt
+from PyQt6.QtCore import QRectF, Qt, QRect
 from PyQt6.QtGui import QIcon, QTransform
 from PyQt6.QtWidgets import (
     QGraphicsView,
@@ -18,6 +18,7 @@ from rdkit import Chem
 
 from chi_editor.canvas import Canvas
 from chi_editor.constants import ASSETS
+from chi_editor.popup_canvas import PopupCanvas
 from chi_editor.task_creator import InputDialog
 from chi_editor.toolbar import CanvasToolBar
 from chi_editor.menubar.menubar import CanvasMenuBar
@@ -92,6 +93,17 @@ class Editor(QMainWindow):
         # Create dialogs (they won't show instantly)
 
         self.result_dialog = TaskResultDialog(editor=self)
+
+        # Test purposes
+        self.btn1 = QPushButton("Click me", self.workspace)
+        self.btn1.setGeometry(QRect(0, 0, 100, 30))
+        self.btn1.clicked.connect(self.doit)
+        self.w = None
+
+    def doit(self):
+        self.w = PopupCanvas()
+        self.w.setGeometry(QRect(100, 100, 400, 200))
+        self.w.show()
 
     def zoom_in(self, index: int):
         # Get the current scale factor of the view
