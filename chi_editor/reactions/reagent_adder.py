@@ -6,6 +6,8 @@ from PyQt6.QtWidgets import QGraphicsEllipseItem, QGraphicsSceneMouseEvent, QGra
     QWidget, QGraphicsSceneHoverEvent, QGraphicsRectItem
 from PyQt6.QtGui import QPainter, QColor
 
+from chi_editor.reactions.size_constants import Sizes
+
 
 class GrowthDirection(Enum):
     LEFT = 1
@@ -25,9 +27,12 @@ class ReagentAdder(QGraphicsEllipseItem):
         self.setAcceptHoverEvents(True)
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent):
-        new_item = QGraphicsRectItem(len(self._reagent_list))
+        next_pos = self._getNextItemPos()
+        new_item = QGraphicsRectItem(next_pos.x(), next_pos.y(), Sizes.reagent_size.width(),
+                                     Sizes.reagent_size.height())
 
-        self._reagent_list.append()
+        self._reagent_list.append(new_item)
+        self.setPos(self._getNextAddPos())
 
     def paint(self, painter: QPainter, option: 'QStyleOptionGraphicsItem', widget: Optional[QWidget] = ...) -> None:
         painter.save()
@@ -51,10 +56,30 @@ class ReagentAdder(QGraphicsEllipseItem):
     def _getRightMiddlePoint(self) -> QPointF:
         return self.boundingRect().topRight() + QPointF(0, self.boundingRect().height() / 2)
 
-    # def _getNextPos(self) -> QPointF:
-    #     match self._growth_direction:
-    #         case Direction.LEFT:
-    #             return QPointF(-1 * len(self._reagent_list) * ())
+    def _getNextAddPos(self) -> QPointF:
+        match self._growth_direction:
+            case GrowthDirection.LEFT:
+                return self.pos() + QPointF(
+                    -1 * (Sizes.default_gap + Sizes.plus_size.width() + Sizes.default_gap + Sizes.reagent_size.width()),
+                    0)
+            case GrowthDirection.RIGHT:
+                return self.pos() + QPointF(
+                    Sizes.reagent_size.width() + Sizes.default_gap + Sizes.plus_size.width() + Sizes.default_gap, 0)
+
+    def _getNextItemPos(self) -> QPointF:
+        match self._growth_direction:
+            case GrowthDirection.LEFT:
+                return self._getLastItemPos() + QPointF(
+                    -1 * (Sizes.default_gap + Sizes.plus_size.width() + Sizes.default_gap + Sizes.reagent_size.width()),
+                    0)
+            case GrowthDirection.RIGHT:
+                return self._getLastItemPos() + QPointF(
+                    Sizes.reagent_size.width() + Sizes.default_gap + Sizes.plus_size.width() + Sizes.default_gap, 0)
+
+    def _getLastItemPos(self) -> QPointF:
+        item = self._reagent_list.pop()
+        self._reagent_list.append(item)
+        return item.sceneBoundingRect().topLeft()
 
     def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
         self._item_highlighted = True
