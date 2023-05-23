@@ -68,9 +68,6 @@ class Canvas(QGraphicsScene):
                 raise TypeError("wrong signature")
 
     def findMolecule(self) -> str:
-        if self.more_than_one_molecule():
-            return "ADJDJGSHJGDHGDYHSFDYSFSHDYDSFTSH"
-
         items = self.items()
 
         if len(items) == 0:
@@ -93,3 +90,6 @@ class Canvas(QGraphicsScene):
         if atoms == 0:
             return False
         return atoms > next(filter(lambda item: isinstance(item, AlphaAtom), self.items())).molecule.number_atoms()
+
+    def no_atoms(self) -> bool:
+        return len(list(filter(lambda item: isinstance(item, AlphaAtom), self.items()))) == 0
