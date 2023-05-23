@@ -1,10 +1,10 @@
 from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QWidget, QGraphicsView, QVBoxLayout, QPushButton, QHBoxLayout, QMessageBox
+from PyQt6.QtWidgets import QWidget, QGraphicsView, QVBoxLayout, QPushButton, QHBoxLayout, QMessageBox, QLabel
 
 from chi_editor.canvas import Canvas
 from chi_editor.constants import ASSETS
-from chi_editor.main import error_handler
+from chi_editor.error_handler import error_handler
 from chi_editor.toolbar import CanvasToolBar
 
 
@@ -41,6 +41,12 @@ class PopupCanvas(QWidget):
         tool_layout.addLayout(full_layout)
 
     def return_answer(self) -> None:
+        if self.canvas.no_atoms():
+            return error_handler("No molecules found fella")
+
         if self.canvas.more_than_one_molecule():
-            error_handler("More than one molecule you've got here fella")
-            return
+            return error_handler("More than one molecule you've got here fella")
+
+        molecule = self.canvas.findMolecule()
+        label = QLabel(molecule)
+        self.layout().addWidget(label)
