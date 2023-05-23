@@ -1,3 +1,4 @@
+from .answer_field_tool import AnswerFieldTool
 from ...bases.tool import Tool
 from .arrow import Arrow
 from .atoms.carbon import Carbon
@@ -27,4 +28,5 @@ tools: tuple[type[Tool], ...] = (
     Smiles,
     Eraser,
     Drag,
+    AnswerFieldTool,
 )
