@@ -1,7 +1,7 @@
 from typing import Optional
 
 from PyQt6.QtCore import QRectF, QPointF
-from PyQt6.QtGui import QPainter, QPainterPath, QColor
+from PyQt6.QtGui import QPainter, QPainterPath
 from PyQt6.QtWidgets import (
     QGraphicsItem,
     QGraphicsItemGroup,
@@ -31,7 +31,7 @@ class ReactionItem(QGraphicsItemGroup):
         self._add_reagent_item = ReagentAdder(self._reagent_items, GrowthDirection.LEFT)
         self._add_reagent_item.setRect(QRectF(
             QPointF(-1 * (
-                        Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap + Sizes.add_item_size.width()),
+                    Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap + Sizes.add_item_size.width()),
                     -1 * Sizes.add_item_size.height() / 2), Sizes.add_item_size))
         self._add_product_item = ReagentAdder(self._product_items, GrowthDirection.RIGHT)
         self._add_product_item.setRect(
@@ -90,6 +90,7 @@ class ReactionItem(QGraphicsItemGroup):
         painter.save()
 
         self._paint_arrow(painter)
+        self._paint_pluses(painter)
 
         painter.restore()
 
@@ -101,3 +102,24 @@ class ReactionItem(QGraphicsItemGroup):
         arrow_path.lineTo(0, -1 * Sizes.arrow_height / 2)
 
         painter.drawPath(arrow_path)
+
+    def _paint_pluses(self, painter: QPainter) -> None:
+        for i in range(0, len(self._reagent_items) - 1):
+            plus_top_left = Sizes.plus_top_point_left - i * QPointF(
+                Sizes.plus_size.width() + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap, 0)
+
+            painter.drawLine(plus_top_left + QPointF(Sizes.plus_size.width() / 2, 0),
+                             plus_top_left + QPointF(Sizes.plus_size.width() / 2, Sizes.plus_size.height()))
+
+            painter.drawLine(plus_top_left + QPointF(0, Sizes.plus_size.height() / 2),
+                             plus_top_left + QPointF(Sizes.plus_size.width(), Sizes.plus_size.height() / 2))
+
+        for i in range(0, len(self._product_items) - 1):
+            plus_top_left = Sizes.plus_top_point_right + i * QPointF(
+                Sizes.plus_size.width() + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap, 0)
+
+            painter.drawLine(plus_top_left + QPointF(Sizes.plus_size.width() / 2, 0),
+                             plus_top_left + QPointF(Sizes.plus_size.width() / 2, Sizes.plus_size.height()))
+
+            painter.drawLine(plus_top_left + QPointF(0, Sizes.plus_size.height() / 2),
+                             plus_top_left + QPointF(Sizes.plus_size.width(), Sizes.plus_size.height() / 2))
