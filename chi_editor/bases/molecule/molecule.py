@@ -67,3 +67,6 @@ class Molecule:
             )
         self.anchor.update_position([atom for atom in self.atoms])
         return [atom for atom in self.atoms]
+
+    def number_atoms(self) -> int:
+        return len(self.atoms)

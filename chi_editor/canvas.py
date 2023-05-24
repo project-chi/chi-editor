@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING, overload
 
 from PyQt6.QtCore import QRectF, pyqtSignal
-from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QGraphicsScene
 from rdkit import Chem
 
@@ -85,3 +84,12 @@ class Canvas(QGraphicsScene):
             return ""
 
         return Chem.MolToSmiles(mol_from_graphs(molecule))
+
+    def more_than_one_molecule(self) -> bool:
+        atoms = len(list(filter(lambda item: isinstance(item, AlphaAtom), self.items())))
+        if atoms == 0:
+            return False
+        return atoms > next(filter(lambda item: isinstance(item, AlphaAtom), self.items())).molecule.number_atoms()
+
+    def no_atoms(self) -> bool:
+        return len(list(filter(lambda item: isinstance(item, AlphaAtom), self.items()))) == 0

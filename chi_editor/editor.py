@@ -8,7 +8,6 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QStackedWidget,
-    QToolBar,
     QSizePolicy,
     QLabel,
     QGroupBox,
@@ -178,16 +177,8 @@ class Editor(QMainWindow):
         scale_minus = QPushButton("Zoom Out", self)
         scale_minus.clicked.connect(lambda: self.zoom_out(index))
 
-        add_right = QPushButton("Add Right")
-        scale_plus.clicked.connect(lambda: self.active_canvas.add_right_drawing_space)
-
-        add_left = QPushButton("Add Left")
-        scale_minus.clicked.connect(lambda: self.active_canvas.add_left_drawing_space())
-
         zoom_layout.addWidget(scale_minus)
         zoom_layout.addWidget(scale_plus)
-        zoom_layout.addWidget(add_right)
-        zoom_layout.addWidget(add_left)
 
         # Stack layouts
         solve_canvas_layout.addLayout(zoom_layout)
@@ -234,7 +225,7 @@ class Editor(QMainWindow):
 
     def checkAnswer(self, user_answer: str) -> bool:
         mol_user = Chem.MolFromSmiles(user_answer)
-        if mol_user == None:
+        if mol_user is None:
             return False
         Chem.RemoveStereochemistry(mol_user)
         user_smiles = Chem.MolToSmiles(mol_user)

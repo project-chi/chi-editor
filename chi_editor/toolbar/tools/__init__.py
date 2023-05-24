@@ -13,6 +13,7 @@ from .eraser import Eraser
 from .smiles import Smiles
 from .structure import Structure
 from .text import Text
+from .add_reaction import AddReaction
 
 tools: tuple[type[Tool], ...] = (
     Arrow,
@@ -27,4 +28,5 @@ tools: tuple[type[Tool], ...] = (
     Smiles,
     Eraser,
     Drag,
+    AddReaction
 )
