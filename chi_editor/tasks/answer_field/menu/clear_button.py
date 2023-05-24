@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
 from PyQt6.QtGui import QColor
 
 from chi_editor.tasks.answer_field.menu.abstract_button import AbstractButton

@@ -3,7 +3,8 @@ from typing import Optional
 from PyQt6 import QtGui
 from PyQt6.QtCore import QRectF, Qt, QPointF
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QWidget, QGraphicsItem, QGraphicsSceneHoverEvent, QStyleOptionGraphicsItem
+from PyQt6.QtWidgets import QWidget, QGraphicsItem, QGraphicsSceneHoverEvent, QStyleOptionGraphicsItem, \
+    QGraphicsSceneMouseEvent
 
 from chi_editor.reactions.size_constants import Sizes
 
@@ -28,7 +29,6 @@ class AnswerField(QGraphicsItem):
 
         self.content = "default"
 
-        self.setAcceptHoverEvents(True)
         self.answer_field_menu = AnswerFieldMenu(self, x, y)
 
         self.editable = True
@@ -39,12 +39,15 @@ class AnswerField(QGraphicsItem):
     def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
         super().hoverEnterEvent(event)
         if self.editable:
-            self.answer_field_menu.add_to_scene(self.scene())
+            self.answer_field_menu.show()
 
     def hoverLeaveEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
         super().hoverLeaveEvent(event)
         if self.editable:
-            self.answer_field_menu.remove_from_scene(self.scene())
+            self.answer_field_menu.hide()
+
+    def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent') -> None:
+        self.answer_field_menu.mouse_press_event(event)
 
     def paint(self, painter: QtGui.QPainter, option: 'QStyleOptionGraphicsItem',
               widget: Optional[QWidget] = ...) -> None:

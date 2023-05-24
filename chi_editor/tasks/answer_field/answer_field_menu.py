@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, ClassVar
 
 from PyQt6.QtCore import QRectF, QPointF, QSizeF
-from PyQt6.QtWidgets import QGraphicsItem, QGraphicsScene
+from PyQt6.QtWidgets import QGraphicsItem, QGraphicsSceneMouseEvent
 
 from chi_editor.tasks.answer_field.menu.clear_button import ClearButton
 from chi_editor.tasks.answer_field.menu.edit_button import EditButton
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class AnswerFieldMenu:
-    _reagent_menu_size: ClassVar[QSizeF] = QSizeF(Sizes.reagent_size.width() * 0.1, Sizes.reagent_size.height() * 0.2)
+    _reagent_menu_size: ClassVar[QSizeF] = QSizeF(Sizes.reagent_size.width() * 0.4, Sizes.reagent_size.height() * 0.8)
     _reagent_menu_button_size: ClassVar[QSizeF] = QSizeF(_reagent_menu_size.width(), _reagent_menu_size.height() / 2)
     answer_field: 'AnswerField'
     rect: QRectF
@@ -26,14 +26,24 @@ class AnswerFieldMenu:
         self.answer_field = answer_field
 
         self.clear_button = ClearButton(answer_field, x, y, self._reagent_menu_button_size.width(),
-                                        self._reagent_menu_button_size.height())
+                                        self._reagent_menu_button_size.height(), parent=answer_field)
+        self.clear_button.hide()
+
         self.edit_button = EditButton(answer_field, x, y + self._reagent_menu_button_size.height(),
-                                      self._reagent_menu_button_size.width(), self._reagent_menu_button_size.height())
+                                      self._reagent_menu_button_size.width(), self._reagent_menu_button_size.height(),
+                                      parent=answer_field)
+        self.edit_button.hide()
 
-    def add_to_scene(self, scene: QGraphicsScene):
-        scene.addItem(self.clear_button)
-        scene.addItem(self.edit_button)
+    def show(self):
+        self.clear_button.show()
+        self.edit_button.show()
 
-    def remove_from_scene(self, scene: QGraphicsScene):
-        scene.removeItem(self.clear_button)
-        scene.removeItem(self.edit_button)
+    def hide(self):
+        self.clear_button.hide()
+        self.edit_button.hide()
+
+    def mouse_press_event(self, event: 'QGraphicsSceneMouseEvent') -> None:
+        if self.clear_button.sceneBoundingRect().contains(event.scenePos()):
+            self.clear_button.mousePressEvent(event)
+        if self.edit_button.sceneBoundingRect().contains(event.scenePos()):
+            self.edit_button.mousePressEvent(event)
