@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QRectF, Qt, QRect
+from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QIcon, QTransform
 from PyQt6.QtWidgets import (
     QGraphicsView,
@@ -8,7 +8,6 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QStackedWidget,
-    QToolBar,
     QSizePolicy,
     QLabel,
     QGroupBox,
@@ -18,7 +17,6 @@ from rdkit import Chem
 
 from chi_editor.canvas import Canvas
 from chi_editor.constants import ASSETS
-from chi_editor.popup_canvas import PopupCanvas
 from chi_editor.task_creator import InputDialog
 from chi_editor.toolbar import CanvasToolBar
 from chi_editor.menubar.menubar import CanvasMenuBar
@@ -93,17 +91,6 @@ class Editor(QMainWindow):
         # Create dialogs (they won't show instantly)
 
         self.result_dialog = TaskResultDialog(editor=self)
-
-        # Test purposes
-        self.btn1 = QPushButton("Click me", self.workspace)
-        self.btn1.setGeometry(QRect(0, 0, 100, 30))
-        self.btn1.clicked.connect(self.doit)
-        self.w = None
-
-    def doit(self):
-        self.w = PopupCanvas()
-        self.w.setGeometry(QRect(100, 100, 400, 200))
-        self.w.show()
 
     def zoom_in(self, index: int):
         # Get the current scale factor of the view
@@ -190,16 +177,8 @@ class Editor(QMainWindow):
         scale_minus = QPushButton("Zoom Out", self)
         scale_minus.clicked.connect(lambda: self.zoom_out(index))
 
-        add_right = QPushButton("Add Right")
-        scale_plus.clicked.connect(lambda: self.active_canvas.add_right_drawing_space)
-
-        add_left = QPushButton("Add Left")
-        scale_minus.clicked.connect(lambda: self.active_canvas.add_left_drawing_space())
-
         zoom_layout.addWidget(scale_minus)
         zoom_layout.addWidget(scale_plus)
-        zoom_layout.addWidget(add_right)
-        zoom_layout.addWidget(add_left)
 
         # Stack layouts
         solve_canvas_layout.addLayout(zoom_layout)
