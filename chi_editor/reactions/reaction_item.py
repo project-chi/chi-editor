@@ -9,13 +9,13 @@ from PyQt6.QtWidgets import (
     QGraphicsSceneHoverEvent,
     QStyleOptionGraphicsItem,
     QWidget,
-    QGraphicsRectItem,
     QGraphicsSceneMouseEvent
 )
 
 from chi_editor.reactions.reaction_model import ReactionModel
 from chi_editor.reactions.reagent_adder import ReagentAdder, GrowthDirection
 from chi_editor.reactions.size_constants import Sizes
+from chi_editor.tasks.answer_field.answer_field import AnswerField
 
 
 class ReactionItem(QGraphicsItemGroup):
@@ -25,35 +25,40 @@ class ReactionItem(QGraphicsItemGroup):
     _add_reagent_item: QGraphicsEllipseItem
     _add_product_item: QGraphicsEllipseItem
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, x: float, y: float, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.setPos(x, y)
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
-        self._add_reagent_item = ReagentAdder(self._reagent_items, GrowthDirection.LEFT)
-        self._add_reagent_item.setRect(QRectF(
-            QPointF(-1 * (
-                    Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap + Sizes.add_item_size.width()),
-                    -1 * Sizes.add_item_size.height() / 2), Sizes.add_item_size))
-        self._add_product_item = ReagentAdder(self._product_items, GrowthDirection.RIGHT)
-        self._add_product_item.setRect(
-            QRectF(QPointF(Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap,
-                           -1 * Sizes.add_item_size.height() / 2),
-                   Sizes.add_item_size))
         self.setFiltersChildEvents(False)
-        self.setAcceptHoverEvents(False)
+        self.setAcceptHoverEvents(True)
+
+        self._addAddButtons()
+        self._addInitialItems()
+
+    def _addAddButtons(self) -> None:
+        self._add_reagent_item = ReagentAdder(self._reagent_items, GrowthDirection.LEFT)
+        reagent_top_left_point = self.pos() + QPointF(-1 * (
+                Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap + Sizes.add_item_size.width()),
+                                                      -1 * Sizes.add_item_size.height() / 2)
+        self._add_reagent_item.setRect(QRectF(reagent_top_left_point, Sizes.add_item_size))
+
+        self._add_product_item = ReagentAdder(self._product_items, GrowthDirection.RIGHT)
+        product_top_left_point = self.pos() + QPointF(
+            Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap,
+            -1 * Sizes.add_item_size.height() / 2)
+        self._add_product_item.setRect(QRectF(product_top_left_point, Sizes.add_item_size))
 
         self.addToGroup(self._add_product_item)
         self.addToGroup(self._add_reagent_item)
 
-        self._addInitialItems()
-
     def _addInitialItems(self) -> None:
-        self._reagent_items.append(QGraphicsRectItem(QRectF(
-            QPointF(-1 * (Sizes.side_items_offset + Sizes.reagent_size.width()), -1 * Sizes.reagent_size.height() / 2),
-            Sizes.reagent_size)))
+        first_reagent_point = self.pos() + QPointF(-1 * (Sizes.side_items_offset + Sizes.reagent_size.width()),
+                                                   -1 * Sizes.reagent_size.height() / 2)
+        self._reagent_items.append(AnswerField(first_reagent_point.x(), first_reagent_point.y()))
         self._addLastReagent()
 
-        self._product_items.append(QGraphicsRectItem(
-            QRectF(QPointF(Sizes.side_items_offset, -1 * Sizes.reagent_size.height() / 2), Sizes.reagent_size)))
+        first_product_point = self.pos() + QPointF(Sizes.side_items_offset, -1 * Sizes.reagent_size.height() / 2)
+        self._product_items.append(AnswerField(first_product_point.x(), first_product_point.y()))
         self._addLastProduct()
 
     def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
@@ -62,19 +67,40 @@ class ReactionItem(QGraphicsItemGroup):
         elif self._add_product_item.sceneBoundingRect().contains(event.scenePos()):
             self._add_product_item.hoverEnterEvent(event)
 
+        for reagent_item in self._reagent_items:
+            if reagent_item.sceneBoundingRect().contains(event.scenePos()):
+                reagent_item.hoverEnterEvent(event)
+        for product_item in self._product_items:
+            if product_item.sceneBoundingRect().contains(event.scenePos()):
+                product_item.hoverEnterEvent(event)
+
     def hoverLeaveEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
         if self._add_reagent_item.sceneBoundingRect().contains(event.lastScenePos()):
             self._add_reagent_item.hoverLeaveEvent(event)
         elif self._add_product_item.sceneBoundingRect().contains(event.lastScenePos()):
             self._add_product_item.hoverLeaveEvent(event)
 
+        for reagent_item in self._reagent_items:
+            if reagent_item.sceneBoundingRect().contains(event.lastScenePos()):
+                reagent_item.hoverLeaveEvent(event)
+        for product_item in self._product_items:
+            if product_item.sceneBoundingRect().contains(event.lastScenePos()):
+                product_item.hoverLeaveEvent(event)
+
     def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent') -> None:
-        if self._add_reagent_item.sceneBoundingRect().contains(event.lastScenePos()):
+        if self._add_reagent_item.sceneBoundingRect().contains(event.scenePos()):
             self._add_reagent_item.mousePressEvent(event)
             self._addLastReagent()
-        elif self._add_product_item.sceneBoundingRect().contains(event.lastScenePos()):
+        elif self._add_product_item.sceneBoundingRect().contains(event.scenePos()):
             self._add_product_item.mousePressEvent(event)
             self._addLastProduct()
+
+        for reagent_item in self._reagent_items:
+            if reagent_item.sceneBoundingRect().contains(event.scenePos()):
+                reagent_item.mousePressEvent(event)
+        for product_item in self._product_items:
+            if product_item.sceneBoundingRect().contains(event.scenePos()):
+                product_item.mousePressEvent(event)
 
     def _addLastReagent(self) -> None:
         last_reagent = self._reagent_items.pop()

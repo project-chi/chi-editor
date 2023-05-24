@@ -13,8 +13,8 @@ class EditButton(AbstractButton):
     background_color: QColor
     answer_window: PopupCanvas
 
-    def __init__(self, answer_field: 'AnswerField', x: float, y: float, *args, **kwargs):
-        super().__init__(answer_field, x, y, *args, **kwargs)
+    def __init__(self, answer_field: 'AnswerField', x: float, y: float, width: float, height: float, *args, **kwargs):
+        super().__init__(answer_field, x, y, width, height, *args, **kwargs)
         self.background_color = QColor("gray")
 
     def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent') -> None:

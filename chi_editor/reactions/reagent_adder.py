@@ -3,10 +3,12 @@ from enum import Enum
 
 from PyQt6.QtCore import QPointF
 from PyQt6.QtWidgets import QGraphicsEllipseItem, QGraphicsSceneMouseEvent, QGraphicsItem, QStyleOptionGraphicsItem, \
-    QWidget, QGraphicsSceneHoverEvent, QGraphicsRectItem
+    QWidget, QGraphicsSceneHoverEvent
 from PyQt6.QtGui import QPainter, QColor
 
 from chi_editor.reactions.size_constants import Sizes
+
+from chi_editor.tasks.answer_field.answer_field import AnswerField
 
 
 class GrowthDirection(Enum):
@@ -28,8 +30,7 @@ class ReagentAdder(QGraphicsEllipseItem):
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent):
         next_pos = self._getNextItemPos()
-        new_item = QGraphicsRectItem(next_pos.x(), next_pos.y(), Sizes.reagent_size.width(),
-                                     Sizes.reagent_size.height())
+        new_item = AnswerField(next_pos.x(), next_pos.y())
 
         self._reagent_list.append(new_item)
         self.setPos(self._getNextAddPos())

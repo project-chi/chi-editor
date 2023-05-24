@@ -1,9 +1,11 @@
-import typing
+from typing import Optional
 
 from PyQt6 import QtGui
-from PyQt6.QtCore import QRectF, Qt
+from PyQt6.QtCore import QRectF, Qt, QPointF
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QWidget, QGraphicsItem
+from PyQt6.QtWidgets import QWidget, QGraphicsItem, QGraphicsSceneHoverEvent, QStyleOptionGraphicsItem
+
+from chi_editor.reactions.size_constants import Sizes
 
 from chi_editor.tasks.answer_field.answer_field_menu import AnswerFieldMenu
 
@@ -14,23 +16,20 @@ class AnswerField(QGraphicsItem):
     font: QFont
 
     content: str
-    answer_field_menu: AnswerFieldMenu
+    answer_field_menu: "AnswerFieldMenu"
 
     editable: bool
 
     def __init__(self, x, y, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.rect = QRectF(x, y, 400, 300)
+        self.rect = QRectF(QPointF(x, y), Sizes.reagent_size)
         self.background_color = QtGui.QColor("lightgray")
 
         self.content = "default"
 
         self.setAcceptHoverEvents(True)
         self.answer_field_menu = AnswerFieldMenu(self, x, y)
-
-        self.font = QFont()
-        self.font.setPointSizeF(40)
 
         self.editable = True
 
@@ -48,14 +47,13 @@ class AnswerField(QGraphicsItem):
             self.answer_field_menu.remove_from_scene(self.scene())
 
     def paint(self, painter: QtGui.QPainter, option: 'QStyleOptionGraphicsItem',
-              widget: typing.Optional[QWidget] = ...) -> None:
+              widget: Optional[QWidget] = ...) -> None:
         painter.save()
 
         painter.setBrush(self.background_color)
         painter.drawRect(self.rect)
 
         painter.setBrush(QtGui.QColor("black"))
-        painter.setFont(self.font)
         painter.drawText(self.rect, Qt.AlignmentFlag.AlignCenter, self.content)
 
         painter.restore()

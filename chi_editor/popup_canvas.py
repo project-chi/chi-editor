@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from PyQt6.QtCore import QRectF, Qt, pyqtSignal
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QWidget, QGraphicsView, QVBoxLayout, QPushButton, QHBoxLayout
@@ -5,7 +7,9 @@ from PyQt6.QtWidgets import QWidget, QGraphicsView, QVBoxLayout, QPushButton, QH
 from chi_editor.canvas import Canvas
 from chi_editor.constants import ASSETS
 from chi_editor.error_handler import error_handler
-from chi_editor.toolbar.general_toolbar import GeneralToolBar
+
+if TYPE_CHECKING:
+    from chi_editor.toolbar.general_toolbar import GeneralToolBar
 
 
 class PopupCanvas(QWidget):

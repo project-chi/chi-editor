@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 class ClearButton(AbstractButton):
     background_color: QColor
 
-    def __init__(self, answer_field: 'AnswerField', x: float, y: float, *args, **kwargs):
-        super().__init__(answer_field, x, y, *args, **kwargs)
+    def __init__(self, answer_field: 'AnswerField', x: float, y: float, width: float, height: float, *args, **kwargs):
+        super().__init__(answer_field, x, y, width, height, *args, **kwargs)
         self.background_color = QColor("red")
 
     def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent') -> None:

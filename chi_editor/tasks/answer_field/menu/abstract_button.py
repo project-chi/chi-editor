@@ -9,10 +9,10 @@ class AbstractButton(QGraphicsItem):
     rect: QRectF
     answer_field: 'AnswerField'
 
-    def __init__(self, answer_field: 'AnswerField', x: float, y: float, *args, **kwargs):
+    def __init__(self, answer_field: 'AnswerField', x: float, y: float, width: float, height: float, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.answer_field = answer_field
-        self.rect = QRectF(x, y, 50, 50)
+        self.rect = QRectF(x, y, width, height)
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
 
     def boundingRect(self) -> QRectF:
