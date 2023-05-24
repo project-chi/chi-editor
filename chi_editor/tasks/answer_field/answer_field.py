@@ -59,3 +59,6 @@ class AnswerField(QGraphicsItem):
         painter.drawText(self.rect, Qt.AlignmentFlag.AlignCenter, self.content)
 
         painter.restore()
+
+    def set_content(self, content: str) -> None:
+        self.content = content

@@ -1,7 +1,7 @@
 from random import choice
 
 from chi_editor.api.server import Server, default_url
-from chi_editor.tasks import Task, TaskType
+from chi_editor.tasks import Task
 
 
 class RandomTask(Task):

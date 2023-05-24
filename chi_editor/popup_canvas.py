@@ -1,15 +1,16 @@
-from PyQt6.QtCore import QRectF, Qt
+from PyQt6.QtCore import QRectF, Qt, pyqtSignal
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QWidget, QGraphicsView, QVBoxLayout, QPushButton, QHBoxLayout, QMessageBox, QLabel
+from PyQt6.QtWidgets import QWidget, QGraphicsView, QVBoxLayout, QPushButton, QHBoxLayout
 
 from chi_editor.canvas import Canvas
 from chi_editor.constants import ASSETS
 from chi_editor.error_handler import error_handler
-from chi_editor.toolbar import CanvasToolBar
+from chi_editor.toolbar.general_toolbar import GeneralToolBar
 
 
 class PopupCanvas(QWidget):
     canvas: "Canvas"
+    canvas_changed: pyqtSignal = pyqtSignal(str)
 
     def __init__(self, *args, **kwargs) -> "None":
         super().__init__(*args, **kwargs)
@@ -26,7 +27,7 @@ class PopupCanvas(QWidget):
 
         view.setScene(self.canvas)
 
-        toolbar = CanvasToolBar(canvas=self.canvas)
+        toolbar = GeneralToolBar(canvas=self.canvas)
         tool_layout.addWidget(toolbar)
         tool_layout.addWidget(view)
 
@@ -48,5 +49,4 @@ class PopupCanvas(QWidget):
             return error_handler("More than one molecule you've got here fella")
 
         molecule = self.canvas.findMolecule()
-        label = QLabel(molecule)
-        self.layout().addWidget(label)
+        self.canvas_changed.emit(molecule)

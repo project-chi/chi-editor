@@ -225,7 +225,7 @@ class Editor(QMainWindow):
 
     def checkAnswer(self, user_answer: str) -> bool:
         mol_user = Chem.MolFromSmiles(user_answer)
-        if mol_user == None:
+        if mol_user is None:
             return False
         Chem.RemoveStereochemistry(mol_user)
         user_smiles = Chem.MolToSmiles(mol_user)
