@@ -4,10 +4,9 @@ from PyQt6.QtGui import QActionGroup
 from PyQt6.QtWidgets import QToolBar
 
 from chi_editor.toolbar.tools import tools
+from PyQt6.QtGui import QAction
 
 if TYPE_CHECKING:
-    from PyQt6.QtGui import QAction
-
     from chi_editor.canvas import Canvas
 
 
