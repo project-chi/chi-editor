@@ -1,11 +1,11 @@
 import typing
+
 from PyQt6.QtCore import QRectF
-from PyQt6.QtGui import QColor, QPainter
+from PyQt6.QtGui import QPainter
 from PyQt6.QtWidgets import QGraphicsItem, QWidget
 
 
 class AbstractButton(QGraphicsItem):
-
     rect: QRectF
     answer_field: 'AnswerField'
 
@@ -18,8 +18,8 @@ class AbstractButton(QGraphicsItem):
     def boundingRect(self) -> QRectF:
         return self.rect
 
-
-    def paint(self, painter: QPainter, option: 'QStyleOptionGraphicsItem', widget: typing.Optional[QWidget] = ...) -> None:
+    def paint(self, painter: QPainter, option: 'QStyleOptionGraphicsItem',
+              widget: typing.Optional[QWidget] = ...) -> None:
         painter.save()
 
         painter.setBrush(self.background_color)

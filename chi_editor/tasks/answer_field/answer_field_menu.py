@@ -1,11 +1,7 @@
 from typing import TYPE_CHECKING
 
-import typing
-
-from PyQt6 import QtGui
 from PyQt6.QtCore import QRectF
-from PyQt6.QtGui import QColor
-from PyQt6.QtWidgets import QGraphicsItemGroup, QGraphicsItem, QWidget, QGraphicsScene
+from PyQt6.QtWidgets import QGraphicsItem, QGraphicsScene
 
 from chi_editor.tasks.answer_field.menu.clear_button import ClearButton
 from chi_editor.tasks.answer_field.menu.edit_button import EditButton
@@ -15,7 +11,6 @@ if TYPE_CHECKING:
 
 
 class AnswerFieldMenu:
-
     answer_field: 'AnswerField'
     rect: QRectF
 

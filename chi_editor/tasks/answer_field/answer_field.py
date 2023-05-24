@@ -1,14 +1,14 @@
 import typing
+
 from PyQt6 import QtGui
 from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QGraphicsTextItem, QWidget, QLineEdit, QGraphicsItem, QGraphicsSimpleTextItem
+from PyQt6.QtWidgets import QWidget, QGraphicsItem
 
 from chi_editor.tasks.answer_field.answer_field_menu import AnswerFieldMenu
 
 
 class AnswerField(QGraphicsItem):
-
     rect: QRectF
     background_color: QtGui.QColor
     font: QFont
@@ -47,7 +47,8 @@ class AnswerField(QGraphicsItem):
         if self.editable:
             self.answer_field_menu.remove_from_scene(self.scene())
 
-    def paint(self, painter: QtGui.QPainter, option: 'QStyleOptionGraphicsItem', widget: typing.Optional[QWidget] = ...) -> None:
+    def paint(self, painter: QtGui.QPainter, option: 'QStyleOptionGraphicsItem',
+              widget: typing.Optional[QWidget] = ...) -> None:
         painter.save()
 
         painter.setBrush(self.background_color)
