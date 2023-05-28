@@ -1,4 +1,4 @@
-from typing import Optional, ClassVar
+from typing import Optional, ClassVar, TYPE_CHECKING
 from enum import Enum
 
 from PyQt6.QtCore import QPointF, QObject, QEvent, QRectF
@@ -10,6 +10,9 @@ from chi_editor.reactions.size_constants import Sizes
 
 from chi_editor.tasks.answer_field.answer_field import AnswerField
 
+if TYPE_CHECKING:
+    from chi_editor.reactions.reaction_item import ReactionItemGroup
+
 
 class GrowthDirection(Enum):
     LEFT = 1
@@ -17,16 +20,19 @@ class GrowthDirection(Enum):
 
 
 class ReagentAdder(QGraphicsEllipseItem):
+    _reaction_group: 'ReactionItemGroup'
     _reagent_list: list[QGraphicsItem]
     _item_highlighted: bool = False
     _highlight_color: ClassVar[QColor] = QColor(0, 255, 50, 100)
     _growth_direction: GrowthDirection
 
-    def __init__(self, reagent_list: list[QGraphicsItem], growth_direction: GrowthDirection, pos: QPointF, *args,
+    def __init__(self, reaction_group: 'ReactionItemGroup', reagent_list: list[QGraphicsItem],
+                 growth_direction: GrowthDirection, pos: QPointF, *args,
                  **kwargs):
         super().__init__(*args, **kwargs)
         self.setPos(pos)
         self.setRect(QRectF(QPointF(0, 0), Sizes.add_item_size))
+        self._reaction_group = reaction_group
         self._reagent_list = reagent_list
         self._growth_direction = growth_direction
         self.setAcceptHoverEvents(True)
@@ -42,6 +48,7 @@ class ReagentAdder(QGraphicsEllipseItem):
         new_item = AnswerField(next_pos.x(), next_pos.y())
 
         self._reagent_list.append(new_item)
+        self._reaction_group.addToGroup(new_item)
         self.setPos(self._getNextAddPos())
 
     def paint(self, painter: QPainter, option: 'QStyleOptionGraphicsItem', widget: Optional[QWidget] = ...) -> None:

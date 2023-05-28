@@ -3,12 +3,12 @@ from PyQt6.QtWidgets import (
 )
 
 from ...bases.tool import Tool
-from chi_editor.reactions.reaction_item import ReactionItem
+from chi_editor.reactions.reaction_item import ReactionItemGroup
 
 
 class AddReaction(Tool):
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:
-        new_reaction = ReactionItem(event.scenePos().x(), event.scenePos().y())
+        new_reaction = ReactionItemGroup(event.scenePos().x(), event.scenePos().y())
 
         self.canvas.addItem(new_reaction)
 
