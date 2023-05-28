@@ -54,22 +54,14 @@ class ReactionItemGroup(QGraphicsItemGroup):
     def _addInitialItems(self) -> None:
         first_reagent_point = self.pos() + QPointF(-1 * (Sizes.side_items_offset + Sizes.reagent_size.width()),
                                                    -1 * Sizes.reagent_size.height() / 2)
-        self._reagent_items.append(AnswerField(first_reagent_point.x(), first_reagent_point.y()))
-        self._addLastReagent()
+        first_reagent = AnswerField(first_reagent_point.x(), first_reagent_point.y())
+        self._reagent_items.append(first_reagent)
+        self.addToGroup(first_reagent)
 
         first_product_point = self.pos() + QPointF(Sizes.side_items_offset, -1 * Sizes.reagent_size.height() / 2)
-        self._product_items.append(AnswerField(first_product_point.x(), first_product_point.y()))
-        self._addLastProduct()
-
-    def _addLastReagent(self) -> None:
-        last_reagent = self._reagent_items.pop()
-        self.addToGroup(last_reagent)
-        self._reagent_items.append(last_reagent)
-
-    def _addLastProduct(self) -> None:
-        last_product = self._product_items.pop()
-        self.addToGroup(last_product)
-        self._product_items.append(last_product)
+        first_product = AnswerField(first_product_point.x(), first_product_point.y())
+        self._product_items.append(first_product)
+        self.addToGroup(first_product)
 
     def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
         for child_item in self.childItems():
