@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import (
     QGraphicsSceneMouseEvent
 )
 
-from chi_editor.reactions.reagent_adder import ReagentAdder, GrowthDirection
+from chi_editor.reactions.reagent_adder import ReactionReagentAdder, GrowthDirection
 from chi_editor.reactions.size_constants import Sizes
 from chi_editor.tasks.answer_field.answer_field import AnswerField
 
@@ -39,12 +39,14 @@ class ReactionItemGroup(QGraphicsItemGroup):
         reagent_top_left_point = self.pos() + QPointF(-1 * (
                 Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap + Sizes.add_item_size.width()),
                                                       -1 * Sizes.add_item_size.height() / 2)
-        self._add_reagent_item = ReagentAdder(self, self._reagent_items, GrowthDirection.LEFT, reagent_top_left_point)
+        self._add_reagent_item = ReactionReagentAdder(self, self._reagent_items, GrowthDirection.LEFT,
+                                                      reagent_top_left_point)
 
         product_top_left_point = self.pos() + QPointF(
             Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap,
             -1 * Sizes.add_item_size.height() / 2)
-        self._add_product_item = ReagentAdder(self, self._product_items, GrowthDirection.RIGHT, product_top_left_point)
+        self._add_product_item = ReactionReagentAdder(self, self._product_items, GrowthDirection.RIGHT,
+                                                      product_top_left_point)
 
         self.addToGroup(self._add_product_item)
         self.addToGroup(self._add_reagent_item)

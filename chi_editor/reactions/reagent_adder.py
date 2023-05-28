@@ -19,7 +19,7 @@ class GrowthDirection(Enum):
     RIGHT = 2
 
 
-class ReagentAdder(QGraphicsEllipseItem):
+class ReactionReagentAdder(QGraphicsEllipseItem):
     _reaction_group: 'ReactionItemGroup'
     _reagent_list: list[QGraphicsItem]
     _item_highlighted: bool = False
