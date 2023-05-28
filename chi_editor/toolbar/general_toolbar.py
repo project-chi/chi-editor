@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QActionGroup
 from PyQt6.QtWidgets import QToolBar
 
@@ -18,6 +19,7 @@ class GeneralToolBar(QToolBar):
         super().__init__(*args, **kwargs)
         self._canvas = canvas
         self.setStyleSheet("""QToolBar { background-color: rgb(212, 204, 234); }""")
+        self.setIconSize(QSize(20, 20))
         self.setMovable(False)
 
         self.action_group = QActionGroup(self)
