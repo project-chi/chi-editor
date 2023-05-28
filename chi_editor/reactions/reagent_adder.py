@@ -88,10 +88,11 @@ class ReactionReagentAdder(QGraphicsEllipseItem):
             case GrowthDirection.LEFT:
                 return self._getLastItemPos() + QPointF(
                     -1 * (Sizes.default_gap + Sizes.plus_size.width() + Sizes.default_gap + Sizes.reagent_size.width()),
-                    0)
+                    0) - QPointF(Sizes.reagent_boarder_width, Sizes.reagent_boarder_width)
             case GrowthDirection.RIGHT:
                 return self._getLastItemPos() + QPointF(
-                    Sizes.reagent_size.width() + Sizes.default_gap + Sizes.plus_size.width() + Sizes.default_gap, 0)
+                    Sizes.reagent_size.width() + Sizes.default_gap + Sizes.plus_size.width() + Sizes.default_gap,
+                    0) - QPointF(Sizes.reagent_boarder_width, Sizes.reagent_boarder_width)
 
     def _getLastItemPos(self) -> QPointF:
         item = self._reagent_list.pop()
