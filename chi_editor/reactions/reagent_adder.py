@@ -93,7 +93,7 @@ class ReactionReagentAdder(QGraphicsEllipseItem):
     def _getNextItemPos(self) -> QPointF:
         match self._growth_direction:
             case GrowthDirection.LEFT:
-                return self._getLastItemPos() + QPointF(
+                return self._getFirstItemPos() + QPointF(
                     -1 * (Sizes.default_gap + Sizes.plus_size.width() + Sizes.default_gap + Sizes.reagent_size.width()),
                     0) - QPointF(Sizes.reagent_boarder_width, Sizes.reagent_boarder_width)
             case GrowthDirection.RIGHT:
@@ -102,9 +102,10 @@ class ReactionReagentAdder(QGraphicsEllipseItem):
                     0) - QPointF(Sizes.reagent_boarder_width, Sizes.reagent_boarder_width)
 
     def _getLastItemPos(self) -> QPointF:
-        item = self._reagent_list.pop()
-        self._reagent_list.append(item)
-        return item.sceneBoundingRect().topLeft()
+        return self._reagent_list[-1].sceneBoundingRect().topLeft()
+
+    def _getFirstItemPos(self) -> QPointF:
+        return self._reagent_list[0].sceneBoundingRect().topLeft()
 
     def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
         self._item_highlighted = True
