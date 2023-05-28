@@ -11,7 +11,7 @@ from chi_editor.reactions.size_constants import Sizes
 from chi_editor.tasks.answer_field.answer_field import AnswerField
 
 if TYPE_CHECKING:
-    from chi_editor.reactions.reaction_item import ReactionItemGroup
+    from chi_editor.reactions.reaction_item_group import ReactionItemGroup
 
 
 class GrowthDirection(Enum):

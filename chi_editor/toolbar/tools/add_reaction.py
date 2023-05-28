@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import (
 )
 
 from ...bases.tool import Tool
-from chi_editor.reactions.reaction_item import ReactionItemGroup
+from chi_editor.reactions.reaction_item_group import ReactionItemGroup
 
 
 class AddReaction(Tool):
