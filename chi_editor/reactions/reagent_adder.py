@@ -1,7 +1,7 @@
 from typing import Optional, ClassVar
 from enum import Enum
 
-from PyQt6.QtCore import QPointF
+from PyQt6.QtCore import QPointF, QObject, QEvent, QRectF
 from PyQt6.QtWidgets import QGraphicsEllipseItem, QGraphicsSceneMouseEvent, QGraphicsItem, QStyleOptionGraphicsItem, \
     QWidget, QGraphicsSceneHoverEvent
 from PyQt6.QtGui import QPainter, QColor
@@ -22,11 +22,20 @@ class ReagentAdder(QGraphicsEllipseItem):
     _highlight_color: ClassVar[QColor] = QColor(0, 255, 50, 100)
     _growth_direction: GrowthDirection
 
-    def __init__(self, reagent_list: list[QGraphicsItem], growth_direction: GrowthDirection, *args, **kwargs):
+    def __init__(self, reagent_list: list[QGraphicsItem], growth_direction: GrowthDirection, pos: QPointF, *args,
+                 **kwargs):
         super().__init__(*args, **kwargs)
+        self.setPos(pos)
+        self.setRect(QRectF(QPointF(0, 0), Sizes.add_item_size))
         self._reagent_list = reagent_list
         self._growth_direction = growth_direction
         self.setAcceptHoverEvents(True)
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:
+        print("press!")
+        if event.type() == QEvent.Type.GraphicsSceneMousePress:
+            pass
+        return True
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent):
         next_pos = self._getNextItemPos()

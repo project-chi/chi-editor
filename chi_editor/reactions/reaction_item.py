@@ -1,7 +1,7 @@
 from typing import Optional
 
 from PyQt6.QtCore import QRectF, QPointF
-from PyQt6.QtGui import QPainter, QPainterPath
+from PyQt6.QtGui import QPainter, QPainterPath, QColor
 from PyQt6.QtWidgets import (
     QGraphicsItem,
     QGraphicsItemGroup,
@@ -30,23 +30,21 @@ class ReactionItem(QGraphicsItemGroup):
         self.setPos(x, y)
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         self.setFiltersChildEvents(False)
-        self.setAcceptHoverEvents(True)
+        self.setAcceptHoverEvents(False)
 
         self._addAddButtons()
         self._addInitialItems()
 
     def _addAddButtons(self) -> None:
-        self._add_reagent_item = ReagentAdder(self._reagent_items, GrowthDirection.LEFT)
         reagent_top_left_point = self.pos() + QPointF(-1 * (
                 Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap + Sizes.add_item_size.width()),
                                                       -1 * Sizes.add_item_size.height() / 2)
-        self._add_reagent_item.setRect(QRectF(reagent_top_left_point, Sizes.add_item_size))
+        self._add_reagent_item = ReagentAdder(self._reagent_items, GrowthDirection.LEFT, reagent_top_left_point)
 
-        self._add_product_item = ReagentAdder(self._product_items, GrowthDirection.RIGHT)
         product_top_left_point = self.pos() + QPointF(
             Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap,
             -1 * Sizes.add_item_size.height() / 2)
-        self._add_product_item.setRect(QRectF(product_top_left_point, Sizes.add_item_size))
+        self._add_product_item = ReagentAdder(self._product_items, GrowthDirection.RIGHT, product_top_left_point)
 
         self.addToGroup(self._add_product_item)
         self.addToGroup(self._add_reagent_item)
@@ -55,13 +53,25 @@ class ReactionItem(QGraphicsItemGroup):
         first_reagent_point = self.pos() + QPointF(-1 * (Sizes.side_items_offset + Sizes.reagent_size.width()),
                                                    -1 * Sizes.reagent_size.height() / 2)
         self._reagent_items.append(AnswerField(first_reagent_point.x(), first_reagent_point.y()))
+
         self._addLastReagent()
 
         first_product_point = self.pos() + QPointF(Sizes.side_items_offset, -1 * Sizes.reagent_size.height() / 2)
         self._product_items.append(AnswerField(first_product_point.x(), first_product_point.y()))
         self._addLastProduct()
 
+    def _addLastReagent(self) -> None:
+        last_reagent = self._reagent_items.pop()
+        self.addToGroup(last_reagent)
+        self._reagent_items.append(last_reagent)
+
+    def _addLastProduct(self) -> None:
+        last_product = self._product_items.pop()
+        self.addToGroup(last_product)
+        self._product_items.append(last_product)
+
     def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
+        print(self.sceneBoundingRect().contains(event.scenePos()))
         if self._add_reagent_item.sceneBoundingRect().contains(event.scenePos()):
             self._add_reagent_item.hoverEnterEvent(event)
         elif self._add_product_item.sceneBoundingRect().contains(event.scenePos()):
@@ -101,16 +111,6 @@ class ReactionItem(QGraphicsItemGroup):
         for product_item in self._product_items:
             if product_item.sceneBoundingRect().contains(event.scenePos()):
                 product_item.mousePressEvent(event)
-
-    def _addLastReagent(self) -> None:
-        last_reagent = self._reagent_items.pop()
-        self.addToGroup(last_reagent)
-        self._reagent_items.append(last_reagent)
-
-    def _addLastProduct(self) -> None:
-        last_product = self._product_items.pop()
-        self.addToGroup(last_product)
-        self._product_items.append(last_product)
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: Optional[QWidget] = ...) -> None:
         painter.save()
