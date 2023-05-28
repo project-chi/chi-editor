@@ -44,6 +44,7 @@ class ReactionReagentAdder(QGraphicsEllipseItem):
         return True
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent):
+        self._item_highlighted = False
         next_pos = self._getNextItemPos()
         new_item = AnswerField(next_pos.x(), next_pos.y())
 
