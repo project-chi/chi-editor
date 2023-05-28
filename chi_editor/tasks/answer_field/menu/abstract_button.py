@@ -1,28 +1,27 @@
 import typing
 
 from PyQt6.QtCore import QRectF
-from PyQt6.QtGui import QPainter
-from PyQt6.QtWidgets import QGraphicsItem, QWidget
+from PyQt6.QtGui import QPainter, QColor
+from PyQt6.QtWidgets import QGraphicsItem, QWidget, QStyleOptionGraphicsItem
 
 
-class AbstractButton(QGraphicsItem):
-    rect: QRectF
-    answer_field: 'AnswerField'
+class GraphicsAbstractButton(QGraphicsItem):
+    _bounding_rect: QRectF
+    background_color: QColor
 
-    def __init__(self, answer_field: 'AnswerField', x: float, y: float, width: float, height: float, *args, **kwargs):
+    def __init__(self, x: float, y: float, width: float, height: float, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.answer_field = answer_field
-        self.rect = QRectF(x, y, width, height)
+        self._bounding_rect = QRectF(x, y, width, height)
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
 
     def boundingRect(self) -> QRectF:
-        return self.rect
+        return self._bounding_rect
 
     def paint(self, painter: QPainter, option: 'QStyleOptionGraphicsItem',
               widget: typing.Optional[QWidget] = ...) -> None:
         painter.save()
 
         painter.setBrush(self.background_color)
-        painter.drawRect(self.rect)
+        painter.drawRect(self._bounding_rect)
 
         painter.restore()

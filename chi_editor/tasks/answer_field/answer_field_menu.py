@@ -1,37 +1,39 @@
 from typing import TYPE_CHECKING, ClassVar
 
 from PyQt6.QtCore import QRectF, QPointF, QSizeF
-from PyQt6.QtWidgets import QGraphicsItem, QGraphicsSceneMouseEvent
+from PyQt6.QtWidgets import QGraphicsItem, QGraphicsSceneMouseEvent, QGraphicsItemGroup
 
-from chi_editor.tasks.answer_field.menu.clear_button import ClearButton
-from chi_editor.tasks.answer_field.menu.edit_button import EditButton
+from chi_editor.tasks.answer_field.menu.clear_button import ClearButtonGraphics
+from chi_editor.tasks.answer_field.menu.edit_button import EditButtonGraphics
 from chi_editor.reactions.size_constants import Sizes
 
 if TYPE_CHECKING:
     from chi_editor.tasks.answer_field.answer_field import AnswerField
 
 
-class AnswerFieldMenu:
+class AnswerFieldMenu(QGraphicsItemGroup):
     _reagent_menu_size: ClassVar[QSizeF] = QSizeF(Sizes.reagent_size.width() * 0.4, Sizes.reagent_size.height() * 0.8)
     _reagent_menu_button_size: ClassVar[QSizeF] = QSizeF(_reagent_menu_size.width(), _reagent_menu_size.height() / 2)
     answer_field: 'AnswerField'
-    rect: QRectF
 
     clear_button: QGraphicsItem
     edit_button: QGraphicsItem
 
-    def __init__(self, answer_field: 'AnswerField', x: float, y: float, *args, **kwargs):
+    def __init__(self, answer_field: 'AnswerField', *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.rect = QRectF(QPointF(x, y), self._reagent_menu_size)
         self.answer_field = answer_field
+        boarder_offset = self.answer_field.pen.widthF()
+        self.setPos(boarder_offset, boarder_offset)
 
-        self.clear_button = ClearButton(answer_field, x, y, self._reagent_menu_button_size.width(),
-                                        self._reagent_menu_button_size.height(), parent=answer_field)
+        # setting self as parent is the same as adding to the group
+        self.clear_button = ClearButtonGraphics(answer_field, 0, 0, self._reagent_menu_button_size.width(),
+                                                self._reagent_menu_button_size.height(), parent=self)
         self.clear_button.hide()
 
-        self.edit_button = EditButton(answer_field, x, y + self._reagent_menu_button_size.height(),
-                                      self._reagent_menu_button_size.width(), self._reagent_menu_button_size.height(),
-                                      parent=answer_field)
+        self.edit_button = EditButtonGraphics(answer_field, 0, 0 + self._reagent_menu_button_size.height(),
+                                              self._reagent_menu_button_size.width(),
+                                              self._reagent_menu_button_size.height(),
+                                              parent=self)
         self.edit_button.hide()
 
     def show(self):
@@ -42,7 +44,7 @@ class AnswerFieldMenu:
         self.clear_button.hide()
         self.edit_button.hide()
 
-    def mouse_press_event(self, event: 'QGraphicsSceneMouseEvent') -> None:
+    def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent') -> None:
         if self.clear_button.sceneBoundingRect().contains(event.scenePos()):
             self.clear_button.mousePressEvent(event)
         if self.edit_button.sceneBoundingRect().contains(event.scenePos()):
