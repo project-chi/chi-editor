@@ -6,7 +6,7 @@ from PyQt6.QtGui import QFont, QColor, QPen
 from PyQt6.QtWidgets import QWidget, QGraphicsItem, QGraphicsSceneHoverEvent, QStyleOptionGraphicsItem, \
     QGraphicsSceneMouseEvent
 
-from chi_editor.reactions.size_constants import Sizes
+from chi_editor.tasks.tasks_size_constants import Sizes
 
 from chi_editor.tasks.answer_field.answer_field_menu import AnswerFieldMenu
 
@@ -14,7 +14,7 @@ from chi_editor.tasks.answer_field.answer_field_menu import AnswerFieldMenu
 class AnswerField(QGraphicsItem):
     background_color: QColor
     font: QFont
-    pen: ClassVar[QPen] = QPen()
+    pen: ClassVar[QPen] = QPen(QColor("black"), Sizes.reagent_boarder_width)
 
     content: str
     answer_field_menu: "AnswerFieldMenu"

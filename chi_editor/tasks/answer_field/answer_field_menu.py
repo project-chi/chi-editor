@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING, ClassVar
 
-from PyQt6.QtCore import QRectF, QPointF, QSizeF
+from PyQt6.QtCore import QSizeF
 from PyQt6.QtWidgets import QGraphicsItem, QGraphicsSceneMouseEvent, QGraphicsItemGroup
 
 from chi_editor.tasks.answer_field.menu.clear_button import ClearButtonGraphics
 from chi_editor.tasks.answer_field.menu.edit_button import EditButtonGraphics
-from chi_editor.reactions.size_constants import Sizes
+from chi_editor.tasks.tasks_size_constants import Sizes
 
 if TYPE_CHECKING:
     from chi_editor.tasks.answer_field.answer_field import AnswerField

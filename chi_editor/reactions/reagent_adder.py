@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import QGraphicsEllipseItem, QGraphicsSceneMouseEvent, QGra
     QWidget, QGraphicsSceneHoverEvent
 from PyQt6.QtGui import QPainter, QColor
 
-from chi_editor.reactions.size_constants import Sizes
+from chi_editor.tasks.tasks_size_constants import Sizes
 
 from chi_editor.tasks.answer_field.answer_field import AnswerField
 

@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (
 )
 
 from chi_editor.reactions.reagent_adder import ReactionReagentAdder, GrowthDirection
-from chi_editor.reactions.size_constants import Sizes
+from chi_editor.tasks.tasks_size_constants import Sizes
 from chi_editor.tasks.answer_field.answer_field import AnswerField
 
 
@@ -37,13 +37,13 @@ class ReactionItemGroup(QGraphicsItemGroup):
 
     def _addAddButtons(self) -> None:
         reagent_top_left_point = self.pos() + QPointF(-1 * (
-                Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap + Sizes.add_item_size.width()),
+                Sizes.arrow_size.width() / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap + Sizes.add_item_size.width()),
                                                       -1 * Sizes.add_item_size.height() / 2)
         self._add_reagent_item = ReactionReagentAdder(self, self._reagent_items, GrowthDirection.LEFT,
                                                       reagent_top_left_point)
 
         product_top_left_point = self.pos() + QPointF(
-            Sizes.arrow_width / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap,
+            Sizes.arrow_size.width() / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap,
             -1 * Sizes.add_item_size.height() / 2)
         self._add_product_item = ReactionReagentAdder(self, self._product_items, GrowthDirection.RIGHT,
                                                       product_top_left_point)
@@ -87,11 +87,11 @@ class ReactionItemGroup(QGraphicsItemGroup):
         painter.restore()
 
     def _paint_arrow(self, painter: QPainter) -> None:
-        arrow_path = QPainterPath(QPointF(-1 * Sizes.arrow_width / 2, 0))
-        arrow_path.lineTo(Sizes.arrow_width / 2, 0)
-        arrow_path.lineTo(0, Sizes.arrow_height / 2)
-        arrow_path.lineTo(Sizes.arrow_width / 2, 0)
-        arrow_path.lineTo(0, -1 * Sizes.arrow_height / 2)
+        arrow_path = QPainterPath(QPointF(-1 * Sizes.arrow_size.width() / 2, 0))
+        arrow_path.lineTo(Sizes.arrow_size.width() / 2, 0)
+        arrow_path.lineTo(0, Sizes.arrow_size.height() / 2)
+        arrow_path.lineTo(Sizes.arrow_size.width() / 2, 0)
+        arrow_path.lineTo(0, -1 * Sizes.arrow_size.height() / 2)
 
         painter.drawPath(arrow_path)
 
