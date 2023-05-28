@@ -20,8 +20,8 @@ from chi_editor.tasks.answer_field.answer_field import AnswerField
 
 class ReactionItemGroup(QGraphicsItemGroup):
     _model: ReactionModel
-    _reagent_items: list[QGraphicsItem] = []
-    _product_items: list[QGraphicsItem] = []
+    _reagent_items: list[QGraphicsItem]
+    _product_items: list[QGraphicsItem]
     _add_reagent_item: QGraphicsEllipseItem
     _add_product_item: QGraphicsEllipseItem
 
@@ -32,6 +32,8 @@ class ReactionItemGroup(QGraphicsItemGroup):
         self.setFiltersChildEvents(False)
         self.setAcceptHoverEvents(False)
 
+        self._reagent_items = []
+        self._product_items = []
         self._addAddButtons()
         self._addInitialItems()
 
