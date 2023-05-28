@@ -16,7 +16,7 @@ class Eraser(Tool):
                 return super(Eraser, self).mouse_press_event(event)
             elif isinstance(items[0], AlphaAtom) or isinstance(items[0], Line):
                 items[0].remove()
-            elif isinstance(items[0], QGraphicsPixmapItem):
+            else:
                 self.canvas.removeItem(items[0])
         else:
             self.canvas.clear()

@@ -1,64 +1,73 @@
-import typing
+from typing import Optional, ClassVar
 
 from PyQt6 import QtGui
-from PyQt6.QtCore import QRectF, Qt
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QWidget, QGraphicsItem
+from PyQt6.QtCore import QRectF, Qt, QPointF
+from PyQt6.QtGui import QFont, QColor, QPen
+from PyQt6.QtWidgets import QWidget, QGraphicsItem, QGraphicsSceneHoverEvent, QStyleOptionGraphicsItem, \
+    QGraphicsSceneMouseEvent
+
+from chi_editor.tasks.tasks_size_constants import Sizes
 
 from chi_editor.tasks.answer_field.answer_field_menu import AnswerFieldMenu
 
 
 class AnswerField(QGraphicsItem):
-    rect: QRectF
-    background_color: QtGui.QColor
+    background_color: QColor
     font: QFont
+    pen: ClassVar[QPen] = QPen(QColor("black"), Sizes.reagent_boarder_width)
 
     content: str
-    answer_field_menu: AnswerFieldMenu
+    answer_field_menu: "AnswerFieldMenu"
 
     editable: bool
 
-    def __init__(self, x, y, *args, **kwargs):
+    def __init__(self, x: float, y: float, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.rect = QRectF(x, y, 400, 300)
+        self.setPos(x, y)
+
         self.background_color = QtGui.QColor("lightgray")
-
-        self.content = "default"
-
-        self.setAcceptHoverEvents(True)
-        self.answer_field_menu = AnswerFieldMenu(self, x, y)
-
-        self.font = QFont()
-        self.font.setPointSizeF(40)
-
+        self.content = "c"
         self.editable = True
 
+        self.answer_field_menu = AnswerFieldMenu(self, parent=self)
+
+        self.setAcceptHoverEvents(True)
+        self.setFiltersChildEvents(True)
+
     def boundingRect(self) -> QRectF:
-        return self.rect
+        boarder_width = self.pen.widthF()
+        bounding_rect = QRectF(QPointF(0, 0), Sizes.reagent_size)
+        bounding_rect.adjust(
+            boarder_width, boarder_width,
+            boarder_width, boarder_width
+        )
+        return bounding_rect
 
     def hoverEnterEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
-        super().hoverEnterEvent(event)
         if self.editable:
-            self.answer_field_menu.add_to_scene(self.scene())
+            self.answer_field_menu.show()
 
     def hoverLeaveEvent(self, event: 'QGraphicsSceneHoverEvent') -> None:
-        super().hoverLeaveEvent(event)
         if self.editable:
-            self.answer_field_menu.remove_from_scene(self.scene())
+            self.answer_field_menu.hide()
+
+    def mousePressEvent(self, event: 'QGraphicsSceneMouseEvent') -> None:
+        self.answer_field_menu.mousePressEvent(event)
 
     def paint(self, painter: QtGui.QPainter, option: 'QStyleOptionGraphicsItem',
-              widget: typing.Optional[QWidget] = ...) -> None:
+              widget: Optional[QWidget] = ...) -> None:
         painter.save()
 
+        painter.setPen(self.pen)
         painter.setBrush(self.background_color)
-        painter.drawRect(self.rect)
+        painter.drawRect(self.boundingRect())
 
         painter.setBrush(QtGui.QColor("black"))
-        painter.setFont(self.font)
-        painter.drawText(self.rect, Qt.AlignmentFlag.AlignCenter, self.content)
+        painter.drawText(self.boundingRect(), Qt.AlignmentFlag.AlignCenter, self.content)
 
         painter.restore()
 
     def set_content(self, content: str) -> None:
         self.content = content
+        self.update()

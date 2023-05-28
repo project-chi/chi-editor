@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QWidget, QGraphicsView, QVBoxLayout, QPushButton, QH
 from chi_editor.canvas import Canvas
 from chi_editor.constants import ASSETS
 from chi_editor.error_handler import error_handler
+
 from chi_editor.toolbar.general_toolbar import GeneralToolBar
 
 
