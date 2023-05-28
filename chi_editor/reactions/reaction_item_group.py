@@ -12,14 +12,12 @@ from PyQt6.QtWidgets import (
     QGraphicsSceneMouseEvent
 )
 
-from chi_editor.reactions.reaction_model import ReactionModel
 from chi_editor.reactions.reagent_adder import ReagentAdder, GrowthDirection
 from chi_editor.reactions.size_constants import Sizes
 from chi_editor.tasks.answer_field.answer_field import AnswerField
 
 
 class ReactionItemGroup(QGraphicsItemGroup):
-    _model: ReactionModel
     _reagent_items: list[QGraphicsItem]
     _product_items: list[QGraphicsItem]
     _add_reagent_item: QGraphicsEllipseItem
