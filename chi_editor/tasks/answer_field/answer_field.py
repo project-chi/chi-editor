@@ -27,7 +27,7 @@ class AnswerField(QGraphicsItem):
         self.setPos(x, y)
 
         self.background_color = QtGui.QColor("lightgray")
-        self.content = "default"
+        self.content = "c"
         self.editable = True
 
         self.answer_field_menu = AnswerFieldMenu(self, parent=self)

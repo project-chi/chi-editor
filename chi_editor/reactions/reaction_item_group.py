@@ -35,6 +35,12 @@ class ReactionItemGroup(QGraphicsItemGroup):
         self._addAddButtons()
         self._addInitialItems()
 
+    def get_reagents(self) -> list[str]:
+        return list(map(lambda reagent: reagent.content, self._reagent_items))
+
+    def get_products(self) -> list[str]:
+        return list(map(lambda product: product.content, self._product_items))
+
     def _addAddButtons(self) -> None:
         reagent_top_left_point = self.pos() + QPointF(-1 * (
                 Sizes.arrow_size.width() / 2 + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap + Sizes.add_item_size.width()),

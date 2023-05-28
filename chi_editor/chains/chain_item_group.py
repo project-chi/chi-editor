@@ -18,7 +18,7 @@ from chi_editor.tasks.answer_field.answer_field import AnswerField
 
 
 class ChainItemGroup(QGraphicsItemGroup):
-    _reagent_items: list[QGraphicsItem]
+    _reagent_items: list[AnswerField]
     _add_left_item: QGraphicsEllipseItem
     _add_right_item: QGraphicsEllipseItem
 
@@ -32,6 +32,9 @@ class ChainItemGroup(QGraphicsItemGroup):
         self._reagent_items = []
         self._addAddButtons()
         self._addInitialItems()
+
+    def get_reagents(self) -> list[str]:
+        return list(map(lambda reagent: reagent.content, self._reagent_items))
 
     def boundingRect(self) -> QRectF:
         return self.childrenBoundingRect()
@@ -92,7 +95,6 @@ class ChainItemGroup(QGraphicsItemGroup):
             Sizes.add_item_size.width() + Sizes.default_gap + Sizes.reagent_size.width() + Sizes.default_gap,
             Sizes.reagent_size.height() / 2
         )
-        painter.drawEllipse(top_left_chain_point, 5, 5)
 
         for i in range(0, len(self._reagent_items) - 1):
             arrow_start_point = first_arrow_start_point + i * QPointF(

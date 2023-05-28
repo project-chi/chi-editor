@@ -47,7 +47,13 @@ class ReactionReagentAdder(QGraphicsEllipseItem):
         next_pos = self._getNextItemPos()
         new_item = AnswerField(next_pos.x(), next_pos.y())
 
-        self._reagent_list.append(new_item)
+        # add new item in corresponding position
+        match self._growth_direction:
+            case GrowthDirection.LEFT:
+                self._reagent_list.insert(0, new_item)
+            case GrowthDirection.RIGHT:
+                self._reagent_list.append(new_item)
+
         self._reaction_group.addToGroup(new_item)
         self.setPos(self._getNextAddPos())
 
