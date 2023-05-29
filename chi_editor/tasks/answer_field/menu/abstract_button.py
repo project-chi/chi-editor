@@ -1,13 +1,14 @@
 import typing
+from typing import ClassVar
 
 from PyQt6.QtCore import QRectF
-from PyQt6.QtGui import QPainter, QColor
+from PyQt6.QtGui import QPainter, QColor, QImage
 from PyQt6.QtWidgets import QGraphicsItem, QWidget, QStyleOptionGraphicsItem
 
 
 class GraphicsAbstractButton(QGraphicsItem):
     _bounding_rect: QRectF
-    background_color: QColor
+    picture: "ClassVar[QImage]"
 
     def __init__(self, x: float, y: float, width: float, height: float, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,7 +22,6 @@ class GraphicsAbstractButton(QGraphicsItem):
               widget: typing.Optional[QWidget] = ...) -> None:
         painter.save()
 
-        painter.setBrush(self.background_color)
-        painter.drawRect(self._bounding_rect)
+        painter.drawImage(self._bounding_rect, self.picture)
 
         painter.restore()
