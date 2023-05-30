@@ -8,6 +8,8 @@ from .text import Text
 
 from .atoms_menu import AtomsMenu
 from .atoms import atom_tools
+from .bonds_menu import BondsMenu
+from .bonds import bond_tools
 
 tools: tuple[type[Tool], ...] = (
     Arrow,
@@ -20,4 +22,5 @@ tools: tuple[type[Tool], ...] = (
 
 menus: list[tuple[tuple[type[Tool], ...], type[Tool]], ...] = [
     (atom_tools, AtomsMenu),
+    (bond_tools, BondsMenu),
 ]
