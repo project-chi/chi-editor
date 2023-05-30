@@ -259,6 +259,4 @@ class Editor(QMainWindow):
         return reagents_user == reagents_real and products_user == products_real
 
     def checkAnswerChain(self, user_answer: str) -> bool:
-        print(user_answer)
-        print(self.task.solution)
         return user_answer == self.task.solution
