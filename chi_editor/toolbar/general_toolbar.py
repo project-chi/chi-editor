@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, cast
 
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QActionGroup
-from PyQt6.QtWidgets import QToolBar, QToolButton
+from PyQt6.QtWidgets import QToolBar, QToolButton, QWidgetAction
 
 from chi_editor.toolbar.tools import tools, menus
 from PyQt6.QtGui import QAction
@@ -52,5 +52,5 @@ class GeneralToolBar(QToolBar):
 
     def change_canvas(self, canvas: "Canvas"):
         self._canvas = canvas
-        for Action in self.actions():
-            Action.change_canvas(canvas)
+        for action in self.action_group.actions():
+            action.change_canvas(canvas)
