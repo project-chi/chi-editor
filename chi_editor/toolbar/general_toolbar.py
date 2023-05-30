@@ -1,10 +1,10 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QActionGroup
-from PyQt6.QtWidgets import QToolBar
+from PyQt6.QtWidgets import QToolBar, QToolButton
 
-from chi_editor.toolbar.tools import tools
+from chi_editor.toolbar.tools import tools, menus
 from PyQt6.QtGui import QAction
 
 if TYPE_CHECKING:
@@ -30,6 +30,20 @@ class GeneralToolBar(QToolBar):
             self.addAction(tool)
             self.action_group.addAction(tool)
             self.widgetForAction(tool).setStyleSheet("padding: 5px")
+
+        for menu in menus:
+            menu_tools = menu[0]
+            menu_button = menu[1]()
+            self.addWidget(menu_button)
+            menu_button.setStyleSheet("padding: 5px")
+            menu_button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+            for Tool in menu_tools:
+                tool = Tool(canvas)
+                menu_button.addAction(tool)
+                self.action_group.addAction(tool)
+                tool.toggled.connect(menu_button.setCheckable)  # focus on menu button when one of its items is chosen
+                tool.toggled.connect(menu_button.setChecked)  # focus on menu button when one of its items is chosen
+            menu_button.triggered.connect(self.changeAction)
 
         self.actionTriggered.connect(self.changeAction)
 

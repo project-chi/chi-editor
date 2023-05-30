@@ -1,10 +1,10 @@
 from PyQt6.QtWidgets import QGraphicsSceneMouseEvent
 
-from ...bases.alpha_atom import AlphaAtom
-from ...bases.tool import Tool
+from chi_editor.bases.alpha_atom import AlphaAtom
+from chi_editor.bases.tool import Tool
 
 
-class Atom(Tool):
+class CreateAtom(Tool):
     _element: str
 
     def mouse_press_event(self, event: QGraphicsSceneMouseEvent) -> None:

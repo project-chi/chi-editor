@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from PyQt6.QtCore import QPointF, Qt
 from PyQt6.QtWidgets import (
     QGraphicsEllipseItem,
@@ -7,12 +5,12 @@ from PyQt6.QtWidgets import (
     QGraphicsSceneMouseEvent,
 )
 
-from ...bases.alpha_atom import AlphaAtom
-from ...bases.line import Line
-from ...bases.tool import Tool
+from chi_editor.bases.alpha_atom import AlphaAtom
+from chi_editor.bases.line import Line
+from chi_editor.bases.tool import Tool
 
 
-class Bond(Tool):
+class CreateBond(Tool):
     startItem: AlphaAtom = None
     bond: Line = None
 

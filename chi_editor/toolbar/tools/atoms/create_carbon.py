@@ -1,8 +1,8 @@
 
-from ..atom import Atom
+from chi_editor.toolbar.tools.atoms.create_atom import CreateAtom
 
 
-class Carbon(Atom):
+class CreateCarbon(CreateAtom):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._element = "C"
