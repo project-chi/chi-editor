@@ -41,6 +41,7 @@ class GeneralToolBar(QToolBar):
                 tool = Tool(canvas)
                 menu_button.addAction(tool)
                 self.action_group.addAction(tool)
+                tool.toggled.connect(menu_button.setChecked)  # focus on menu button when one of its items is chosen
             menu_button.triggered.connect(self.changeAction)
 
         self.actionTriggered.connect(self.changeAction)
