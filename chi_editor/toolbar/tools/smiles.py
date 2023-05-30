@@ -4,6 +4,7 @@ from rdkit import Chem
 
 from ...bases.tool import Tool
 from .structure import put_molecule
+from ...error_handler import error_handler
 
 
 class Smiles(Tool):
@@ -13,6 +14,10 @@ class Smiles(Tool):
             self.canvas.addWidget(dialog)
             if dialog.smiles != "":
                 molecule: Chem.Mol = Chem.MolFromSmiles(dialog.smiles)
+                if molecule == None:
+                    error_handler("Wtf is this dawg \nI ain't no Walter White \nbut it"
+                                  " defo ain't no damn \nsmiles you got there")
+                    return
                 Chem.Kekulize(molecule)
                 put_molecule(self.canvas, molecule, event.scenePos())
             self.canvas.removeItem(dialog.graphicsProxyWidget())
