@@ -80,7 +80,12 @@ class InputDialog(QDialog):
         self.clearAll()
 
     def parseInput(self):
-        self.correct_answer.setText(self.active_canvas.findMolecule())
+        if self.active_canvas == self.canvas_molecule:
+            self.correct_answer.setText(self.active_canvas.findMolecule())
+        elif self.active_canvas == self.canvas_reaction:
+            self.correct_answer.setText(self.active_canvas.findReaction())
+        else:
+            self.correct_answer.setText(self.active_canvas.findChain())
 
     def createTask(self):
         res_name, res_type, res_formulation, res_correct = self.getInputs()

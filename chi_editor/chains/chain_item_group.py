@@ -12,22 +12,19 @@ from PyQt6.QtWidgets import (
     QGraphicsSceneMouseEvent
 )
 
+from chi_editor.chains.chain import Chain
 from chi_editor.chains.chain_adder import ChainReagentAdder, GrowthDirection
 from chi_editor.tasks.tasks_size_constants import Sizes
 from chi_editor.tasks.answer_field.answer_field import AnswerField
 
 
-class ChainItemGroup(QGraphicsItemGroup):
+class ChainItemGroup(Chain):
     _reagent_items: list[AnswerField]
     _add_left_item: QGraphicsEllipseItem
     _add_right_item: QGraphicsEllipseItem
 
     def __init__(self, x: float, y: float, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.setPos(x, y)
-        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
-        self.setFiltersChildEvents(False)
-        self.setAcceptHoverEvents(False)
+        super().__init__(x, y, *args, **kwargs)
 
         self._reagent_items = []
         self._addAddButtons()
@@ -35,6 +32,9 @@ class ChainItemGroup(QGraphicsItemGroup):
 
     def get_reagents(self) -> list[str]:
         return list(map(lambda reagent: reagent.content, self._reagent_items))
+
+    def to_string(self):
+        return str(self.get_reagents())
 
     def boundingRect(self) -> QRectF:
         return self.childrenBoundingRect()

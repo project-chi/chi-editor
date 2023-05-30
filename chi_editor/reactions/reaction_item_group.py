@@ -12,23 +12,20 @@ from PyQt6.QtWidgets import (
     QGraphicsSceneMouseEvent
 )
 
+from chi_editor.reactions.reaction import Reaction
 from chi_editor.reactions.reagent_adder import ReactionReagentAdder, GrowthDirection
 from chi_editor.tasks.tasks_size_constants import Sizes
 from chi_editor.tasks.answer_field.answer_field import AnswerField
 
 
-class ReactionItemGroup(QGraphicsItemGroup):
+class ReactionItemGroup(Reaction):
     _reagent_items: list[QGraphicsItem]
     _product_items: list[QGraphicsItem]
     _add_reagent_item: QGraphicsEllipseItem
     _add_product_item: QGraphicsEllipseItem
 
     def __init__(self, x: float, y: float, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.setPos(x, y)
-        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
-        self.setFiltersChildEvents(False)
-        self.setAcceptHoverEvents(False)
+        super().__init__(x, y, *args, **kwargs)
 
         self._reagent_items = []
         self._product_items = []
@@ -40,6 +37,9 @@ class ReactionItemGroup(QGraphicsItemGroup):
 
     def get_products(self) -> list[str]:
         return list(map(lambda product: product.content, self._product_items))
+
+    def to_string(self) -> str:
+        return str(self.get_reagents()) + str(self.get_products())
 
     def _addAddButtons(self) -> None:
         reagent_top_left_point = self.pos() + QPointF(-1 * (
