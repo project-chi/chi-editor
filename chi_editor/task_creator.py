@@ -1,9 +1,12 @@
 from PyQt6.QtWidgets import QDialog, QLineEdit, QDialogButtonBox, QFormLayout, QComboBox
-from PyQt6.QtCore import Qt, QRectF, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal
 
 from chi_editor.api.server import Server, default_url
 from chi_editor.api.task import Kind
+from chi_editor.bases.molecule import Molecule
 from chi_editor.canvas import Canvas
+from chi_editor.chains.chain import Chain
+from chi_editor.reactions.reaction import Reaction
 from chi_editor.utils.json_utils import create_task
 from chi_editor.editor_mode import EditorMode
 
@@ -80,12 +83,14 @@ class InputDialog(QDialog):
         self.clearAll()
 
     def parseInput(self):
+        answer_type: type
         if self.active_canvas == self.canvas_molecule:
-            self.correct_answer.setText(self.active_canvas.findMolecule())
+            answer_type = Molecule
         elif self.active_canvas == self.canvas_reaction:
-            self.correct_answer.setText(self.active_canvas.findReaction())
+            answer_type = Reaction
         else:
-            self.correct_answer.setText(self.active_canvas.findChain())
+            answer_type = Chain
+        self.correct_answer.setText(self.active_canvas.findElement(answer_type))
 
     def createTask(self):
         res_name, res_type, res_formulation, res_correct = self.getInputs()
