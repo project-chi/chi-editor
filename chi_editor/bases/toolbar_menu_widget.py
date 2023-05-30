@@ -20,7 +20,6 @@ class ToolbarMenuWidget(QToolButton):
 
         self.setIcon(QIcon(str(icon_path)))
         self.triggered.connect(self._set_tool)
-        self.setCheckable(True)
 
     def _set_tool(self, tool: Tool):
         self._current_tool = tool
