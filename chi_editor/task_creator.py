@@ -40,7 +40,7 @@ class InputDialog(QDialog):
         # Fill type combo box
         for kind in Kind:
             self.type.addItem(kind.name, userData=kind)
-        self.type.setCurrentIndex(0)
+        self.type.setCurrentIndex(1)
         self.type.currentIndexChanged.connect(self.changeCanvas)
 
         layout = QFormLayout(self)
