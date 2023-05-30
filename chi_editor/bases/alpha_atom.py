@@ -35,7 +35,7 @@ class AlphaAtom(QGraphicsItem):
             self.fit_text_rect = self.default_rect
         else:
             self.fit_text_rect = QRectF(0, 0, self._text_font_metrics.boundingRect(self.text).width(),
-                                        self.default_rect.height())
+                                        self._text_font_metrics.height())
 
         self.setFlag(self.GraphicsItemFlag.ItemIsMovable)
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
