@@ -1,7 +1,7 @@
-from chi_editor.bases.tool import Tool
+from chi_editor.bases.toolbar_menu_widget import ToolbarMenuWidget
 
 
-class AtomsMenu(Tool):
+class AtomsMenu(ToolbarMenuWidget):
 
     @property
     def picture(self) -> str:

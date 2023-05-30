@@ -33,17 +33,15 @@ class GeneralToolBar(QToolBar):
 
         for menu in menus:
             menu_tools = menu[0]
-            menu_action = menu[1](canvas)
-            self.addAction(menu_action)
-            self.action_group.addAction(menu_action)
-            menu_button = cast(QToolButton, self.widgetForAction(menu_action))
-            menu_button.removeAction(menu_action)
+            menu_button = menu[1]()
+            self.addWidget(menu_button)
             menu_button.setStyleSheet("padding: 5px")
             menu_button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
             for Tool in menu_tools:
                 tool = Tool(canvas)
                 menu_button.addAction(tool)
                 self.action_group.addAction(tool)
+            menu_button.triggered.connect(self.changeAction)
 
         self.actionTriggered.connect(self.changeAction)
 

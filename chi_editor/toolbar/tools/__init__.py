@@ -6,6 +6,7 @@ from .smiles import Smiles
 from .structure import Structure
 from .text import Text
 
+from ...bases.toolbar_menu_widget import ToolbarMenuWidget
 from .atoms_menu import AtomsMenu
 from .atoms import atom_tools
 from .bonds_menu import BondsMenu
@@ -20,7 +21,7 @@ tools: tuple[type[Tool], ...] = (
     Drag,
 )
 
-menus: list[tuple[tuple[type[Tool], ...], type[Tool]], ...] = [
+menus: list[tuple[tuple[type[Tool], ...], type[ToolbarMenuWidget]], ...] = [
     (atom_tools, AtomsMenu),
     (bond_tools, BondsMenu),
 ]
