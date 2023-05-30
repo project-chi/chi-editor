@@ -14,4 +14,4 @@ class AddReaction(Tool):
 
     @property
     def picture(self) -> str:
-        return "text"
+        return "reaction"

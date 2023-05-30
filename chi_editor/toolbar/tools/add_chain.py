@@ -14,4 +14,4 @@ class AddChain(Tool):
 
     @property
     def picture(self) -> str:
-        return "text"
+        return "chain"

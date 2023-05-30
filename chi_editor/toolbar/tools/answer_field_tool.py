@@ -21,4 +21,4 @@ class AnswerFieldTool(Tool):
 
     @property
     def picture(self) -> str:
-        return "arrow"
+        return "reagent"
