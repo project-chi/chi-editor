@@ -6,7 +6,9 @@ from rdkit import Chem
 
 from chi_editor.bases.alpha_atom import AlphaAtom
 from chi_editor.bases.molecule import Molecule
+from chi_editor.chains.chain import Chain
 from chi_editor.chem_utils import mol_from_graphs
+from chi_editor.reactions.reaction import Reaction
 
 if TYPE_CHECKING:
     from chi_editor.bases.tool import Tool
@@ -67,20 +69,31 @@ class Canvas(QGraphicsScene):
             case _:
                 raise TypeError("wrong signature")
 
-    def findElement(self, element_type: type):
-        if element_type == Molecule:
-            element_type = AlphaAtom
+    def findMolecule(self):
+        items = self.items()
+        if len(items) == 0:
+            return ""
+        molecule: type | None = None
+        for item in items:
+            if isinstance(item, AlphaAtom):
+                molecule = item.molecule
+                break
+        if molecule is None:
+            return ""
+        return Chem.MolToSmiles(mol_from_graphs(molecule))
+
+    def findElement(self, element_type: Chain | Reaction):
         items = self.items()
         if len(items) == 0:
             return ""
         element: type | None = None
         for item in items:
-            if isinstance(item, AlphaAtom if element_type == Molecule else element_type):
+            if isinstance(item, element_type):
                 element = item
                 break
         if element is None:
             return ""
-        return Chem.MolToSmiles(mol_from_graphs(element.molecule)) if element_type == AlphaAtom else element.to_string()
+        return element.to_string()
 
     def more_than_one_molecule(self) -> bool:
         atoms = len(list(filter(lambda item: isinstance(item, AlphaAtom), self.items())))

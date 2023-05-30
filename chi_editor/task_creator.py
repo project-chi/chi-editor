@@ -3,7 +3,6 @@ from PyQt6.QtCore import Qt, pyqtSignal
 
 from chi_editor.api.server import Server, default_url
 from chi_editor.api.task import Kind
-from chi_editor.bases.molecule import Molecule
 from chi_editor.canvas import Canvas
 from chi_editor.chains.chain import Chain
 from chi_editor.reactions.reaction import Reaction
@@ -85,7 +84,8 @@ class InputDialog(QDialog):
     def parseInput(self):
         answer_type: type
         if self.active_canvas == self.canvas_molecule:
-            answer_type = Molecule
+            self.correct_answer.setText(self.active_canvas.findMolecule())
+            return
         elif self.active_canvas == self.canvas_reaction:
             answer_type = Reaction
         else:

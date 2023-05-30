@@ -29,7 +29,7 @@ class ChainItemGroup(Chain):
         self._addInitialItems()
 
     def get_reagents(self) -> list[str]:
-        return list(map(lambda reagent: reagent.content, self._reagent_items))
+        return [reagent.content for reagent in self._reagent_items if reagent.content != '']
 
     def to_string(self):
         return str(self.get_reagents())

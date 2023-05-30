@@ -32,10 +32,10 @@ class ReactionItemGroup(Reaction):
         self._addInitialItems()
 
     def get_reagents(self) -> list[str]:
-        return list(map(lambda reagent: reagent.content, self._reagent_items))
+        return [reagent.content for reagent in self._reagent_items if reagent.content != '']
 
     def get_products(self) -> list[str]:
-        return list(map(lambda product: product.content, self._product_items))
+        return [product.content for product in self._product_items if product.content != '']
 
     def to_string(self) -> str:
         return str(self.get_reagents()) + str(self.get_products())
