@@ -1,3 +1,5 @@
+import re
+
 from PyQt6.QtCore import QRectF, Qt
 from PyQt6.QtGui import QIcon, QTransform
 from PyQt6.QtWidgets import (
@@ -16,13 +18,15 @@ from PyQt6.QtWidgets import (
 from rdkit import Chem
 
 from chi_editor.canvas import Canvas
+from chi_editor.chains.chain import Chain
 from chi_editor.constants import ASSETS
+from chi_editor.reactions.reaction import Reaction
 from chi_editor.task_creator import InputDialog
 from chi_editor.toolbar import CanvasToolBar
 from chi_editor.menubar.menubar import CanvasMenuBar
 from chi_editor.dialog_windows.task_result_dialog import TaskResultDialog
 
-from chi_editor.api.task import Task
+from chi_editor.api.task import Task, Kind
 
 from chi_editor.editor_mode import EditorMode
 
@@ -208,8 +212,17 @@ class Editor(QMainWindow):
         return create_widget
 
     def submitAnswer(self) -> None:
-        smiles_answer = self.canvases[EditorMode.SOLVE_MODE.value].findMolecule()
-        answer_is_correct = self.checkAnswer(smiles_answer)
+        raw_answer: str
+        answer_is_correct: bool
+        if self.task.kind == Kind.Molecule:
+            raw_answer = self.canvases[EditorMode.SOLVE_MODE.value].findMolecule()
+            answer_is_correct = self.checkAnswerMolecule(raw_answer)
+        elif self.task.kind == Kind.Reaction:
+            raw_answer = self.canvases[EditorMode.SOLVE_MODE.value].findElement(Reaction)
+            answer_is_correct = self.checkAnswerReaction(raw_answer)
+        else:
+            raw_answer = self.canvases[EditorMode.SOLVE_MODE.value].findElement(Chain)
+            answer_is_correct = self.checkAnswerChain(raw_answer)
 
         if answer_is_correct:
             self.openResultDialog("Correct")
@@ -223,7 +236,7 @@ class Editor(QMainWindow):
     def setFormulationOfTask(self) -> None:
         self.formulation.setText(self.task.problem)
 
-    def checkAnswer(self, user_answer: str) -> bool:
+    def checkAnswerMolecule(self, user_answer: str) -> bool:
         mol_user = Chem.MolFromSmiles(user_answer)
         if mol_user is None:
             return False
@@ -235,3 +248,17 @@ class Editor(QMainWindow):
         canon_user_answer = Chem.CanonSmiles(user_smiles)
         correct_answer = Chem.CanonSmiles(correct_smiles)
         return correct_answer == canon_user_answer
+
+    def checkAnswerReaction(self, user_answer: str) -> bool:
+        data_user: list[str] = re.findall(r'\[.*?\]', user_answer)
+        data_real: list[str] = re.findall(r'\[.*?\]', self.task.solution)
+        reagents_user: set[str] = set(eval(data_user[0]))
+        products_user: set[str] = set(eval(data_user[1]))
+        reagents_real: set[str] = set(eval(data_real[0]))
+        products_real: set[str] = set(eval(data_real[1]))
+        return reagents_user == reagents_real and products_user == products_real
+
+    def checkAnswerChain(self, user_answer: str) -> bool:
+        print(user_answer)
+        print(self.task.solution)
+        return user_answer == self.task.solution

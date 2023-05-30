@@ -5,7 +5,6 @@ from PyQt6.QtWidgets import QGraphicsScene
 from rdkit import Chem
 
 from chi_editor.bases.alpha_atom import AlphaAtom
-from chi_editor.bases.molecule import Molecule
 from chi_editor.chains.chain import Chain
 from chi_editor.chem_utils import mol_from_graphs
 from chi_editor.reactions.reaction import Reaction
