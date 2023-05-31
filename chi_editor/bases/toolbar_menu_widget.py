@@ -1,8 +1,7 @@
-from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QToolButton
 
 from chi_editor.bases.tool import Tool
-from chi_editor.constants import RESOURCES
 
 
 class ToolbarMenuWidget(QToolButton):
@@ -10,15 +9,6 @@ class ToolbarMenuWidget(QToolButton):
 
     def __init__(self, *args, **kwargs) -> "None":
         super().__init__(*args, **kwargs)
-
-        icon_path = RESOURCES / "assets" / "toolbar" / f"{self.picture}.png"
-        if not icon_path.exists():
-            raise ValueError(
-                f"can't find assets for {type(self).__name__}, checked at "
-                f"{icon_path}\n module reference: {self.__module__}"
-            )
-
-        self.setIcon(QIcon(str(icon_path)))
         self.triggered.connect(self._set_tool)
 
     def _set_tool(self, tool: Tool):
@@ -27,8 +17,3 @@ class ToolbarMenuWidget(QToolButton):
 
     def get_tool(self) -> QAction:
         return self._current_tool
-
-    @property
-    def picture(self) -> "str":
-        """Returns the name of the icon for this menu without extension."""
-        raise NotImplementedError

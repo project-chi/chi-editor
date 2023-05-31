@@ -43,6 +43,7 @@ class GeneralToolBar(QToolBar):
                 self.action_group.addAction(tool)
                 tool.toggled.connect(menu_button.setCheckable)  # focus on menu button when one of its items is chosen
                 tool.toggled.connect(menu_button.setChecked)  # focus on menu button when one of its items is chosen
+            menu_button.setDefaultAction(menu_button.actions()[0])
             menu_button.triggered.connect(self.changeAction)
 
         self.actionTriggered.connect(self.changeAction)
