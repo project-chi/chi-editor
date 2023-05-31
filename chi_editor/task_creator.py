@@ -5,6 +5,7 @@ from chi_editor.api.server import Server, default_url
 from chi_editor.api.task import Kind
 from chi_editor.canvas import Canvas
 from chi_editor.chains.chain import Chain
+from chi_editor.error_handler import error_handler
 from chi_editor.reactions.reaction import Reaction
 from chi_editor.utils.json_utils import create_task
 from chi_editor.editor_mode import EditorMode
@@ -77,6 +78,9 @@ class InputDialog(QDialog):
 
     def sendTask(self):
         res_name, res_type, res_formulation, res_correct = self.getInputs()
+        if res_correct == "":
+            error_handler("Write the damn answer to this dawg")
+            return
         server = Server(default_url)
         server.create_task(res_name, res_type, res_formulation, res_correct)
         self.clearAll()
@@ -94,5 +98,8 @@ class InputDialog(QDialog):
 
     def createTask(self):
         res_name, res_type, res_formulation, res_correct = self.getInputs()
+        if res_correct == "":
+            error_handler("Write the damn answer to this dawg")
+            return
         create_task(res_name, res_type.value, res_formulation, res_correct, "")
         self.clearAll()
